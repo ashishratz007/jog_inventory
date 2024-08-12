@@ -2,12 +2,12 @@
 import 'package:flutter/material.dart';
 
 class _AppColors {
-  final Color primary = Color(0xffFF802B);
-  final Color primaryText = Color(0xfff18848);
-  final Color primaryDark = Color(0xffBE5611);
+  final Color primary = Color(0xff2196F3);
+  final Color primaryText = Color(0xff2196F3);
+  final Color primaryDark = Color(0xff2196F3);
   final Color primaryLite = Color(0xffFFF5EE);
   final Color primaryBg = Color(0xffFFE9DA);
-  final Color secondary = Color(0xff153450);
+  final Color secondary = Color(0xffFF6258);
   final Color bgGrey = Color(0xffeceaea);
   final Color blueDark = Color(0xff4175C0);
   final Color blueAccent = Color(0xff4175C0);

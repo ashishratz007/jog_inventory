@@ -390,3 +390,18 @@ void hideKeyboard(BuildContext context) {
   WidgetsBinding.instance.focusManager.primaryFocus?.unfocus();
   SystemChannels.textInput.invokeMethod('TextInput.hide');
 }
+
+
+setSafeAreaColor({Color? color}){
+  if (!config.isWeb) {
+    WidgetsFlutterBinding.ensureInitialized();
+    // Add this line to close the keyboard when the app starts
+    SystemChannels.textInput.invokeMethod('TextInput.hide');
+    // Set the status bar color to white and the status bar icons to dark
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor: color??Colours.secondary, // Set the status bar color to white
+      statusBarBrightness: Brightness.light, // For iOS
+      statusBarIconBrightness: Brightness.light, // For Android
+    ));
+  }
+}

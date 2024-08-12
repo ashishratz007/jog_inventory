@@ -6,7 +6,7 @@ import '../exports/common.dart';
 /// [_Config] class is to get configuration data or variables
 class _Config {
   // final baseUrl = 'http://192.168.1.7/salesrep';// local server
-  final baseUrl = 'http://usedcarwale-env.eba-an89nu3k.ap-south-1.elasticbeanstalk.com/';// live server
+  final baseUrl = "https://api.jog-joinourgame.com/inv/";// live server
   final mediaUrl = "https://usedcarautoscan.s3.ap-south-1.amazonaws.com/";
   final uploadUrl = "https://sales-test.jog-joinourgame.com/upload/new_design/";
   final quotationsUploadUrl = "https://sales-test.jog-joinourgame.com/upload/samples/";
@@ -30,13 +30,14 @@ class _Config {
 
 
 /// actions
- setWalkThrough(){
+ setWalkThrough() {
    storage.configBox.put(appKeys.walkThrough, true,);
  }
 
- bool getWalkThroughStatus (){
+ bool getWalkThroughStatus () {
   return storage.configBox.get(appKeys.walkThrough, defaultValue: false);
  }
+
 }
 
 var config = _Config();
