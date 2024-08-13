@@ -43,41 +43,36 @@ class CustomAppBar extends StatelessWidget {
             buttonText: "Close",
           );
       },
-      child: Material(
-        color: Colors.white,
-        child: SafeArea(
-          maintainBottomViewPadding: true,
-          child: GestureDetector(
-            onTap: () {
-              if (onGestureTap != null) onGestureTap!();
-              hideKeyboard(context);
-            },
-            child: Scaffold(
-                key: _scaffoldKey,
-                backgroundColor: Colours.bgColor,
-                drawer: hasDrawer
-                    ? Container()
-                    : null,
-                appBar: appbar(),
-                body: body,
-                bottomNavigationBar: Visibility(
-                    visible: bottomNavBar != null,
-                    child: Container(height: 70, child: bottomNavBar))),
-          ),
-        ),
+      child: GestureDetector(
+        onTap: () {
+          if (onGestureTap != null) onGestureTap!();
+          hideKeyboard(context);
+        },
+        child: Scaffold(
+            key: _scaffoldKey,
+            backgroundColor: Colours.bgColor,
+            drawer: hasDrawer
+                ? Container()
+                : null,
+            appBar: appbar(),
+            body: SafeArea(child: body),
+            bottomNavigationBar: Visibility(
+                visible: bottomNavBar != null,
+                child: Container(height: 70, child: bottomNavBar))),
       ),
     );
   }
 
   /// App bar
   PreferredSize appbar() {
+   var top = SafeAreaTopValue(Get.context);
     return PreferredSize(
       preferredSize: Size(Get.width, 70),
       child: Container(
-        padding: EdgeInsets.only(left: 10, right: 10),
-        height: 70,
+        padding: EdgeInsets.only(left: 10, right: 10,top: top -10),
+        height: 70 + top,// safe area
         decoration: BoxDecoration(
-            color: Colors.white,
+            color: Colours.secondary,
             // borderRadius: BorderRadius.only(
             //   bottomLeft: Radius.circular(30),
             //   bottomRight: Radius.circular(30),
@@ -105,7 +100,7 @@ class CustomAppBar extends StatelessWidget {
                   icon: Icon(
                     Icons.menu,
                     size: 30,
-                    color: Colors.black,
+                    color: Colors.white,
                   ),
                 ),
 
@@ -120,7 +115,7 @@ class CustomAppBar extends StatelessWidget {
                       Get.back();
                     },
                     child: Icon(Icons.arrow_back_ios_new,
-                        color: Colors.black, size: 22),
+                        color: Colors.white, size: 22),
                   ),
                 ),
             ],
@@ -128,7 +123,7 @@ class CustomAppBar extends StatelessWidget {
             /// title
             titleWidget ??
                 Text(title,
-                    style: appTextTheme.titleLarge,
+                    style: appTextTheme.titleLarge?.copyWith(color: Colours.white),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis),
 
@@ -140,7 +135,7 @@ class CustomAppBar extends StatelessWidget {
                 ? Icon(
                     Icons.notifications_outlined,
                     size: 30,
-                    color: Colors.black,
+                    color: Colors.white,
                   )
                 : SizedBox(width: 42),
             // Container(

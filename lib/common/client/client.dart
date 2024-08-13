@@ -48,7 +48,7 @@ class _DioClient {
         /// adding token when there is token present
         var token = globalData.authToken;
         if (token != null) {
-          options.headers['Authorization'] = '${token}';
+          options.headers['Authorization'] = 'Bearer ${token}';
         }
         return handler.next(options);
       },
@@ -58,7 +58,7 @@ class _DioClient {
   Future _setHeaderToken() async {
     var token = globalData.authToken;
     if (token != null) {
-      _dio.options.headers['Authorization'] = '${token}';
+      _dio.options.headers['Authorization'] = 'Bearer ${token}';
     }
   }
 

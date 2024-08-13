@@ -19,6 +19,9 @@ var appStrings = _AppString();
 
 class _AppKeys {
   final walkThrough = "walkThrough";
+  final fabId = "fabId";
+  final pacId = "pacId";
+
 }
 
 var appKeys = _AppKeys();

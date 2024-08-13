@@ -6,6 +6,11 @@ class _AppIcons {
   static final _path = "assets/icons/";
 
   String boxes = "${_path}boxes.png";
+  String scan = "${_path}scan.png";
+  String boxes_white = "${_path}boxes_white.png";
+  String future = "${_path}future.png";
+  String mat_white = "${_path}mat_white.png";
+  String no_code = "${_path}no_code.png";
 }
 
 var AppIcons = _AppIcons();

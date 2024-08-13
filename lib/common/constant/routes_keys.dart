@@ -6,4 +6,8 @@ abstract class AppRoutesString {
   static const home = "/home";
 
 
+  /// material
+  static const materialDetailById = "${home}/material_detail";
+
+
 }

@@ -1,6 +1,8 @@
 
+import 'package:jog_inventory/modules/auth/models/user_login.dart';
+
 class _GlobalData {
-  String? authToken = "";
+  String? get authToken => UserLoginModel.getToken();
   // bool get alreadyLoggedIn => authToken != null;
 
   // String? get authToken => UserLoginModel.getToken();

@@ -29,6 +29,7 @@ class AuthController extends GetxController {
 
   /// store token to local storage
   void onFormSubmit() async {
+
     setSafeAreaColor();
     isBusy.value = true;
     if (formKey.currentState?.validate() ?? false) {
@@ -47,7 +48,7 @@ class AuthController extends GetxController {
         UserLoginModel.storeUserInfo(loginResponse.employee!);
         successSnackBar(message: loginResponse.message??"");
         /// navigate user to login page
-        // Get.offAllNamed(AppRoutesString.home);
+        Get.offAllNamed(AppRoutesString.home);
       } catch (error, trace) {
         showSnackBar(
             title: "Login error", message: "$error", type: SnackBarType.error);

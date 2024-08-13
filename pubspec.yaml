@@ -50,6 +50,7 @@ dependencies:
   dio: ^5.5.0+1
   pretty_dio_logger: ^1.4.0
   shimmer: ^3.0.0
+  barcode_scan2: ^4.3.3
 
 dev_dependencies:
   flutter_test:
@@ -77,7 +78,7 @@ flutter:
   assets:
     - assets/images/
     - assets/icons/
-    - assets/walk_through/
+#    - assets/walk_through/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

@@ -1,3 +1,5 @@
+import 'package:jog_inventory/common/globals/global.dart';
+
 import 'common/exports/main_export.dart';
 
 void main() async {
@@ -58,7 +60,7 @@ class JogInventory extends StatelessWidget {
           useMaterial3: true,
         ),
         // initialRoute: AppRoutesString.splash,
-        initialRoute: AppRoutesString.login,
+        initialRoute: globalData.authToken== null?AppRoutesString.login: AppRoutesString.home,
         getPages: getRoutes,
         builder: (context, child) {
           return MediaQuery(

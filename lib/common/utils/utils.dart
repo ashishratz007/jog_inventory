@@ -26,8 +26,10 @@ var stringActions = _StingActions();
 Widget gap({double? space}) => Gap(space ?? 20);
 
 Future<File?> pickFile() async {
-  FilePickerResult? result =
-      await FilePicker.platform.pickFiles(allowMultiple: false,type: FileType.image,);
+  FilePickerResult? result = await FilePicker.platform.pickFiles(
+    allowMultiple: false,
+    type: FileType.image,
+  );
 
   if (result != null) {
     File file = File(result.files.single.path!);
@@ -53,7 +55,8 @@ Future<List<File>> pickFiles({int limit = 6}) async {
 
       if (pickedFiles.length > limit) {
         // Notify the user that the limit was exceeded
-        errorSnackBar(message: "Limit exceeded. Please select up to $limit files.");
+        errorSnackBar(
+            message: "Limit exceeded. Please select up to $limit files.");
         throw "Limit exceeded. Please select up to $limit files.";
       }
 
@@ -73,7 +76,6 @@ Future<List<File>> pickFiles({int limit = 6}) async {
     rethrow; // Optional: rethrow the exception to handle it further up the call stack
   }
 }
-
 
 Widget chooseFileButton(
   BuildContext context, {
@@ -161,7 +163,7 @@ abstract final class ParseData {
   }
 
   static DateTime? toDateTime(String? value) {
-    if ((value??"").isNotEmpty) {
+    if ((value ?? "").isNotEmpty) {
       return DateTime.tryParse(value!)?.toLocal();
     }
     return null;
@@ -248,7 +250,7 @@ double SafeAreaTopValue(context) {
   return MediaQuery.viewPaddingOf(context).top;
 }
 
-double keyboardHeight(context){
+double keyboardHeight(context) {
   return MediaQuery.of(context).viewInsets.bottom;
 }
 
@@ -327,13 +329,24 @@ Widget displayAssetsWidget(
   String path, {
   double? height,
   double? width,
-      BoxFit?fit,
+  BoxFit? fit,
+  BorderRadiusGeometry? borderRadius,
+  Color? color,
+      EdgeInsetsGeometry? padding,
+
 }) {
-  return Image.asset(
-    path,
-    height: height,
-    width: width,
-    fit:fit ,
+  return Container(
+    padding: padding,
+    decoration: BoxDecoration(
+      borderRadius: borderRadius,
+      color: color,
+    ),
+    child: Image.asset(
+      path,
+      height: height,
+      width: width,
+      fit: fit,
+    ),
   );
 }
 
@@ -343,18 +356,16 @@ BoxDecoration containerDecoration(
     double borderWidth = 1.5,
     Gradient? gradient,
     Color? borderColor,
-      List<BoxShadow>?boxShadow,
+    List<BoxShadow>? boxShadow,
     DecorationImage? image}) {
   return BoxDecoration(
-    color: color ?? Colors.white,
-    borderRadius: BorderRadius.circular(radius),
-    gradient: gradient,
-
-    border:
-        Border.all(color: borderColor ?? Colours.bgGrey, width: borderWidth),
-    image: image,
-    boxShadow: boxShadow
-  );
+      color: color ?? Colors.white,
+      borderRadius: BorderRadius.circular(radius),
+      gradient: gradient,
+      border:
+          Border.all(color: borderColor ?? Colours.bgGrey, width: borderWidth),
+      image: image,
+      boxShadow: boxShadow);
 }
 
 String getOrdinalSuffix(int number) {
@@ -391,17 +402,58 @@ void hideKeyboard(BuildContext context) {
   SystemChannels.textInput.invokeMethod('TextInput.hide');
 }
 
-
-setSafeAreaColor({Color? color}){
+setSafeAreaColor({Color? color}) {
   if (!config.isWeb) {
     WidgetsFlutterBinding.ensureInitialized();
     // Add this line to close the keyboard when the app starts
     SystemChannels.textInput.invokeMethod('TextInput.hide');
     // Set the status bar color to white and the status bar icons to dark
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: color??Colours.secondary, // Set the status bar color to white
+      statusBarColor:
+          color ?? Colours.secondary, // Set the status bar color to white
       statusBarBrightness: Brightness.light, // For iOS
       statusBarIconBrightness: Brightness.light, // For Android
     ));
   }
+}
+
+List<BoxShadow> containerShadow({
+  bool top = true,
+  bool bottom = true,
+  bool left = true,
+  bool right = true,
+}) {
+  var blurRadius = 2.0;
+  var spreadRadius = 2.0;
+  var color = Colours.bgColorMid;
+  return [
+    if (bottom)
+      BoxShadow(
+        color: color, // Shadow color
+        spreadRadius: spreadRadius, // Spread radius
+        blurRadius: blurRadius, // Blur radius
+        offset: Offset(0, 1), // Bottom shadow
+      ),
+    if (top)
+      BoxShadow(
+        color: color,
+        spreadRadius: spreadRadius,
+        blurRadius: blurRadius,
+        offset: Offset(0, -1), // Top shadow
+      ),
+    if (right)
+      BoxShadow(
+        color: color,
+        spreadRadius: spreadRadius,
+        blurRadius: blurRadius,
+        offset: Offset(1, 0), // Right shadow
+      ),
+    if (left)
+      BoxShadow(
+        color: color,
+        spreadRadius: spreadRadius,
+        blurRadius: blurRadius,
+        offset: Offset(-1, 0), // Left shadow
+      ),
+  ];
 }
