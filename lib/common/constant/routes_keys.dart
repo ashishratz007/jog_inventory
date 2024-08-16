@@ -8,6 +8,7 @@ abstract class AppRoutesString {
 
   /// material
   static const materialDetailById = "${home}/material_detail";
+  static const submit_order = "${materialDetailById}/submit_order";
 
 
 }

@@ -59,8 +59,8 @@ class JogInventory extends StatelessWidget {
           ),
           useMaterial3: true,
         ),
-        // initialRoute: AppRoutesString.splash,
-        initialRoute: globalData.authToken== null?AppRoutesString.login: AppRoutesString.home,
+        // initialRoute: AppRoutesString.submit_order,
+        initialRoute: globalData.authToken == null?AppRoutesString.login: AppRoutesString.home,
         getPages: getRoutes,
         builder: (context, child) {
           return MediaQuery(

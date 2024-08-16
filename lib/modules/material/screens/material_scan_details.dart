@@ -1,4 +1,5 @@
 import 'package:jog_inventory/modules/material/controllers/scan_qr.dart';
+import 'package:jog_inventory/modules/material/widgets/select_jog_code_popup.dart';
 import '../../../common/exports/main_export.dart';
 
 class MaterialRequestDetailScreen
@@ -26,6 +27,10 @@ class MaterialRequestDetailScreen
     return Column(
       children: [
         displayMaterialDetails(),
+        gap(),
+        displaySearchWidget(),
+        gap(),
+        safeAreaBottom(Get.context)
       ],
     );
   }
@@ -106,6 +111,25 @@ class MaterialRequestDetailScreen
             gap(space: 10)
           ],
         ));
+  }
+
+  Widget displaySearchWidget() {
+    return TextFieldWithLabel(
+      allowShadow: true,
+      labelText: 'Search for JOG Code',
+      radius: 10,
+      hintText: "Search",
+      onTap: () {
+        showSelectCodeMenu(Get.context!);
+      },
+      prefixIcon: Padding(
+          padding: EdgeInsets.only(left: 10, right: 10),
+          child: Icon(
+            Icons.search,
+            color: Colours.greyLight,
+            size: 25,
+          )),
+    );
   }
 
   Widget displayDataTiles(String title, String value) {

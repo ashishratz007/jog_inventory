@@ -1,5 +1,3 @@
-
-
 import '../exports/main_export.dart';
 
 Widget PrimaryTextField(
@@ -11,6 +9,7 @@ Widget PrimaryTextField(
     AutovalidateMode? autovalidateMode,
     TextEditingController? controller,
     bool canRequestFocus = true,
+    bool allowShadow = false,
     bool? enabled,
     FocusNode? focusNode,
     double radius = 5,
@@ -39,9 +38,13 @@ Widget PrimaryTextField(
   // widget
   if (fillColor == null) fillColor = Colours.white;
   // focusNode ??= FocusNode();
-  return SizedBox(
+  return Container(
     key: key,
     height: height,
+    decoration: BoxDecoration(
+        boxShadow:allowShadow? containerShadow():null,
+      borderRadius: BorderRadius.circular(radius)
+    ),
     child: TextFormField(
         enabled: enabled,
         initialValue: initialValue,
@@ -115,6 +118,7 @@ Widget TextFieldWithLabel(
     Color? fillColor,
     int maxLines = 1,
     bool hintToNExtLine = false,
+    bool allowShadow = false,
     Widget? prefixIcon,
     EdgeInsets padding = AppPadding.textFieldPadding,
     TextStyle? style,
@@ -183,6 +187,7 @@ Widget TextFieldWithLabel(
         SizedBox(height: 10)
       ],
       PrimaryTextField(
+          allowShadow: allowShadow,
           maxLines: maxLines,
           enabled: enabled,
           controller: controller,
