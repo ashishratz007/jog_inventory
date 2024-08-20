@@ -30,8 +30,7 @@ class HomeController extends GetxController {
     if (fabId.isNotEmpty) {
       Get.toNamed(AppRoutesString.materialDetailById,
           arguments: {appKeys.fabId: fabId, appKeys.pacId: pacId});
-    }
-    else{
+    } else {
       errorSnackBar(message: "Unable to get data from QR");
     }
   }
@@ -44,6 +43,7 @@ class HomeController extends GetxController {
     }
     return Get.put<HomeController>(HomeController());
   }
+
   /// api calls
 }
 

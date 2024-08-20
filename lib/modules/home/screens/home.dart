@@ -4,8 +4,7 @@ import '../../../common/exports/main_export.dart';
 
 class HomeScreen extends GetView<HomeController> {
   const HomeScreen({super.key});
-  HomeController get controller =>
-      HomeController.getController();
+  HomeController get controller => HomeController.getController();
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +30,7 @@ class HomeScreen extends GetView<HomeController> {
 
           ///bottom
           gap(),
-          safeAreaBottom(Get.context),
+          safeAreaBottom(Get.context!),
         ],
       ),
     );
@@ -192,11 +191,11 @@ class HomeScreen extends GetView<HomeController> {
                     ),
                   ),
                   gap(),
+
                   /// Scan button
                   SecondaryButton(
                       title: "Scan Barcode ",
-                      onTap:
-                        controller.scanQrCode,
+                      onTap: controller.scanQrCode,
                       radius: radius,
                       trailing: displayAssetsWidget(AppIcons.scan, width: 20))
                 ],
@@ -225,14 +224,18 @@ class HomeScreen extends GetView<HomeController> {
                           padding: AppPadding.inner))),
               gap(space: 10),
               Expanded(
-                  child: actionTileWidget(
-                      onTap: () {},
-                      "Material Request",
-                      displayAssetsWidget(AppIcons.mat_white,
-                          borderRadius: BorderRadius.circular(10),
-                          color: Colours.secondary,
-                          height: 20,
-                          padding: AppPadding.inner))),
+                child: actionTileWidget(
+                  onTap: () {
+                    Get.toNamed(AppRoutesString.materialRequestForm);
+                  },
+                  "Material Request",
+                  displayAssetsWidget(AppIcons.mat_white,
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colours.secondary,
+                      height: 20,
+                      padding: AppPadding.inner),
+                ),
+              ),
             ],
           ),
           gap(space: 10),

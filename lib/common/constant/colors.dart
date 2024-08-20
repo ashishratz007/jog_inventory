@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 class _AppColors {
   final Color primary = Color(0xff2196F3);
+  final Color primaryBlueLite = Color(0xff779dec);
   final Color primaryText = Color(0xff2196F3);
   final Color primaryDark = Color(0xff2196F3);
   final Color primaryLite = Color(0xfff6dbda);
@@ -19,12 +20,15 @@ class _AppColors {
   final Color greyLight = Color(0xff969292);
   final Color yellow = Color(0xffFFB900);
   final Color redLite = Color(0xffFF0000);
+  final Color redBg = Color(0xfff6dbdb);
   final Color blue = Color(0xff2196F3);
   final Color green = Color(0xff2DD12A);
-  final Color greenLight = Color(0xff4df575);
+  final Color greenLight = Color(0xff19D895);
   final Color blackMat = Color(0xff252C46);
   final Color white = Colors.white;
   final Color black = Colors.black;
+  final Color blackLite = Color(0xff232222);
+
   final Color transparent = Colors.transparent;
 }
 

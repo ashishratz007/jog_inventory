@@ -154,7 +154,7 @@ class UserInfoModel {
         this.employeeStat,
         this.magnifierMode});
 
-  UserInfoModel.fromJson(Map<String, dynamic> json) {
+  UserInfoModel.fromJson(Map<dynamic, dynamic> json) {
     employeeId = json['employee_id'];
     employeeName = json['employee_name'];
     employeeEmail = json['employee_email'];

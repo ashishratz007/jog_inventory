@@ -4,6 +4,8 @@ import 'package:intl/intl.dart';
 import 'package:jog_inventory/common/exports/main_export.dart';
 import 'package:path/path.dart' as path;
 
+import '../widgets/dotted_border.dart';
+
 String getMediaUrl(String mediaPath) {
   return config.mediaUrl + mediaPath;
 }
@@ -234,23 +236,23 @@ Widget displayListBuilder<T>({
   );
 }
 
-Widget safeAreaBottom(context) {
+Widget safeAreaBottom(BuildContext context) {
   return gap(space: SafeAreaBottomValue(context) + keyboardHeight(context));
 }
 
-Widget safeAreaTop(context) {
+Widget safeAreaTop(BuildContext context) {
   return gap(space: SafeAreaTopValue(context));
 }
 
-double SafeAreaBottomValue(context) {
+double SafeAreaBottomValue(BuildContext context) {
   return MediaQuery.viewPaddingOf(context).bottom;
 }
 
-double SafeAreaTopValue(context) {
+double SafeAreaTopValue(BuildContext context) {
   return MediaQuery.viewPaddingOf(context).top;
 }
 
-double keyboardHeight(context) {
+double keyboardHeight(BuildContext context) {
   return MediaQuery.of(context).viewInsets.bottom;
 }
 
@@ -332,8 +334,7 @@ Widget displayAssetsWidget(
   BoxFit? fit,
   BorderRadiusGeometry? borderRadius,
   Color? color,
-      EdgeInsetsGeometry? padding,
-
+  EdgeInsetsGeometry? padding,
 }) {
   return Container(
     padding: padding,
@@ -458,7 +459,42 @@ List<BoxShadow> containerShadow({
   ];
 }
 
+Widget divider({double height = 2, Color? color}) {
+  return Divider(height: height, color: color ?? Colours.border);
+}
 
-Widget divider({double height = 2, Color? color}){
-  return Divider(height: height,color : color??Colours.border);
+Widget chipWidget(
+  String text, {
+  Color? color,
+  Color? textColor,
+  double radius = 100,
+  bool showBorder = false,
+  double fontSize = 10,
+  Color? bgColor,
+  FontWeight fontWeight = FontWeight.w400,
+  Color? borderColor,
+  EdgeInsets padding =
+      const EdgeInsets.only(left: 10, right: 10, top: 3, bottom: 3),
+}) {
+  color ??= Colours.primaryBlueLite;
+  textColor ??= Colours.primary;
+  return Container(
+      padding: padding,
+      decoration: BoxDecoration(
+          color: bgColor ?? color.withOpacity(0.3),
+          borderRadius: BorderRadius.circular(radius),
+          border: showBorder ? Border.all(color: borderColor ?? color) : null),
+      child: Text(
+        text,
+        style: TextStyle(
+            color: textColor, fontSize: fontSize, fontWeight: fontWeight),
+      ));
+}
+
+Widget dottedDivider() {
+  return DottedLineDivider(
+    dotSpace: 3,
+    width: 1,
+    color: Colours.greyLight,
+  );
 }

@@ -1,5 +1,5 @@
+import 'package:jog_inventory/common/globals/global.dart';
 import 'package:jog_inventory/modules/home/controllers/home.dart';
-
 import '../../../common/exports/main_export.dart';
 
 class HomeDrawerWidget extends Drawer {
@@ -43,12 +43,12 @@ class HomeDrawerWidget extends Drawer {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "Hi, David",
+                            "Hi, ${globalData.activeUser?.employeeName??"_"}",
                             style: appTextTheme.titleSmall?.copyWith(color: Colours.white),
                           ),
                           gap(space: 5),
                           Text(
-                            "ashish8126940910@gmail.com",
+                            "${globalData.activeUser?.employeeEmail??"_"}",
                             style: appTextTheme.labelSmall?.copyWith(color: Colours.white),
                             maxLines: 1,
 
@@ -68,31 +68,19 @@ class HomeDrawerWidget extends Drawer {
               /// drawer tile
               drawerTile(
                 context,
-                leading: displayAssetsWidget(
-                  AppIcons.boxes_white,
-                  color: selectedValue == "Material RQ list"
-                      ? Colours.primary
-                      : Colours.greyLight,
-                  height: 25,
-                ),
+                leading: Icon(Icons.file_copy,color: Colours.greyLight,size: 20),
                 title: "Material RQ list",
                 textColor: Colours.black,
                 hideTrailing: true,
                 onTap: () {
-                  Get.toNamed(AppRoutesString.home);
+                  Get.toNamed(AppRoutesString.materialRequestList);
                 },
               ),
 
               /// drawer tile
               drawerTile(
                 context,
-                leading: displayAssetsWidget(
-                  AppIcons.boxes_white,
-                  color: selectedValue == "No code RQ list"
-                      ? Colours.primary
-                      : Colours.greyLight,
-                  height: 25,
-                ),
+                leading:Icon(Icons.file_copy,color: Colours.greyLight,size: 20),
                 title: "No code RQ list",
                 textColor: Colours.black,
                 hideTrailing: true,
@@ -184,7 +172,7 @@ class HomeDrawerWidget extends Drawer {
   Widget setupTiles() {
     return drawerExpansionWidget(
       "Setup",
-      displayAssetsWidget(AppIcons.boxes_white, height: 25),
+      Icon(Icons.settings,color: Colours.greyLight,size: 20),
       children: [
         DrawerItem(
           title: "Supplier",

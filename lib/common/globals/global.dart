@@ -8,6 +8,8 @@ class _GlobalData {
   // String? get authToken => UserLoginModel.getToken();
   //
   // UserModel? get activeUser => UserModel.getActiveUserFromCache();
+
+  UserInfoModel? get activeUser => UserLoginModel.getUserInfo();
 }
 
 var globalData = _GlobalData();

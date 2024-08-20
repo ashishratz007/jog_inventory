@@ -30,7 +30,7 @@ class MaterialRequestDetailScreen
         gap(),
         displaySearchWidget(),
         gap(),
-        safeAreaBottom(Get.context)
+        safeAreaBottom(Get.context!)
       ],
     );
   }

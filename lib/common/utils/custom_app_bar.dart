@@ -58,7 +58,9 @@ class CustomAppBar extends StatelessWidget {
             bottomNavigationBar: Visibility(
                 visible: bottomNavBar != null,
                 child: Container(
-                    height: 70,
+                    height: 70 + SafeAreaBottomValue(Get.context!),
+                    decoration: BoxDecoration(
+                        color: Colours.white, boxShadow: containerShadow()),
                     padding: EdgeInsets.only(right: 16, left: 16),
                     child: bottomNavBar))),
       ),
@@ -67,7 +69,7 @@ class CustomAppBar extends StatelessWidget {
 
   /// App bar
   PreferredSize appbar() {
-    var top = SafeAreaTopValue(Get.context);
+    var top = SafeAreaTopValue(Get.context!);
     return PreferredSize(
       preferredSize: Size(Get.width, 70),
       child: Container(

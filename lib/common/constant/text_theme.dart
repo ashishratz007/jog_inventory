@@ -50,7 +50,7 @@ var appTextTheme = TextTheme(
       fontFamily: "Montserrat"),
   labelSmall: TextStyle(
       color: Colors.black,
-      fontSize: 12,
+      fontSize: 14,
       fontWeight: FontWeight.w500,
       fontFamily: "Montserrat"),
 

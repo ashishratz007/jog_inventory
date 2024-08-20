@@ -9,7 +9,7 @@ class DottedBorderContainer extends StatelessWidget {
   final EdgeInsetsGeometry? padding;
   final EdgeInsetsGeometry? margin;
   final Decoration? decoration;
-  final BoxDecoration? boxDecoration;
+  // final BoxDecoration? boxDecoration;
   final BorderRadius? borderRadius;
 
   const DottedBorderContainer({
@@ -21,7 +21,7 @@ class DottedBorderContainer extends StatelessWidget {
     this.padding,
     this.margin,
     this.decoration,
-    this.boxDecoration,
+    // this.boxDecoration,
     this.borderRadius,
   }) : super(key: key);
 
@@ -36,10 +36,15 @@ class DottedBorderContainer extends StatelessWidget {
           borderWidth: borderWidth,
           borderRadius: borderRadius ?? BorderRadius.circular(0),
         ),
-        child: Container(
-          padding: padding,
-          decoration: decoration ?? boxDecoration,
-          child: child,
+        child: ClipRRect(
+          borderRadius:borderRadius ?? BorderRadius.circular(0),
+          child: Container(
+            padding: padding,
+            decoration: decoration ?? BoxDecoration(
+              borderRadius: borderRadius ?? BorderRadius.circular(0),
+            ),
+            child: child,
+          ),
         ),
       ),
     );

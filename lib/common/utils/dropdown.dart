@@ -169,7 +169,7 @@ class _CustomDropdownWidgetState<T> extends State<_CustomDropdownWidget<T>>
       children: [
         Obx(
           () => Container(
-            height: widget.height,
+            height: widget.height ?? 40,
             key: widget.key,
             padding: EdgeInsets.only(left: 10, right: 10),
             decoration: BoxDecoration(

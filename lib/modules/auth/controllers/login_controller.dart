@@ -39,6 +39,7 @@ class AuthController extends GetxController {
         var resp = await userLogin.create();
         /// get login response to display data
         UserLoginResponse loginResponse = UserLoginResponse.fromJson(resp.data);
+        if(loginResponse.status == 0) throw loginResponse.message??"";
         var token = loginResponse.accessToken;
         await UserLoginModel.storeToken(token);
         // await UserLoginModel.s(loginResponse.employee!);
