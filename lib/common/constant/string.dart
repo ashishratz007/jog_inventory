@@ -12,10 +12,21 @@ class _AppString {
   final String cancel = "Cancel";
   final String delete = "Delete";
 
+  ///
+  final String checkOutDate = "Checkout Date";
+  final String quantityInStock = "Quantity in Stock";
+  final String quantityRequired = "Quantity Required";
+  final String qtdRequested = "QTD Requested";
+  final String previousCheckQtd = "Previous Checkout Qtd";
+  final String previousCheckDate = "Previous Checkout Date";
+  final String dueDateReq = "Due Date Requested";
+  final String dueDateForShipping = "Due Date For Shipping Order";
+  final String reasonForReRequest = "Reason For Re-Request";
+
 }
 
-/// [appStrings] class is for the constant string in the application which will we use commonly to avoid multiple independent value with same string
-var appStrings = _AppString();
+/// [Strings] class is for the constant string in the application which will we use commonly to avoid multiple independent value with same string
+var Strings = _AppString();
 
 class _AppKeys {
   final walkThrough = "walkThrough";

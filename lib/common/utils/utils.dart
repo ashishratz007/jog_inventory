@@ -457,3 +457,8 @@ List<BoxShadow> containerShadow({
       ),
   ];
 }
+
+
+Widget divider({double height = 2, Color? color}){
+  return Divider(height: height,color : color??Colours.border);
+}

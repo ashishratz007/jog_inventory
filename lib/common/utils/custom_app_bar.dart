@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:jog_inventory/modules/home/widgets/home_drawer.dart';
 
 import '../exports/main_export.dart';
 
@@ -51,26 +52,27 @@ class CustomAppBar extends StatelessWidget {
         child: Scaffold(
             key: _scaffoldKey,
             backgroundColor: Colours.bgColor,
-            drawer: hasDrawer
-                ? Container()
-                : null,
+            drawer: hasDrawer ? HomeDrawerWidget() : null,
             appBar: appbar(),
             body: SafeArea(child: body),
             bottomNavigationBar: Visibility(
                 visible: bottomNavBar != null,
-                child: Container(height: 70, child: bottomNavBar))),
+                child: Container(
+                    height: 70,
+                    padding: EdgeInsets.only(right: 16, left: 16),
+                    child: bottomNavBar))),
       ),
     );
   }
 
   /// App bar
   PreferredSize appbar() {
-   var top = SafeAreaTopValue(Get.context);
+    var top = SafeAreaTopValue(Get.context);
     return PreferredSize(
       preferredSize: Size(Get.width, 70),
       child: Container(
-        padding: EdgeInsets.only(left: 10, right: 10,top: top -10),
-        height: 70 + top,// safe area
+        padding: EdgeInsets.only(left: 10, right: 10, top: top - 10),
+        height: 70 + top, // safe area
         decoration: BoxDecoration(
             color: Colours.secondary,
             // borderRadius: BorderRadius.only(
@@ -123,7 +125,8 @@ class CustomAppBar extends StatelessWidget {
             /// title
             titleWidget ??
                 Text(title,
-                    style: appTextTheme.titleLarge?.copyWith(color: Colours.white),
+                    style:
+                        appTextTheme.titleLarge?.copyWith(color: Colours.white),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis),
 

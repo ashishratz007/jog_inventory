@@ -3,6 +3,7 @@ import '../../../common/exports/main_export.dart';
 class SubmitController extends GetxController {
   RxBool isLoading = false.obs;
   RxBool isBusy = false.obs;
+  RxBool isNewOrder = true.obs;
 
   @override
   void onInit() {

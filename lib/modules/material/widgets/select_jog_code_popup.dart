@@ -47,13 +47,12 @@ void showSelectCodeMenu<SearchData>(BuildContext context) {
                     StatefulBuilder(builder: (context, setState) {
                       /// get item func
                       getItems(String query) async {
-                        if(query.isEmpty) return;
+                        if (query.isEmpty) return;
                         selectedIndex.value = -1;
                         isLoading.value = true;
                         try {
                           var data = await SearchOrderModal.searchData(query);
-                          if((data.data?.length ?? 0) > 0)
-                            items.clear();
+                          if ((data.data?.length ?? 0) > 0) items.clear();
                           data.data?.forEach((item) {
                             SearchData? itemData = item as SearchData?;
                             items.add(DropDownItem<SearchData>(
@@ -67,6 +66,8 @@ void showSelectCodeMenu<SearchData>(BuildContext context) {
                         }
                         isLoading.value = false;
                       }
+
+                      if (items.length == 0) getItems("");
                       // if (isLoading.value) {
                       //   return ClipRRect(
                       //     borderRadius: BorderRadius.circular(20),
@@ -83,11 +84,11 @@ void showSelectCodeMenu<SearchData>(BuildContext context) {
                       {
                         return Container(
                           decoration: BoxDecoration(
-                            color: Colours.white,
+                              color: Colours.white,
                               borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(20),
-                            topRight: Radius.circular(20),
-                          )),
+                                topLeft: Radius.circular(20),
+                                topRight: Radius.circular(20),
+                              )),
                           constraints: BoxConstraints(
                             maxHeight: Get.height - 200,
                             minHeight: Get.height - 200,
@@ -111,21 +112,23 @@ void showSelectCodeMenu<SearchData>(BuildContext context) {
                                           },
                                           hintText: "Search",
                                           prefixIcon: Padding(
-                                              padding:
-                                                  EdgeInsets.only(left: 10, right: 10),
+                                              padding: EdgeInsets.only(
+                                                  left: 10, right: 10),
                                               child: Icon(
                                                 Icons.search,
                                                 color: Colours.greyLight,
                                                 size: 25,
                                               ))),
-                                
+
                                       gap(space: 20),
-                                
+
                                       /// no items
                                       Visibility(
-                                        visible: items.length == 0 && error == null,
+                                        visible:
+                                            items.length == 0 && error == null,
                                         child: Padding(
-                                          padding: const EdgeInsets.only(top: 15),
+                                          padding:
+                                              const EdgeInsets.only(top: 15),
                                           child: Column(
                                             children: [
                                               Icon(
@@ -151,7 +154,8 @@ void showSelectCodeMenu<SearchData>(BuildContext context) {
                                           child: Column(
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.center,
-                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
                                             children: [
                                               Icon(
                                                 Icons.error,
@@ -159,53 +163,85 @@ void showSelectCodeMenu<SearchData>(BuildContext context) {
                                                 size: 30,
                                               ),
                                               gap(space: 10),
-                                              Text("Error Loading Data.\nTry again!",
+                                              Text(
+                                                  "Error Loading Data.\nTry again!",
                                                   textAlign: TextAlign.center,
-                                                  style: appTextTheme.titleMedium),
+                                                  style:
+                                                      appTextTheme.titleMedium),
                                               gap(space: 10),
                                               IconButton(
                                                   onPressed: () {
-                                                    getItems(controller.value.text);
+                                                    getItems(
+                                                        controller.value.text);
                                                   },
                                                   icon: Icon(Icons.refresh,
-                                                      size: 30, color: Colours.blue))
+                                                      size: 30,
+                                                      color: Colours.blue))
                                             ],
                                           )),
                                       Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: displayList<DropDownItem<SearchData>>(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: displayList<
+                                                DropDownItem<SearchData>>(
                                             items: items,
                                             builder: (item, index) {
-                                              return Obx(() => InkWell(
-                                                  borderRadius: BorderRadius.circular(10),
+                                              return Obx(
+                                                () => InkWell(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
                                                   onTap: () {
                                                     selectedIndex.value = index;
-                                                    FocusScope.of(context).unfocus();
+                                                    FocusScope.of(context)
+                                                        .unfocus();
                                                   },
                                                   child: Container(
-                                                    padding: EdgeInsets.only(left: 5,right: 5),
+                                                    padding: EdgeInsets.only(
+                                                        left: 5, right: 5),
                                                     decoration: BoxDecoration(
-                                                      borderRadius: BorderRadius.circular(5),
-                                                      color: index ==  selectedIndex.value? Colours.blue.withOpacity(0.2) : null
-                                                    ),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(5),
+                                                        color: index ==
+                                                                selectedIndex
+                                                                    .value
+                                                            ? Colours.blue
+                                                                .withOpacity(
+                                                                    0.2)
+                                                            : null),
                                                     height: 40,
                                                     child: Row(
-                                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
                                                       children: [
                                                         Align(
-                                                          alignment: Alignment.centerLeft,
+                                                          alignment: Alignment
+                                                              .centerLeft,
                                                           child: Text(
                                                             item.title,
                                                             style: TextStyle(
                                                                 fontSize: 14,
-                                                                fontWeight: FontWeight.w600,
-                                                                color: Colors.black
-                                                                    .withOpacity(0.7)),
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w600,
+                                                                color: Colors
+                                                                    .black
+                                                                    .withOpacity(
+                                                                        0.7)),
                                                           ),
                                                         ),
                                                         Visibility(
-                                                            visible:  selectedIndex.value == index,
-                                                            child: Radio<bool>(value: true, groupValue: true, onChanged: (value){}))
+                                                            visible:
+                                                                selectedIndex
+                                                                        .value ==
+                                                                    index,
+                                                            child: Radio<bool>(
+                                                                value: true,
+                                                                groupValue:
+                                                                    true,
+                                                                onChanged:
+                                                                    (value) {}))
                                                       ],
                                                     ),
                                                   ),
@@ -213,20 +249,24 @@ void showSelectCodeMenu<SearchData>(BuildContext context) {
                                               );
                                             }),
                                       ),
-                                      
+
                                       safeAreaBottom(context)
                                     ],
                                   ),
                                 ),
                               ),
-                              Obx(() => Visibility(
+                              Obx(
+                                () => Visibility(
                                   // visible: selectedIndex.value != -1,
                                   child: PrimaryButton(
                                       isEnable: selectedIndex.value != -1,
                                       title: "Process",
-                                      onTap: (){
-                                    ///
-                                  }),
+                                      onTap: () {
+                                        Get.back();
+                                        Get.toNamed(
+                                            AppRoutesString.submit_order,
+                                            arguments: {});
+                                      }),
                                 ),
                               )
                             ],

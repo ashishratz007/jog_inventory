@@ -121,7 +121,7 @@ class LoginScreen extends GetView<AuthController> {
                   displayAssetsWidget(AppIcons.boxes,height: 25,width: 25),
                   gap(space: 10),
                   Text(
-                    appStrings.loginTitle,
+                    Strings.loginTitle,
                     style: appTextTheme.bodyMedium,
                     textAlign: TextAlign.center,
                   ),
@@ -197,13 +197,13 @@ class LoginScreen extends GetView<AuthController> {
                         ),
                         SizedBox(width: 10),
                         Text(
-                          appStrings.rememberMe,
+                          Strings.rememberMe,
                           style: appTextTheme.labelMedium,
                         )
                       ],
                     ),
                   ),
-                  Text(appStrings.forgotPassword,
+                  Text(Strings.forgotPassword,
                       style: appTextTheme.labelMedium
                           ?.copyWith(color: Colours.primary))
                 ],
@@ -213,7 +213,7 @@ class LoginScreen extends GetView<AuthController> {
 
             Obx(
               () => PrimaryButton(
-                title: appStrings.signIn,
+                title: Strings.signIn,
                 onTap: controller.onFormSubmit,
                 isBusy: controller.isBusy.value,
               ),

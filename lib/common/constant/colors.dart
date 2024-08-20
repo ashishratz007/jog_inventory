@@ -8,12 +8,13 @@ class _AppColors {
   final Color primaryLite = Color(0xfff6dbda);
   final Color primaryBg = Color(0xffFFE9DA);
   final Color secondary = Color(0xffFF6258);
+  final Color secondary2 = Color(0xff252C46);
   final Color bgGrey = Color(0xffeceaea);
   final Color blueDark = Color(0xff4175C0);
   final Color blueAccent = Color(0xff4175C0);
   final Color red = Color(0xffE84E4E);
   final Color bgColor = Color(0xffF7F7F7);
-  final Color bgColorMid = Color(0xfff3f0f0);
+  final Color bgColorMid = Color(0xfff1f1f1);
   final Color border = Color(0xffdad5d5);
   final Color greyLight = Color(0xff969292);
   final Color yellow = Color(0xffFFB900);

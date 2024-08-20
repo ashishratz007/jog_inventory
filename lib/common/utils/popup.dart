@@ -128,7 +128,7 @@ class _DeleteItemBody extends StatelessWidget {
                     Expanded(
                       child: PrimaryBorderButton(
                         bgColor: Colours.bgColor,
-                          title: appStrings.cancel,
+                          title: Strings.cancel,
                           onTap: () {
                             Get.back();
                           },
@@ -138,7 +138,7 @@ class _DeleteItemBody extends StatelessWidget {
                     Expanded(
                       child: Obx(
                         () => PrimaryButton(
-                          title: buttonText ?? appStrings.delete,
+                          title: buttonText ?? Strings.delete,
                           color: buttonColor??Colours.red,
                           isBusy: isBusy.value,
                           onTap: () async {
