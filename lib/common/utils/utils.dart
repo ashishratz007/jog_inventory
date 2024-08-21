@@ -491,10 +491,10 @@ Widget chipWidget(
       ));
 }
 
-Widget dottedDivider() {
+Widget dottedDivider({Color? color}) {
   return DottedLineDivider(
     dotSpace: 3,
     width: 1,
-    color: Colours.greyLight,
+    color: color??Colours.greyLight,
   );
 }
