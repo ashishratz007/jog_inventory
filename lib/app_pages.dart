@@ -1,6 +1,8 @@
 import 'package:jog_inventory/modules/auth/bindings/bindings.dart';
 import 'package:jog_inventory/modules/home/screens/home.dart';
 import 'package:jog_inventory/modules/material/models/material_request_detail.dart';
+import 'package:jog_inventory/modules/material/screens/finish_material_rq.dart';
+import 'package:jog_inventory/modules/material/screens/finished_material_detail.dart';
 import 'package:jog_inventory/modules/material/screens/material_request_form.dart';
 import 'package:jog_inventory/modules/material/screens/material_request_list.dart';
 import 'package:jog_inventory/modules/material/screens/material_scan_details.dart';
@@ -49,6 +51,23 @@ List<GetPage<dynamic>> getRoutes = [
   GetPage(
     name: AppRoutesString.materialRequestForm,
     page: () => MaterialRequestFormScreen(),
+    bindings: [
+      ///
+    ],
+  ),
+
+  GetPage(
+    name: AppRoutesString.materialRQFinish,
+    page: () => FinishMaterialRQScreen(),
+    bindings: [
+      ///
+    ],
+  ),
+
+
+  GetPage(
+    name: AppRoutesString.materialRQFinishDetail,
+    page: () => FinishedMaterialDetailScreen(),
     bindings: [
       ///
     ],

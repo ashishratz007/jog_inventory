@@ -460,7 +460,14 @@ List<BoxShadow> containerShadow({
 }
 
 Widget divider({double height = 2, Color? color}) {
-  return Divider(height: height, color: color ?? Colours.border);
+  return Divider(height: height, color: color ?? Colours.border,thickness: 0.5);
+}
+
+Widget verticalDivider({double height = 40, Color? color}) {
+ return SizedBox(
+      height: height,
+      width: 2,
+      child: VerticalDivider(color: color ?? Colours.border,thickness: 0.5));
 }
 
 Widget chipWidget(

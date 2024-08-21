@@ -57,12 +57,14 @@ class CustomAppBar extends StatelessWidget {
             body: SafeArea(child: body),
             bottomNavigationBar: Visibility(
                 visible: bottomNavBar != null,
-                child: Container(
-                    height: 70 + SafeAreaBottomValue(Get.context!),
-                    decoration: BoxDecoration(
-                        color: Colours.white, boxShadow: containerShadow()),
-                    padding: EdgeInsets.only(right: 16, left: 16),
-                    child: bottomNavBar))),
+                child: SafeArea(
+                  child: Container(
+                      height: 70,
+                      decoration: BoxDecoration(
+                          color: Colours.white, boxShadow: containerShadow()),
+                      padding: EdgeInsets.only(right: 16, left: 16),
+                      child: bottomNavBar),
+                ))),
       ),
     );
   }

@@ -27,6 +27,8 @@ class _AppString {
   final String materialRequestList = "Material request list";
   final String producing = "Producing";
   final String finished = "Finished";
+  final String finish = "Finish";
+  final String cutAll = "Cut all";
   final String search = "Search";
   final String viewSummary = "View Summary";
   final String materialRequisitionForm = "Material requisition form";

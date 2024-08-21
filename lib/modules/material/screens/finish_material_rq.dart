@@ -1,43 +1,32 @@
-import 'package:jog_inventory/common/utils/dotted_border.dart';
-import 'package:jog_inventory/modules/material/controllers/material_request_form.dart';
 import '../../../common/exports/main_export.dart';
 
-class MaterialRequestFormScreen extends GetView<MaterialRequestFormController> {
-  const MaterialRequestFormScreen({super.key});
+class FinishMaterialRQScreen extends StatelessWidget {
+  const FinishMaterialRQScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return CustomAppBar(
-        title: "Material requisition form",
-        body: bodyWidget(),
-        bottomNavBar: bottomNavBarButtons());
+      title: "Finish material request",
+      body: body(),
+      bottomNavBar: bottomNavBarButtons(),
+    );
   }
 
-  Widget bodyWidget() {
+  Widget body() {
     return SingleChildScrollView(
       padding: AppPadding.pagePadding,
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           orderInfo(),
           gap(),
-          dottedDivider(),
-          gap(),
+          // tiles
           itemTileWidget(),
           gap(),
           itemTileWidget(),
           gap(),
           itemTileWidget(),
           gap(),
-          itemTileWidget(),
-          gap(),
-          itemTileWidget(),
-          gap(),
-          gap(),
-          addButtonWidget(),
-          gap(),
-          dottedDivider(),
-          gap(),
-          addNewItemTile(),
 
           ///
           gap(),
@@ -101,6 +90,8 @@ class MaterialRequestFormScreen extends GetView<MaterialRequestFormController> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          gap(space: 10),
+          // info
           Row(
             children: [
               Text("10",
@@ -109,11 +100,11 @@ class MaterialRequestFormScreen extends GetView<MaterialRequestFormController> {
               gap(space: 10),
               Text("AK PRO MAX LIGHT ,",
                   style: appTextTheme.labelSmall
-                      ?.copyWith(color: Colours.primaryText)),
+                      ?.copyWith(color: Colours.blackLite)),
               gap(space: 10),
               Text("Michigan Maize",
                   style: appTextTheme.labelSmall
-                      ?.copyWith(color: Colours.greyLight)),
+                      ?.copyWith(color: Colours.primaryText)),
               Expanded(child: SizedBox()),
               Icon(
                 Icons.delete_outlined,
@@ -144,80 +135,25 @@ class MaterialRequestFormScreen extends GetView<MaterialRequestFormController> {
               gap(space: 50),
             ],
           ),
-        ],
-      ),
-    );
-  }
-
-  Widget addButtonWidget() {
-    return DottedBorderContainer(
-        padding: EdgeInsets.all(15),
-        decoration: BoxDecoration(
-          color: Color(0xffdae6f5),
-          // borderRadius: BorderRadius.circular(15),
-        ),
-        borderRadius: BorderRadius.circular(15),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.add, color: Colours.primary, size: 18),
-            gap(),
-            Text("Add",
-                style:
-                    appTextTheme.labelMedium?.copyWith(color: Colours.primary))
-          ],
-        ));
-  }
-
-  Widget addNewItemTile() {
-    return Container(
-      padding: AppPadding.inner,
-      decoration: BoxDecoration(
-          color: Colours.white, borderRadius: BorderRadius.circular(10)),
-      child: Column(
-        children: [
+          // bal form
+          gap(space: 10),
+          dottedDivider(),
+          gap(space: 10),
           Row(
             children: [
+              gap(space: 25),
               Expanded(
-                  child: CustomDropDownWithLabel(
-                      items: [],
-                      onChanged: (item) {},
-                      hintText: Strings.fabric,
-                      labelText: Strings.fabric)),
-              gap(space: 30),
+                  flex: 1,
+                  child: TextFieldWithLabel(
+                      labelText: "LabelText", hintText: "in kgs")),
+              gap(),
               Expanded(
-                  child: CustomDropDownWithLabel(
-                items: [],
-                onChanged: (item) {},
-                labelText: Strings.color,
-                hintText: Strings.color,
-              )),
+                  flex: 2,
+                  child: TextFieldWithLabel(
+                      labelText: "Note", hintText: "Add note")),
             ],
           ),
-          gap(),
-          Row(
-            children: [
-              Expanded(
-                  child: CustomDropDownWithLabel(
-                      items: [],
-                      onChanged: (item) {},
-                      hintText: Strings.box,
-                      labelText: Strings.box)),
-              gap(space: 30),
-              Expanded(
-                  child: Column(
-                children: [
-                  gap(space: 30),
-                  PrimaryButton(
-                    color: Colours.greenLight,
-                    leading: Icon(Icons.add, color: Colours.white, size: 20),
-                    title: "Add",
-                    onTap: () {},
-                  ),
-                ],
-              )),
-            ],
-          ),
+          gap(space: 5),
         ],
       ),
     );
@@ -232,9 +168,7 @@ class MaterialRequestFormScreen extends GetView<MaterialRequestFormController> {
           Container(
               height: 40,
               child: PrimaryButton(
-                title: Strings.deleteRQ,
-                color: Colours.redBg,
-                textColor: Colours.red,
+                title: Strings.cutAll,
                 onTap: () {},
                 isFullWidth: false,
                 radius: 15,
@@ -242,7 +176,8 @@ class MaterialRequestFormScreen extends GetView<MaterialRequestFormController> {
           Container(
               height: 40,
               child: PrimaryButton(
-                title: Strings.submit,
+                title: Strings.finish,
+                color: Colours.greenLight,
                 onTap: () {},
                 isFullWidth: false,
                 radius: 15,

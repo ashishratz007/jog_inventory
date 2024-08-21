@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 class _AppColors {
   final Color primary = Color(0xff2196F3);
   final Color primaryBlueLite = Color(0xff779dec);
+  final Color primaryBlueBg = Color(0xffE9F5FE);
   final Color primaryText = Color(0xff2196F3);
   final Color primaryDark = Color(0xff2196F3);
   final Color primaryLite = Color(0xfff6dbda);

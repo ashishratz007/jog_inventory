@@ -8,7 +8,8 @@ import '../../../common/exports/main_export.dart';
 class MaterialRequestListScreen extends GetView<MaterialRequestListController> {
   const MaterialRequestListScreen({super.key});
 
-  MaterialRequestListController get controller => MaterialRequestListController.getController();
+  MaterialRequestListController get controller =>
+      MaterialRequestListController.getController();
 
   @override
   Widget build(BuildContext context) {
@@ -35,9 +36,9 @@ class MaterialRequestListScreen extends GetView<MaterialRequestListController> {
             gap(),
 
             /// items
-            itemTileWidget(),
+            producingItemTileWidget(),
             gap(),
-            itemTileWidget(),
+            finishedItemTileWidget(),
 
             ///
             gap(),
@@ -68,7 +69,7 @@ class MaterialRequestListScreen extends GetView<MaterialRequestListController> {
                                 : Colours.transparent,
                             width: 3))),
                 child: Text(
-                  "New Order",
+                  Strings.producing,
                   style: appTextTheme.titleMedium?.copyWith(
                       color: controller.isProducing.value
                           ? Colours.secondary
@@ -93,7 +94,7 @@ class MaterialRequestListScreen extends GetView<MaterialRequestListController> {
                             width: 3))),
                 padding: EdgeInsets.only(bottom: 15),
                 child: Text(
-                  "Old Order",
+                  Strings.finished,
                   style: appTextTheme.titleMedium?.copyWith(
                       color: controller.isProducing.value
                           ? Colours.greyLight
@@ -185,7 +186,7 @@ class MaterialRequestListScreen extends GetView<MaterialRequestListController> {
     );
   }
 
-  Widget itemTileWidget() {
+  Widget producingItemTileWidget() {
     return Container(
         decoration: BoxDecoration(
           color: Colours.white,
@@ -288,7 +289,9 @@ class MaterialRequestListScreen extends GetView<MaterialRequestListController> {
               children: [
                 PrimaryButton(
                     title: "View / Edit",
-                    onTap: () {},
+                    onTap: () {
+                      Get.toNamed(AppRoutesString.materialRequestForm);
+                    },
                     isFullWidth: false,
                     padding:
                         EdgeInsets.only(left: 10, right: 10, bottom: 5, top: 5),
@@ -296,8 +299,10 @@ class MaterialRequestListScreen extends GetView<MaterialRequestListController> {
                 gap(space: 15),
                 PrimaryButton(
                     color: Colours.greenLight,
-                    title: "Finish",
-                    onTap: () {},
+                    title: Strings.finish,
+                    onTap: () {
+                      Get.toNamed(AppRoutesString.materialRQFinish);
+                    },
                     isFullWidth: false,
                     padding:
                         EdgeInsets.only(left: 15, right: 15, bottom: 5, top: 5),
@@ -308,5 +313,199 @@ class MaterialRequestListScreen extends GetView<MaterialRequestListController> {
             gap(space: 10)
           ],
         ));
+  }
+
+  Widget finishedItemTileWidget() {
+    return InkWell(
+      onTap: () {
+        Get.toNamed(AppRoutesString.materialRQFinishDetail);
+      },
+      child: Container(
+          decoration: BoxDecoration(
+            color: Colours.white,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: AppPadding.inner,
+                child: Column(
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "1",
+                          style: appTextTheme.titleSmall
+                              ?.copyWith(color: Colours.blackLite),
+                        ),
+                        gap(),
+                        Text("EX21-1396A",
+                            style: appTextTheme.titleSmall?.copyWith()),
+                      ],
+                    ),
+                    gap(space: 10),
+                    Row(
+                      children: [
+                        chipWidget("2024-08-06 12:58", fontSize: 12),
+                        gap(space: 5),
+                        Icon(
+                          Icons.arrow_forward,
+                          color: Colours.greyLight,
+                          size: 18,
+                        ),
+                        gap(space: 5),
+                        chipWidget("2024-08-06 12:58",
+                            color: Colours.redBg,
+                            textColor: Colours.red,
+                            fontSize: 12),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              divider(),
+              gap(),
+
+              /// info
+              Padding(
+                padding: AppPadding.inner,
+                child: Row(
+                  children: [
+                    gap(space: 30),
+                    Expanded(
+                      flex: 2,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("Items",
+                              style: appTextTheme.titleSmall
+                                  ?.copyWith(color: Colours.greyLight)),
+                          gap(space: 10),
+                          Text(
+                            "2",
+                            style: appTextTheme.titleSmall?.copyWith(),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                    ),
+                    verticalDivider(),
+                    Expanded(
+                        flex: 3,
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 10),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(Strings.used + "(kg)",
+                                  style: appTextTheme.titleSmall
+                                      ?.copyWith(color: Colours.greyLight)),
+                              gap(space: 10),
+                              Text(
+                                "102.5",
+                                style: appTextTheme.titleSmall?.copyWith(),
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
+                          ),
+                        )),
+                    verticalDivider(),
+                    Expanded(
+                      flex: 2,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(Strings.total,
+                              style: appTextTheme.titleSmall
+                                  ?.copyWith(color: Colours.greyLight)),
+                          gap(space: 10),
+                          Text(
+                            "10,200",
+                            style: appTextTheme.titleSmall
+                                ?.copyWith(color: Colours.greenLight),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Stack(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(left: 10, top: 10, bottom: 0),
+                    child: Row(
+                      children: [
+                        gap(space: 30),
+                        Expanded(
+                          flex: 2,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("Add on",
+                                  style: appTextTheme.titleSmall
+                                      ?.copyWith(color: Colours.greyLight)),
+                              gap(space: 10),
+                              Text(
+                                "2",
+                                style: appTextTheme.titleSmall?.copyWith(),
+                                textAlign: TextAlign.center,
+                              ),
+                              gap()
+                            ],
+                          ),
+                        ),
+                        verticalDivider(),
+                        // gap(space: 10),
+                        Expanded(
+                          flex: 4,
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 10),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("User",
+                                    style: appTextTheme.titleSmall
+                                        ?.copyWith(color: Colours.greyLight)),
+                                gap(space: 10),
+                                Text(
+                                  "Ashish Raturi",
+                                  style: appTextTheme.titleSmall?.copyWith(),
+                                  textAlign: TextAlign.center,
+                                ),
+                                gap()
+                              ],
+                            ),
+                          ),
+                        ),
+                        Expanded(flex: 1, child: SizedBox())
+                      ],
+                    ),
+                  ),
+                  Positioned(
+                    bottom: 0,
+                    right: 0,
+                    child: Container(
+                      height: 50,
+                      width: 60,
+                      decoration: BoxDecoration(
+                          color: Colours.primaryBlueBg,
+                          borderRadius:
+                              BorderRadius.only(topLeft: Radius.circular(15))),
+                      child: Center(
+                          child: Icon(
+                        Icons.arrow_forward,
+                        color: Colours.blueDark,
+                      )),
+                    ),
+                  )
+                ],
+              ),
+            ],
+          )),
+    );
   }
 }

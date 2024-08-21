@@ -12,6 +12,7 @@ class _AppIcons {
   String mat_white = "${_path}mat_white.png";
   String no_code = "${_path}no_code.png";
   String fabric = "${_path}fabric.png";
+  String edit = "${_path}edit.png";
 }
 
 var AppIcons = _AppIcons();

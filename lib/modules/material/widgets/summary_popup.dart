@@ -17,13 +17,26 @@ class _ViewSummaryBodyScreenState extends State<ViewSummaryBodyScreen> {
           Padding(
             padding: EdgeInsets.only(left: 16, right: 16),
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  Strings.usedTotal,
-                  style: appTextTheme.titleMedium,
+                Row(
+                  children: [
+                    Text(
+                      Strings.usedTotal,
+                      style: appTextTheme.titleMedium,
+                    ),
+                    gap(space: 15),
+                    displayAssetsWidget(AppIcons.fabric, width: 20, height: 20)
+                  ],
                 ),
-                gap(space: 15),
-                displayAssetsWidget(AppIcons.fabric, width: 20, height: 20)
+                SizedBox(
+                  width: 100,
+                  child: CustomDropdown(
+                    items: [],
+                    hintText: "2021",
+                    onChanged: (value) {},
+                  ),
+                )
               ],
             ),
           ),
