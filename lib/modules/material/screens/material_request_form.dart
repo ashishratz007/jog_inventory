@@ -1,9 +1,15 @@
+import 'dart:ffi';
+
 import 'package:jog_inventory/common/utils/dotted_border.dart';
 import 'package:jog_inventory/modules/material/controllers/material_request_form.dart';
+import 'package:jog_inventory/modules/material/widgets/order_codes_remove.dart';
 import '../../../common/exports/main_export.dart';
 
 class MaterialRequestFormScreen extends GetView<MaterialRequestFormController> {
   const MaterialRequestFormScreen({super.key});
+
+  MaterialRequestFormController get controller =>
+      MaterialRequestFormController.getController();
 
   @override
   Widget build(BuildContext context) {
@@ -18,10 +24,19 @@ class MaterialRequestFormScreen extends GetView<MaterialRequestFormController> {
       padding: AppPadding.pagePadding,
       child: Column(
         children: [
-          orderInfo(),
+          if (controller.isUpdate.value) ...[
+            orderInfo(),
+            gap(),
+            dottedDivider()
+          ],
+          if (!controller.isUpdate.value) ...[
+            selectOrderCode(),
+            gap(),
+            dottedDivider(),
+          ],
           gap(),
-          dottedDivider(),
-          gap(),
+
+          /// Items
           itemTileWidget(),
           gap(),
           itemTileWidget(),
@@ -47,6 +62,101 @@ class MaterialRequestFormScreen extends GetView<MaterialRequestFormController> {
     );
   }
 
+  /// for new Material RQ
+  Widget selectOrderCode() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Container(
+              padding: AppPadding.inner,
+              decoration: BoxDecoration(
+                color: Colours.border,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Row(
+                children: [
+                  Text("Date",
+                      style: appTextTheme.labelSmall?.copyWith(fontSize: 13)),
+                  Text("  2024-08-08 18:58:45",
+                      style: appTextTheme.labelSmall?.copyWith(fontSize: 14)),
+                ],
+              ),
+            ),
+            TextBorderButton(
+                onTap: () {
+                  openOrderCodePopup(Get.context!);
+                },
+                title: "Order Code",
+                color: Colours.primary,
+                borderColor: Colours.primary)
+          ],
+        ),
+        gap(),
+        Container(
+            padding: AppPadding.inner,
+            decoration: BoxDecoration(
+              color: Colours.white,
+              boxShadow: containerShadow(),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: CustomDropDownWithLabel(
+                          items: [],
+                          onChanged: (value) {},
+                          labelText: Strings.orderCode,
+                          hintText: "Select " + Strings.orderCode),
+                    ),
+                    gap(space: 10),
+                    Obx(
+                      () => Visibility(
+                        visible: controller.isAddonYear.value,
+                        child: Expanded(
+                          child: CustomDropDownWithLabel(
+                              items: [],
+                              onChanged: (value) {},
+                              labelText: "",
+                              hintText: "Select Code"),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                gap(space: 10),
+                Row(
+                  children: [
+                    Text("Add-On Year",
+                        style: appTextTheme.labelSmall?.copyWith()),
+                    gap(space: 10),
+                    Obx(
+                      () => InkWell(
+                          onTap: () {
+                            controller.isAddonYear.toggle();
+                          },
+                          child: Icon(
+                              !controller.isAddonYear.value
+                                  ? Icons.check_box_outline_blank_rounded
+                                  : Icons.check_box_outlined,
+                              size: 25,
+                              color: controller.isAddonYear.value
+                                  ? Colours.primary
+                                  : Colours.border)),
+                    )
+                  ],
+                ),
+              ],
+            ))
+      ],
+    );
+  }
+
+  /// for update
   Widget orderInfo() {
     return Container(
       padding: AppPadding.inner,
@@ -151,6 +261,7 @@ class MaterialRequestFormScreen extends GetView<MaterialRequestFormController> {
 
   Widget addButtonWidget() {
     return DottedBorderContainer(
+        borderColor: Colours.blueDark,
         padding: EdgeInsets.all(15),
         decoration: BoxDecoration(
           color: Color(0xffdae6f5),
@@ -224,31 +335,52 @@ class MaterialRequestFormScreen extends GetView<MaterialRequestFormController> {
   }
 
   Widget bottomNavBarButtons() {
-    return Container(
-      // padding: EdgeInsets.only(bottom: SafeAreaBottomValue(Get.context!)),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    /// Update material
+    if (controller.isUpdate.value)
+      return Container(
+        // padding: EdgeInsets.only(bottom: SafeAreaBottomValue(Get.context!)),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Container(
+                height: 40,
+                child: PrimaryButton(
+                  title: Strings.deleteRQ,
+                  color: Colours.redBg,
+                  textColor: Colours.red,
+                  onTap: () {},
+                  isFullWidth: false,
+                  radius: 15,
+                )),
+            Container(
+                height: 40,
+                child: PrimaryButton(
+                  title: Strings.submit,
+                  onTap: () {},
+                  isFullWidth: false,
+                  radius: 15,
+                )),
+          ],
+        ),
+      );
+
+    /// Add new
+    else
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
-              height: 40,
-              child: PrimaryButton(
-                title: Strings.deleteRQ,
-                color: Colours.redBg,
-                textColor: Colours.red,
-                onTap: () {},
-                isFullWidth: false,
-                radius: 15,
-              )),
-          Container(
-              height: 40,
-              child: PrimaryButton(
-                title: Strings.submit,
-                onTap: () {},
-                isFullWidth: false,
-                radius: 15,
-              )),
+            height: 50,
+            child: ClipRRect(
+                child: PrimaryButton(
+              title: Strings.submit,
+              onTap: () {},
+              isFullWidth: false,
+              radius: 15,
+            )),
+          ),
         ],
-      ),
-    );
+      );
   }
 }

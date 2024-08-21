@@ -1,18 +1,23 @@
 import '../exports/main_export.dart';
 
-void showAppBottomSheet (BuildContext context, Widget body) async {
+void showAppBottomSheet(
+  BuildContext context,
+  Widget body, {
+  String? title,
+  Color? bgColor,
+}) async {
   return showModalBottomSheet(
     context: context,
     isScrollControlled: true,
+    useSafeArea: true,
     builder: (context) {
       return Container(
         decoration: BoxDecoration(
-          color: Colours.white,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(15),
-            topRight: Radius.circular(15),
-          )
-        ),
+            color: bgColor ?? Colours.white,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(15),
+              topRight: Radius.circular(15),
+            )),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -27,18 +32,34 @@ void showAppBottomSheet (BuildContext context, Widget body) async {
             ),
             gap(space: 10),
             Padding(
-              padding: const EdgeInsets.only(left: 16),
+              padding: const EdgeInsets.only(left: 16, right: 16),
               child: Align(
                 alignment: Alignment.centerLeft,
-                child: Icon(
-                  Icons.close,
-                  size: 25,
-                  color: Colours.blackLite,
+                child: Row(
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        Get.back();
+                      },
+                      child: Icon(
+                        Icons.close,
+                        size: 25,
+                        color: Colours.blackLite,
+                      ),
+                    ),
+                    if (title != null) ...[
+                      Expanded(
+                          child: Text(title,
+                              style: appTextTheme.titleSmall,
+                              textAlign: TextAlign.center)),
+                      gap(space: 25)
+                    ]
+                  ],
                 ),
               ),
             ),
             gap(),
-            body
+            Flexible(child: body)
           ],
         ),
       );

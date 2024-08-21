@@ -301,7 +301,7 @@ Widget TextButtonWidget({
       ));
 }
 
-Widget TextButtonBorderWidget({
+Widget TextBorderButton({
   required Function() onTap,
   required String title,
   Color? color,

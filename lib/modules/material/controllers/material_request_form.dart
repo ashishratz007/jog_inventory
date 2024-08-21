@@ -3,11 +3,14 @@ import '../../../common/exports/main_export.dart';
 class MaterialRequestFormController extends GetxController {
   RxBool isLoading = false.obs;
   RxBool isBusy = false.obs;
-  RxBool isProducing = true.obs;
+  RxBool isUpdate = false.obs;
+  RxBool isAddonYear = false.obs;
 
   @override
   void onInit() {
-    // TODO: implement onInit
+    if (Get.arguments != null) {
+      isUpdate.value = true;
+    }
     super.onInit();
   }
 
@@ -24,8 +27,9 @@ class MaterialRequestFormController extends GetxController {
     if (isRegistered) {
       return Get.find<MaterialRequestFormController>();
     }
-    return Get.put<MaterialRequestFormController>(MaterialRequestFormController());
+    return Get.put<MaterialRequestFormController>(
+        MaterialRequestFormController());
   }
 
-/// api calls
+  /// api calls
 }

@@ -136,7 +136,7 @@ class MaterialRequestListScreen extends GetView<MaterialRequestListController> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        TextButtonBorderWidget(
+        TextBorderButton(
             onTap: () {
               showAppBottomSheet(Get.context!, ViewSummaryBodyScreen());
             },
@@ -290,7 +290,7 @@ class MaterialRequestListScreen extends GetView<MaterialRequestListController> {
                 PrimaryButton(
                     title: "View / Edit",
                     onTap: () {
-                      Get.toNamed(AppRoutesString.materialRequestForm);
+                      Get.toNamed(AppRoutesString.materialRequestForm,arguments: {});
                     },
                     isFullWidth: false,
                     padding:
