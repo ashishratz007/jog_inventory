@@ -28,7 +28,7 @@ class _OrderCodesRemoveScreenState extends State<_OrderCodesRemoveScreen> {
           child: SingleChildScrollView(
             padding: AppPadding.inner,
             child: Wrap(
-                spacing: 5,
+                spacing: 10,
                 runSpacing: 10,
                 children: List.generate(200, (index) {
                   RxBool isSelected = false.obs;
@@ -50,7 +50,7 @@ class _OrderCodesRemoveScreenState extends State<_OrderCodesRemoveScreen> {
                                     : Colours.border)),
                         padding: EdgeInsets.only(
                             left: 10, right: 10, top: 5, bottom: 5),
-                        child: Text("Ex-1234"),
+                        child: Text("Ex-1234${index}"),
                       ),
                     ),
                   );
