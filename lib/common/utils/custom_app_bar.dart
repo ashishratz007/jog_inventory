@@ -55,15 +55,35 @@ class CustomAppBar extends StatelessWidget {
             drawer: hasDrawer ? HomeDrawerWidget() : null,
             appBar: appbar(),
             body: SafeArea(child: body),
-            bottomNavigationBar: Visibility(
+            bottomNavigationBar:bottomNavBar == null? null : Visibility(
                 visible: bottomNavBar != null,
                 child: SafeArea(
-                  child: Container(
-                      height: 70,
-                      decoration: BoxDecoration(
-                          color: Colours.white, boxShadow: containerShadow()),
-                      padding: EdgeInsets.only(right: 16, left: 16),
-                      child: bottomNavBar),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                          constraints: BoxConstraints(
+                            maxHeight: 300,
+                            minHeight: 70,
+                          ),
+                          decoration: BoxDecoration(
+                              color: Colours.white,
+                              boxShadow: containerShadow(
+                                bottom: false,
+                                left: false,
+                                right: false,
+                              )),
+                          padding: EdgeInsets.only(right: 16, left: 16),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              bottomNavBar!,
+                            ],
+                          )),
+                    ],
+                  ),
                 ))),
       ),
     );
@@ -120,8 +140,8 @@ class CustomAppBar extends StatelessWidget {
                     onTap: () {
                       Get.back();
                     },
-                    child: Icon(Icons.arrow_back_ios_new,
-                        color: Colors.white, size: 22),
+                    child:
+                        Icon(Icons.arrow_back, color: Colors.white, size: 28),
                   ),
                 ),
             ],

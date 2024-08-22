@@ -13,6 +13,7 @@ abstract class AppRoutesString {
   static const materialRequestForm = "/material_request_form";
   static const materialRQFinish = "$materialRequestForm/finish";
   static const materialRQFinishDetail = "$materialRQFinish/detail";
+  static const noCodeRequest = "/no_code_request";
 
 
 }

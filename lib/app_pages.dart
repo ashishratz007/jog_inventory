@@ -7,6 +7,7 @@ import 'package:jog_inventory/modules/material/screens/material_request_form.dar
 import 'package:jog_inventory/modules/material/screens/material_request_list.dart';
 import 'package:jog_inventory/modules/material/screens/material_scan_details.dart';
 import 'package:jog_inventory/modules/material/screens/submit_order.dart';
+import 'package:jog_inventory/modules/no_code/screens/no_code_request.dart';
 import 'common/exports/main_export.dart';
 
 List<GetPage<dynamic>> getRoutes = [
@@ -14,7 +15,6 @@ List<GetPage<dynamic>> getRoutes = [
       name: AppRoutesString.login,
       page: () => LoginScreen(),
       bindings: [AuthBindings()]),
-
   GetPage(
     name: AppRoutesString.home,
     page: () => HomeScreen(),
@@ -22,7 +22,6 @@ List<GetPage<dynamic>> getRoutes = [
       ///
     ],
   ),
-
   GetPage(
     name: AppRoutesString.materialDetailById,
     page: () => MaterialRequestDetailScreen(),
@@ -30,7 +29,6 @@ List<GetPage<dynamic>> getRoutes = [
       ///
     ],
   ),
-
   GetPage(
     name: AppRoutesString.submit_order,
     page: () => SubmitOrderScreen(),
@@ -38,8 +36,6 @@ List<GetPage<dynamic>> getRoutes = [
       ///
     ],
   ),
-
-
   GetPage(
     name: AppRoutesString.materialRequestList,
     page: () => MaterialRequestListScreen(),
@@ -47,7 +43,6 @@ List<GetPage<dynamic>> getRoutes = [
       ///
     ],
   ),
-
   GetPage(
     name: AppRoutesString.materialRequestForm,
     page: () => MaterialRequestFormScreen(),
@@ -55,7 +50,6 @@ List<GetPage<dynamic>> getRoutes = [
       ///
     ],
   ),
-
   GetPage(
     name: AppRoutesString.materialRQFinish,
     page: () => FinishMaterialRQScreen(),
@@ -63,11 +57,16 @@ List<GetPage<dynamic>> getRoutes = [
       ///
     ],
   ),
-
-
   GetPage(
     name: AppRoutesString.materialRQFinishDetail,
     page: () => FinishedMaterialDetailScreen(),
+    bindings: [
+      ///
+    ],
+  ),
+  GetPage(
+    name: AppRoutesString.noCodeRequest,
+    page: () => NoCodeRequestFormScreen(),
     bindings: [
       ///
     ],

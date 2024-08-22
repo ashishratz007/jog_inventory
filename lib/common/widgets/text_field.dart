@@ -37,14 +37,14 @@ Widget PrimaryTextField(
     TextAlign textAlign = TextAlign.start}) {
   // widget
   if (fillColor == null) fillColor = Colours.white;
+  enabled ??= true;
   // focusNode ??= FocusNode();
   return Container(
     key: key,
     height: height,
     decoration: BoxDecoration(
-        boxShadow:allowShadow? containerShadow():null,
-      borderRadius: BorderRadius.circular(radius)
-    ),
+        boxShadow: allowShadow ? containerShadow() : null,
+        borderRadius: BorderRadius.circular(radius)),
     child: TextFormField(
         enabled: enabled,
         initialValue: initialValue,
@@ -53,26 +53,31 @@ Widget PrimaryTextField(
         style: style ?? appTextTheme.bodyMedium,
         maxLines: maxLines,
         decoration: InputDecoration(
+            enabled: enabled,
             counterText: "",
-            fillColor: fillColor,
+            fillColor: enabled ? fillColor : Colours.border,
             filled: true,
             hintText: hintText,
             hintStyle: TextStyle(fontSize: fontSize, color: Colors.black54),
             contentPadding: padding,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(radius),
-              borderSide: BorderSide(
-                  color: borderColor ?? Colours.border, width: 1.0),
+              borderSide:
+                  BorderSide(color: borderColor ?? Colours.border, width: 1.0),
+            ),
+            disabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(radius),
+              borderSide: BorderSide(color: Colours.border, width: 1.0),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(radius),
-              borderSide: BorderSide(
-                  color: borderColor ?? Colours.border, width: 1.0),
+              borderSide:
+                  BorderSide(color: borderColor ?? Colours.border, width: 1.0),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(radius),
-              borderSide: BorderSide(
-                  color: focusColor ?? Colours.primary, width: 1.0),
+              borderSide:
+                  BorderSide(color: focusColor ?? Colours.primary, width: 1.0),
             ),
             errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(radius),

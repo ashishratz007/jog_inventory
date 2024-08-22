@@ -243,7 +243,9 @@ class HomeScreen extends GetView<HomeController> {
             children: [
               Expanded(
                   child: actionTileWidget(
-                      onTap: () {},
+                      onTap: () {
+                        Get.toNamed(AppRoutesString.noCodeRequest);
+                      },
                       "No Code request",
                       displayAssetsWidget(AppIcons.no_code,
                           borderRadius: BorderRadius.circular(10),

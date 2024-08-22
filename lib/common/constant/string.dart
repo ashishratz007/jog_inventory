@@ -34,8 +34,11 @@ class _AppString {
   final String materialRequisitionForm = "Material requisition form";
   final String deleteRQ = "Delete RQ";
   final String submit = "Submit";
+  final String view = "View";
   final String searchMaterials = "Search materials in Producing";
   final String fabric = "Fabric";
+  final String selectType = "Select Type";
+  final String selectMaterial = "Select Material";
   final String color = "Color";
   final String showing = "Showing";
   final String orderCode = "Order code";
@@ -45,13 +48,19 @@ class _AppString {
   final String usedTotal = "Used total";
   final String month = "Month";
   final String used = "Used";
+  final String amount = "Amount";
   final String cost = "Cost";
   final String total = "Total";
   final String status = "Status";
   final String date = "Date";
   final String balBefore = "Bal before";
 
-
+  // no code request
+  final String noCodeRQ = "No code request";
+  final String requisitionWithNoCode = "Requisition with No code";
+  final String autoGenCode = "Auto generate code";
+  final String note = "Note";
+  final String enterComments = "Enter comments";
 }
 
 /// [Strings] class is for the constant string in the application which will we use commonly to avoid multiple independent value with same string
@@ -61,7 +70,6 @@ class _AppKeys {
   final walkThrough = "walkThrough";
   final fabId = "fabId";
   final pacId = "pacId";
-
 }
 
 var appKeys = _AppKeys();

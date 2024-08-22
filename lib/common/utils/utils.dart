@@ -424,8 +424,8 @@ List<BoxShadow> containerShadow({
   bool left = true,
   bool right = true,
 }) {
-  var blurRadius = 2.0;
-  var spreadRadius = 2.0;
+  var blurRadius = 1.0;
+  var spreadRadius = 1.0;
   var color = Colours.bgColorMid;
   return [
     if (bottom)
@@ -460,14 +460,15 @@ List<BoxShadow> containerShadow({
 }
 
 Widget divider({double height = 2, Color? color}) {
-  return Divider(height: height, color: color ?? Colours.border,thickness: 0.5);
+  return Divider(
+      height: height, color: color ?? Colours.border, thickness: 0.5);
 }
 
 Widget verticalDivider({double height = 40, Color? color}) {
- return SizedBox(
+  return SizedBox(
       height: height,
       width: 2,
-      child: VerticalDivider(color: color ?? Colours.border,thickness: 0.5));
+      child: VerticalDivider(color: color ?? Colours.border, thickness: 0.5));
 }
 
 Widget chipWidget(
@@ -502,6 +503,34 @@ Widget dottedDivider({Color? color}) {
   return DottedLineDivider(
     dotSpace: 3,
     width: 1,
-    color: color??Colours.greyLight,
+    color: color ?? Colours.greyLight,
   );
+}
+
+/// get and register controller
+T getController<T>(T creator, {String? tag}) {
+  var isRegistered = Get.isRegistered<T>(tag: tag);
+  if (isRegistered) {
+    return Get.find<T>(tag: tag);
+  }
+  return Get.put<T>(creator, tag: tag);
+}
+
+Widget checkBox(
+    {required bool value,
+    required Function(bool) onchange,
+    double size = 25,
+    Color? color,
+    Color? selectedColor}) {
+  color ??= Colours.greyLight;
+  selectedColor ??= Colours.primary;
+  return IconButton(
+      onPressed: () {
+        onchange(!value);
+      },
+      icon: Icon(
+        value ? Icons.check_box : Icons.check_box_outline_blank,
+        size: size,
+        color: value ? selectedColor : color,
+      ));
 }
