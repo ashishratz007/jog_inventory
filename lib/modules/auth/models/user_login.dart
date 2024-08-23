@@ -75,7 +75,8 @@ class UserLoginModel extends BaseModel {
   }
 
   static Future logoutUser() async {
-    await UserLoginModel().create(url: "/Api/Logout");
+    await storage.userBox.clear();
+    // await UserLoginModel().create(url: "/Api/Logout");
   }
 }
 

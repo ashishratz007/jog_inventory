@@ -10,6 +10,7 @@ class _GlobalData {
   // UserModel? get activeUser => UserModel.getActiveUserFromCache();
 
   UserInfoModel? get activeUser => UserLoginModel.getUserInfo();
+
 }
 
 var globalData = _GlobalData();

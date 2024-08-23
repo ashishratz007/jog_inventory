@@ -88,7 +88,6 @@ class _FabricDetailsScreenState extends State<_FabricDetailsScreen> {
                   }))
             ],
           ),
-          gap(space: 10),
           Row(
             children: [
               Expanded(

@@ -9,11 +9,11 @@ abstract class AppRoutesString {
   /// material
   static const materialDetailById = "${home}/material_detail";
   static const submit_order = "${materialDetailById}/submit_order";
-  static const materialRequestList = "/material_request_list";
-  static const materialRequestForm = "/material_request_form";
+  static const materialRequestList = "${home}/material_request_list";
+  static const materialRequestForm = "${home}/material_request_form";
   static const materialRQFinish = "$materialRequestForm/finish";
   static const materialRQFinishDetail = "$materialRQFinish/detail";
-  static const noCodeRequest = "/no_code_request";
+  static const noCodeRequest = "${home}/no_code_request";
 
 
 }

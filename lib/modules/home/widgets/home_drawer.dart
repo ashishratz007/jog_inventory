@@ -1,4 +1,5 @@
 import 'package:jog_inventory/common/globals/global.dart';
+import 'package:jog_inventory/modules/auth/models/user_login.dart';
 import 'package:jog_inventory/modules/home/controllers/home.dart';
 import '../../../common/exports/main_export.dart';
 
@@ -113,6 +114,7 @@ class HomeDrawerWidget extends Drawer {
                     subTitle: "Are you sure you want to logout!",
                     buttonText: "Logout",
                     onDelete: (context) async {
+                      await UserLoginModel.logoutUser();
                       Get.offAllNamed(AppRoutesString.login);
                     },
                     onComplete: () {

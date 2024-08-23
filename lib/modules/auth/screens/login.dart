@@ -178,34 +178,22 @@ class LoginScreen extends GetView<AuthController> {
               () => Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  InkWell(
-                    splashColor: Colors.transparent,
-                    borderRadius: BorderRadius.circular(10),
-                    onTap: controller.toggleRememberMe,
-                    child: Row(
-                      children: [
-                        !controller.rememberMe.value
-                            ? Icon(
-                          Icons.check_box,
-                          color: Colours.blueDark,
-                          size: 30,
-                        )
-                            : Icon(
-                          Icons.check_box_outline_blank,
-                          color: Colours.blueDark,
-                          size: 30,
-                        ),
-                        SizedBox(width: 10),
-                        Text(
-                          Strings.rememberMe,
-                          style: appTextTheme.labelMedium,
-                        )
-                      ],
-                    ),
+
+                  Row(
+                    children: [
+                      checkBox(value: controller.rememberMe.value, onchange: (value){
+                        controller.rememberMe.value = value;
+                      }),
+                      SizedBox(width: 5),
+                      Text(
+                        Strings.rememberMe,
+                        style: appTextTheme.labelMedium?.copyWith(fontSize: 14),
+                      )
+                    ],
                   ),
                   Text(Strings.forgotPassword,
                       style: appTextTheme.labelMedium
-                          ?.copyWith(color: Colours.primary))
+                          ?.copyWith(color: Colours.primary, fontSize: 14))
                 ],
               ),
             ),
