@@ -1,4 +1,3 @@
-
 import '../exports/common.dart';
 
 class CustomIndicatorWidget extends AnimatedWidget {
