@@ -302,9 +302,10 @@ class MaterialRequestFormScreen extends GetView<MaterialRequestFormController> {
         children: [
           Row(
             children: [
+              /// Fabric
               Expanded(
                   child: bottomSheetItemMenuWithLabel<FabricModel>(
-
+                      controller: controller.fabricController,
                       items: [],
                       fromApi: () async {
                         var resp = await FabricModel.getFabrics();
@@ -316,14 +317,28 @@ class MaterialRequestFormScreen extends GetView<MaterialRequestFormController> {
                                 title: resp.items[index].fabricNo ?? "_",
                                 value: resp.items[index]));
                       },
-
-                      onChanged: (item) {},
+                      onChanged: (item) {
+                        controller.fabricColorController.clearItems!();
+                      },
                       hintText: Strings.fabric,
                       labelText: Strings.fabric)),
               gap(space: 30),
+
+              /// Color
               Expanded(
                   child: bottomSheetItemMenuWithLabel(
+                    controller: controller.fabricColorController,
                 items: [],
+                    fromApi: () async {
+                      var resp = await FabricModel.getFabrics();
+                      return List.generate(
+                          resp.items.length,
+                              (index) => DropDownItem(
+                              id: index,
+                              key: resp.items[index].fabricId.toString(),
+                              title: resp.items[index].fabricNo ?? "_",
+                              value: resp.items[index]));
+                    },
                 onChanged: (item) {},
                 labelText: Strings.color,
                 hintText: Strings.color,
@@ -331,11 +346,24 @@ class MaterialRequestFormScreen extends GetView<MaterialRequestFormController> {
             ],
           ),
           gap(),
+
+          /// Box
           Row(
             children: [
               Expanded(
                   child: bottomSheetItemMenuWithLabel(
-                      items: [],
+                       items: [],
+                      controller: controller.colorBoxController,
+                      fromApi: () async {
+                        var resp = await FabricModel.getFabrics();
+                        return List.generate(
+                            resp.items.length,
+                                (index) => DropDownItem(
+                                id: index,
+                                key: resp.items[index].fabricId.toString(),
+                                title: resp.items[index].fabricNo ?? "_",
+                                value: resp.items[index]));
+                      },
                       onChanged: (item) {},
                       hintText: Strings.box,
                       labelText: Strings.box)),

@@ -1,3 +1,5 @@
+import 'package:jog_inventory/modules/material/models/fabric.dart';
+
 import '../../../common/exports/main_export.dart';
 
 class MaterialRequestFormController extends GetxController {
@@ -5,6 +7,11 @@ class MaterialRequestFormController extends GetxController {
   RxBool isBusy = false.obs;
   RxBool isUpdate = false.obs;
   RxBool isAddonYear = false.obs;
+
+
+  BottomSheetItemMenuController fabricController = BottomSheetItemMenuController();
+  BottomSheetItemMenuController fabricColorController = BottomSheetItemMenuController();
+  BottomSheetItemMenuController colorBoxController = BottomSheetItemMenuController();
 
   @override
   void onInit() {

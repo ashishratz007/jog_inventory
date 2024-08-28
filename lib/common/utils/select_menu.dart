@@ -1,8 +1,15 @@
 import '../../../common/exports/main_export.dart';
 
+class BottomSheetItemMenuController<T> {
+  void Function()? clearItems;
+  void Function()? resetItems;
+  Function({String? query})? getItems;
+}
+
 class bottomSheetItemMenu<T> extends FormField<DropDownItem<T>> {
   final Future<List<DropDownItem<T>>> Function()? fromApi;
   final Future<List<DropDownItem<T>>> Function(String)? searchApi;
+  final BottomSheetItemMenuController? controller; /// controller to change states like reset clear items and all
   final double? borderRadius;
   final double? titleSize;
   final double? height;
@@ -51,6 +58,8 @@ class bottomSheetItemMenu<T> extends FormField<DropDownItem<T>> {
     this.onSave,
     this.validate,
     this.focusNode,
+    this.controller,
+
     Key? key,
   }) : super(
           key: key,
@@ -86,6 +95,7 @@ class bottomSheetItemMenu<T> extends FormField<DropDownItem<T>> {
               },
               focusNode: focusNode,
               state: state,
+              controller: controller,
             );
           },
         );
@@ -97,6 +107,7 @@ class _SelectItemMenuWidget<T> extends StatefulWidget {
   final List<DropDownItem<T>> items;
   final Future<List<DropDownItem<T>>> Function()? fromApi;
   final Future<List<DropDownItem<T>>> Function(String)? searchApi;
+  final BottomSheetItemMenuController? controller; /// controller to change states like reset clear items and all
   final double? borderRadius;
   final double? titleSize;
   final double? height;
@@ -143,6 +154,7 @@ class _SelectItemMenuWidget<T> extends StatefulWidget {
     required this.onChanged,
     this.focusNode,
     required this.state,
+    required this.controller,
     Key? key,
   }) : super(key: key);
 
@@ -182,6 +194,12 @@ class _SelectItemMenuWidgetState<T> extends State<_SelectItemMenuWidget<T>>
         _controller.reverse();
       }
     });
+    // Assign controller actions
+    if (widget.controller != null) {
+      widget.controller!.clearItems = _clearItems;
+      widget.controller!.resetItems = _resetItems;
+      widget.controller!.getItems = loadItems;
+    }
 
     _selectedItem = widget.selectedItem;
     items = widget.items;
@@ -231,6 +249,25 @@ class _SelectItemMenuWidgetState<T> extends State<_SelectItemMenuWidget<T>>
             .toLowerCase()
             .contains(query.trim().toLowerCase()))
         .toList();
+  }
+
+
+  // Function to clear items
+  void _clearItems() {
+    setState(() {
+      items.clear();
+      _selectedItem = null;
+      widget.state.didChange(null);
+    });
+  }
+
+  // Function to reset items
+  void _resetItems() {
+    setState(() {
+      items = widget.items;
+      _selectedItem = widget.selectedItem;
+      widget.state.didChange(_selectedItem);
+    });
   }
 
   @override
@@ -543,11 +580,13 @@ class _SelectItemMenuWidgetState<T> extends State<_SelectItemMenuWidget<T>>
 }
 
 Widget bottomSheetItemMenuWithLabel<T>({
+  Key? key,
   DropDownItem<T>? selectedItem,
   required List<DropDownItem<T>> items,
   required void Function(DropDownItem<T>?) onChanged,
   final Future<List<DropDownItem<T>>> Function()? fromApi,
   final Future<List<DropDownItem<T>>> Function(String)? searchApi,
+  final BottomSheetItemMenuController? controller, /// controller to change states like reset clear items and all
   double? borderRadius,
   double? titleSize,
   Color? borderColor,
@@ -598,6 +637,7 @@ Widget bottomSheetItemMenuWithLabel<T>({
       ),
       SizedBox(height: 10),
       bottomSheetItemMenu<T>(
+        key: key,
         items: items,
         onChanged: onChanged,
         borderRadius: borderRadius,
@@ -616,6 +656,7 @@ Widget bottomSheetItemMenuWithLabel<T>({
         fontSize: fontSize,
         title: labelText,
         allowSearch: allowSearch,
+        controller: controller,
       ),
     ],
   );
