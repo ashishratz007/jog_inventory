@@ -1,5 +1,7 @@
 import 'package:jog_inventory/common/base_model/base_model.dart';
 
+import '../../../common/exports/main_export.dart';
+
 class SearchOrderModal extends BaseModel {
   @override
   String get endPoint => 'api/order-title';
@@ -32,9 +34,11 @@ class SearchOrderModal extends BaseModel {
   }
 
   static Future<SearchOrderModal> searchData(String query) async {
-    var resp = await SearchOrderModal().create(queryParameters: {
-      'order_code': query,
-    },);
+    var resp = await SearchOrderModal().create(
+      queryParameters: {
+        'order_code': query,
+      },
+    );
 
     return SearchOrderModal.fromJson(resp.data);
   }
@@ -96,4 +100,18 @@ class SearchData {
     data['enable'] = enable;
     return data;
   }
+}
+
+
+Future<List<DropDownItem<SearchData>>> searchCodesMenuItems(
+    String query) async {
+  var data = await SearchOrderModal.searchData(query);
+  var list = data.data ?? [];
+  return List.generate(
+      data.data?.length ?? 0,
+      (index) => DropDownItem<SearchData>(
+          id: index,
+          title: list[index].orderTitle ?? "",
+          key: list[index].orderTitle ?? "_",
+          value: list[index]));
 }

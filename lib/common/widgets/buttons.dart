@@ -1,4 +1,3 @@
-
 import '../exports/main_export.dart';
 
 Widget PrimaryButton(
@@ -255,7 +254,8 @@ Widget PrimaryBorderButton(
           SizedBox(width: 10),
         ],
         Text(title,
-            style: (textStyle ?? appTextTheme.titleMedium?.copyWith(fontSize: textSize))
+            style: (textStyle ??
+                    appTextTheme.titleMedium?.copyWith(fontSize: textSize))
                 ?.copyWith(color: color)),
         if (trailing != null) ...[
           SizedBox(width: 10),
@@ -283,6 +283,7 @@ Widget PrimaryBorderButton(
 Widget TextButtonWidget({
   required Function() onTap,
   required String title,
+  Widget? trailing,
   Color? color,
   double fontSize = 14,
   FontWeight fontWeight = FontWeight.bold,
@@ -295,9 +296,15 @@ Widget TextButtonWidget({
       borderRadius: BorderRadius.circular(100),
       child: Padding(
         padding: padding,
-        child: Text(title,
-            style: TextStyle(
-                fontWeight: fontWeight, fontSize: fontSize, color: color)),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(title,
+                style: TextStyle(
+                    fontWeight: fontWeight, fontSize: fontSize, color: color)),
+            if (trailing != null) ...[gap(space: 5), trailing]
+          ],
+        ),
       ));
 }
 
@@ -306,6 +313,7 @@ Widget TextBorderButton({
   required String title,
   Color? color,
   Color? borderColor,
+  Widget? trailing,
   bool enable = true,
   double fontSize = 14,
   FontWeight fontWeight = FontWeight.bold,
@@ -314,15 +322,27 @@ Widget TextBorderButton({
 }) {
   color ??= Colours.secondary;
   return InkWell(
-      onTap:enable? onTap:null,
+      onTap: enable ? onTap : null,
       borderRadius: BorderRadius.circular(100),
       child: Container(
         decoration: BoxDecoration(
             border: Border(
-                bottom: BorderSide(color: !enable?Colours.border: borderColor ?? Colours.secondary, width: 1.5))),
+                bottom: BorderSide(
+                    color: !enable
+                        ? Colours.border
+                        : borderColor ?? Colours.secondary,
+                    width: 1.5))),
         margin: padding,
-        child: Text(title,
-            style: TextStyle(
-                fontWeight: fontWeight, fontSize: fontSize, color:!enable?Colours.border: color)),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(title,
+                style: TextStyle(
+                    fontWeight: fontWeight,
+                    fontSize: fontSize,
+                    color: !enable ? Colours.border : color)),
+            if (trailing != null) ...[gap(space: 5), trailing]
+          ],
+        ),
       ));
 }

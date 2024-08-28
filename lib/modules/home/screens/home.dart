@@ -242,10 +242,9 @@ class HomeScreen extends GetView<HomeController> {
           Row(
             children: [
               Expanded(
-                  child: actionTileWidget(
-                      onTap: () {
-                        Get.toNamed(AppRoutesString.noCodeRequest);
-                      },
+                  child: actionTileWidget(onTap: () {
+                Get.toNamed(AppRoutesString.noCodeRequest);
+              },
                       "No Code request",
                       displayAssetsWidget(AppIcons.no_code,
                           borderRadius: BorderRadius.circular(10),
@@ -254,8 +253,9 @@ class HomeScreen extends GetView<HomeController> {
                           padding: AppPadding.inner))),
               gap(space: 10),
               Expanded(
-                  child: actionTileWidget(
-                      onTap: () {},
+                  child: actionTileWidget(onTap: () {
+                Get.toNamed(AppRoutesString.addForecast);
+              },
                       "Add Forecast",
                       displayAssetsWidget(AppIcons.future,
                           borderRadius: BorderRadius.circular(10),

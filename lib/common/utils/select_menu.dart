@@ -1,7 +1,8 @@
 import '../../../common/exports/main_export.dart';
 
-class SelectItemMenu<T> extends FormField<DropDownItem<T>> {
+class bottomSheetItemMenu<T> extends FormField<DropDownItem<T>> {
   final Future<List<DropDownItem<T>>> Function()? fromApi;
+  final Future<List<DropDownItem<T>>> Function(String)? searchApi;
   final double? borderRadius;
   final double? titleSize;
   final double? height;
@@ -24,10 +25,11 @@ class SelectItemMenu<T> extends FormField<DropDownItem<T>> {
   final String? Function(DropDownItem<T>?)? validate;
   final FocusNode? focusNode;
 
-  SelectItemMenu({
+  bottomSheetItemMenu({
     DropDownItem<T>? selectedItem,
     required List<DropDownItem<T>> items,
     this.fromApi,
+    this.searchApi,
     this.borderRadius,
     this.titleSize,
     this.height,
@@ -60,6 +62,7 @@ class SelectItemMenu<T> extends FormField<DropDownItem<T>> {
               selectedItem: selectedItem,
               items: items,
               fromApi: fromApi,
+              searchApi: searchApi,
               borderRadius: borderRadius,
               titleSize: titleSize,
               height: height,
@@ -93,6 +96,7 @@ class _SelectItemMenuWidget<T> extends StatefulWidget {
   final DropDownItem<T>? selectedItem;
   final List<DropDownItem<T>> items;
   final Future<List<DropDownItem<T>>> Function()? fromApi;
+  final Future<List<DropDownItem<T>>> Function(String)? searchApi;
   final double? borderRadius;
   final double? titleSize;
   final double? height;
@@ -119,6 +123,7 @@ class _SelectItemMenuWidget<T> extends StatefulWidget {
     required this.items,
     required this.title,
     this.fromApi,
+    this.searchApi,
     this.borderRadius,
     this.titleSize,
     this.height,
@@ -153,9 +158,13 @@ class _SelectItemMenuWidgetState<T> extends State<_SelectItemMenuWidget<T>>
   late Animation<double> _iconRotation;
   FocusNode get focusNode => widget.focusNode ?? FocusNode();
   RxBool isLoading = false.obs;
+
+  /// [isSearchLoading] is used to show loading when we call [widget.searchApi] function
+  RxBool isSearchLoading = false.obs; // global search key
   List<DropDownItem<T>> items = [];
   DropDownItem<T>? _selectedItem;
 
+  /// [initState] initial state when widget is being called
   @override
   void initState() {
     super.initState();
@@ -185,18 +194,32 @@ class _SelectItemMenuWidgetState<T> extends State<_SelectItemMenuWidget<T>>
   }
 
   String? error;
-  Future<void> loadItems() async {
-    if (widget.fromApi != null && items.isEmpty) {
+
+  /// in case of search from api we will pass the query inside this function
+  Future<void> loadItems({String? query}) async {
+    if ((widget.fromApi != null && items.isEmpty) || query != null) {
       error = null;
-      isLoading.value = true;
       try {
-        items = await widget.fromApi!();
+        /// in case of normal functions and also it we are passing search api and the widget is loading first time
+        if (query == null) {
+          isLoading.value = true;
+          items = await widget.fromApi!();
+        }
+
+        /// in case of external search api
+        else {
+          isSearchLoading.value = true;
+          items = await widget.searchApi!(query);
+        }
         isLoading.value = false;
+        isSearchLoading.value = false;
       } catch (e, trace) {
         error = "Unable to load items";
         isLoading.value = false;
+        isSearchLoading.value = false;
       } finally {
         isLoading.value = false;
+        isSearchLoading.value = false;
       }
     }
   }
@@ -212,65 +235,69 @@ class _SelectItemMenuWidgetState<T> extends State<_SelectItemMenuWidget<T>>
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        InkWell(
-          onTap: _showBottomSheet,
-          child: Container(
-            height: widget.height ?? 45,
-            padding: EdgeInsets.symmetric(horizontal: 10),
-            decoration: BoxDecoration(
-              color: widget.bgColor ?? Colors.white,
-              border: Border.all(
-                color: widget.state.hasError
-                    ? Colors.red
-                    : widget.borderColor ?? Colors.grey,
-              ),
-              borderRadius:
-                  widget.borderRadiusShape ?? BorderRadius.circular(7),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                    child: Row(
+    return Obx(() => shimmerEffects(
+        isLoading: isLoading.value,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            InkWell(
+              onTap: _showBottomSheet,
+              child: Container(
+                height: widget.height ?? 45,
+                padding: EdgeInsets.symmetric(horizontal: 10),
+                decoration: BoxDecoration(
+                  color: widget.bgColor ?? Colors.white,
+                  border: Border.all(
+                    color: widget.state.hasError
+                        ? Colors.red
+                        : widget.borderColor ?? Colors.grey,
+                  ),
+                  borderRadius:
+                      widget.borderRadiusShape ?? BorderRadius.circular(7),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Expanded(
-                      child: Text(
-                        _selectedItem?.title ?? widget.hintText ?? '',
-                        style: TextStyle(
-                          color: _selectedItem == null
-                              ? widget.hintColor ?? Colors.grey
-                              : widget.selectedTextColor ?? Colors.black87,
-                          fontSize: widget.fontSize,
+                        child: Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            _selectedItem?.title ?? widget.hintText ?? '',
+                            style: TextStyle(
+                              color: _selectedItem == null
+                                  ? widget.hintColor ?? Colors.grey
+                                  : widget.selectedTextColor ?? Colors.black87,
+                              fontSize: widget.fontSize,
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                    Transform.rotate(
-                      angle: 1.55,
-                      child: Icon(
-                        Icons.arrow_forward_ios_rounded,
-                        color: widget.iconColor ??
-                            (focusNode.hasFocus ? Colors.blue : Colors.black),
-                        size: 15,
-                      ),
-                    ),
+                        Transform.rotate(
+                          angle: 1.55,
+                          child: Icon(
+                            Icons.arrow_forward_ios_rounded,
+                            color: widget.iconColor ??
+                                (focusNode.hasFocus ? Colors.blue : Colors.black),
+                            size: 15,
+                          ),
+                        ),
+                      ],
+                    )),
                   ],
-                )),
-              ],
+                ),
+              ),
             ),
-          ),
+            if (widget.state.hasError)
+              Padding(
+                padding: const EdgeInsets.only(top: 5),
+                child: Text(
+                  widget.state.errorText ?? '',
+                  style: TextStyle(color: Colors.red, fontSize: 12),
+                ),
+              ),
+          ],
         ),
-        if (widget.state.hasError)
-          Padding(
-            padding: const EdgeInsets.only(top: 5),
-            child: Text(
-              widget.state.errorText ?? '',
-              style: TextStyle(color: Colors.red, fontSize: 12),
-            ),
-          ),
-      ],
+      ),
     );
   }
 
@@ -317,57 +344,78 @@ class _SelectItemMenuWidgetState<T> extends State<_SelectItemMenuWidget<T>>
                           /// appbar gap
                           Row(),
                           gap(space: 40),
+                          // if called searchApi api
+                          if (isSearchLoading.value)
+                            Container(
+                                padding: AppPadding.pagePadding,
+                                height: 250,
+                                color: Colours.white,
+                                width: Get.width,
+                                child: listLoadingEffect(
+                                  count: 3,
+                                )),
 
                           /// no items
-                          Visibility(
-                            visible: items.length == 0 && error == null,
-                            child: Padding(
-                              padding: const EdgeInsets.only(top: 15),
-                              child: Column(
-                                children: [
-                                  Icon(
-                                    Icons.data_array,
-                                    size: 40,
-                                    color: Colours.border,
-                                  ),
-                                  gap(space: 10),
-                                  Text(
-                                    "No Items",
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colours.black,
+                          if (!isSearchLoading.value)
+                            Visibility(
+                              visible: items.length == 0 && error == null,
+                              child: Padding(
+                                padding: const EdgeInsets.only(top: 15),
+                                child: Column(
+                                  children: [
+                                    Icon(
+                                      Icons.data_array,
+                                      size: 40,
+                                      color: Colours.border,
                                     ),
-                                  ),
-                                ],
+                                    gap(space: 10),
+                                    Text(
+                                      "No Items",
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colours.black,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                          Visibility(
-                              visible: error != null,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(
-                                    Icons.error,
-                                    color: Colours.red,
-                                    size: 30,
-                                  ),
-                                  gap(space: 10),
-                                  Text("Error Loading Data.\nTry again!",
-                                      textAlign: TextAlign.center,
-                                      style: appTextTheme.titleMedium),
-                                  gap(space: 10),
-                                  IconButton(
-                                      onPressed: () {
-                                        loadItems();
-                                      },
-                                      icon: Icon(Icons.refresh,
-                                          size: 30, color: Colours.blue))
-                                ],
-                              )),
 
+                          /// error
+                          if (!isSearchLoading.value)
+                            Visibility(
+                                visible:
+                                    error != null && !isSearchLoading.value,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.error,
+                                      color: Colours.red,
+                                      size: 30,
+                                    ),
+                                    gap(space: 10),
+                                    Text("Error Loading Data.\nTry again!",
+                                        textAlign: TextAlign.center,
+                                        style: appTextTheme.titleMedium),
+                                    gap(space: 10),
+                                    IconButton(
+                                        onPressed: () {
+                                          /// parsing query if user search api
+                                          var query;
+                                          if (widget.searchApi != null) {
+                                            query = controller.value.text;
+                                          }
+                                          loadItems(query: query);
+                                        },
+                                        icon: Icon(Icons.refresh,
+                                            size: 30, color: Colours.blue))
+                                  ],
+                                )),
+
+                          /// search widget
                           Visibility(
                             visible: widget.allowSearch,
                             child: PrimaryTextField(
@@ -377,62 +425,81 @@ class _SelectItemMenuWidgetState<T> extends State<_SelectItemMenuWidget<T>>
                                 controller: controller.value,
                                 borderColor: Colours.border.withOpacity(0.5),
                                 onChanged: (value) {
-                                  controller.refresh();
+                                  /// looking for search from api function if you have provide function
+                                  if (widget.fromApi != null) {
+                                    loadItems(query: value);
+                                  }
+
+                                  /// normal search function
+                                  else
+                                    controller.refresh();
                                 },
                                 suffixIcon: IconButton(
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      /// looking for search from api function if you have provide function
+                                      if (widget.fromApi != null) {
+                                        loadItems(query: controller.value.text);
+                                      }
+                                    },
                                     icon: Icon(
                                       Icons.search,
                                       size: 30,
                                       color: Colours.primary,
                                     ))),
                           ),
-                          Obx(() => Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: displayList<DropDownItem<T>>(
-                                    items:
-                                        filterItemsLst(controller.value.text),
-                                    builder: (item, index) {
-                                      return InkWell(
-                                        borderRadius: BorderRadius.circular(10),
-                                        onTap: () {
-                                          setState(() {
-                                            _selectedItem = item;
-                                          });
-                                          widget.onChanged(item);
-                                          widget.state.didChange(item);
-                                          Get.back(result: item);
-                                        },
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                              // borderRadius: BorderRadius.circular(10),
-                                              border: Border(
-                                                  bottom: BorderSide(
-                                                      color: Colours.border))),
-                                          height: 40,
-                                          child: Align(
-                                            alignment: Alignment.centerLeft,
-                                            child: Text(
-                                              item.title,
-                                              style: TextStyle(
-                                                  fontSize:
-                                                      widget.fontSize ?? 14,
-                                                  fontWeight: FontWeight.w600,
-                                                  color: widget.itemTextColor ??
-                                                      Colors.black
-                                                          .withOpacity(0.7)),
+
+                          /// display items
+                          Obx(() => Visibility(
+                            visible: isSearchLoading.value || !isSearchLoading.value,
+                            child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: displayList<DropDownItem<T>>(
+                                      items:
+                                          filterItemsLst(controller.value.text),
+                                      builder: (item, index) {
+                                        return InkWell(
+                                          borderRadius: BorderRadius.circular(10),
+                                          onTap: () {
+                                            setState(() {
+                                              _selectedItem = item;
+                                            });
+                                            widget.onChanged(item);
+                                            widget.state.didChange(item);
+                                            Get.back(result: item);
+                                          },
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                                // borderRadius: BorderRadius.circular(10),
+                                                border: Border(
+                                                    bottom: BorderSide(
+                                                        color: Colours.border))),
+                                            height: 40,
+                                            child: Align(
+                                              alignment: Alignment.centerLeft,
+                                              child: Text(
+                                                item.title,
+                                                style: TextStyle(
+                                                    fontSize:
+                                                        widget.fontSize ?? 14,
+                                                    fontWeight: FontWeight.w600,
+                                                    color: widget.itemTextColor ??
+                                                        Colors.black
+                                                            .withOpacity(0.7)),
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                      );
-                                    }),
-                              )),
+                                        );
+                                      }),
+                                ),
+                          )),
                           safeAreaBottom(context)
                         ],
                       ),
                     ),
                   );
                 }),
+
+                /// app drag bar
                 Positioned(
                   left: 0,
                   right: 0,
@@ -454,7 +521,7 @@ class _SelectItemMenuWidgetState<T> extends State<_SelectItemMenuWidget<T>>
                                 width: 100,
                                 height: 5,
                                 decoration: BoxDecoration(
-                                    color: Colours.primary.withOpacity(0.7),
+                                    color: Colours.border.withOpacity(0.7),
                                     borderRadius: BorderRadius.circular(100))),
                             gap(space: 10),
                             Text(widget.title ?? "_",
@@ -475,11 +542,12 @@ class _SelectItemMenuWidgetState<T> extends State<_SelectItemMenuWidget<T>>
   }
 }
 
-Widget SelectItemMenuWithLabel<T>({
+Widget bottomSheetItemMenuWithLabel<T>({
   DropDownItem<T>? selectedItem,
   required List<DropDownItem<T>> items,
   required void Function(DropDownItem<T>?) onChanged,
   final Future<List<DropDownItem<T>>> Function()? fromApi,
+  final Future<List<DropDownItem<T>>> Function(String)? searchApi,
   double? borderRadius,
   double? titleSize,
   Color? borderColor,
@@ -529,7 +597,7 @@ Widget SelectItemMenuWithLabel<T>({
         ),
       ),
       SizedBox(height: 10),
-      SelectItemMenu<T>(
+      bottomSheetItemMenu<T>(
         items: items,
         onChanged: onChanged,
         borderRadius: borderRadius,
@@ -544,6 +612,7 @@ Widget SelectItemMenuWithLabel<T>({
         titleSize: titleSize,
         validate: validate,
         fromApi: fromApi,
+        searchApi: searchApi,
         fontSize: fontSize,
         title: labelText,
         allowSearch: allowSearch,

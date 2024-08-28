@@ -2,6 +2,8 @@ import 'dart:ffi';
 
 import 'package:jog_inventory/common/utils/dotted_border.dart';
 import 'package:jog_inventory/modules/material/controllers/material_request_form.dart';
+import 'package:jog_inventory/modules/material/models/fabric.dart';
+import 'package:jog_inventory/modules/material/models/search.dart';
 import 'package:jog_inventory/modules/material/widgets/order_codes_remove.dart';
 import '../../../common/exports/main_export.dart';
 
@@ -89,12 +91,14 @@ class MaterialRequestFormScreen extends GetView<MaterialRequestFormController> {
                 onTap: () {
                   openOrderCodePopup(Get.context!);
                 },
-                title: "Order Code",
+                title: "Remove Codes",
                 color: Colours.primary,
                 borderColor: Colours.primary)
           ],
         ),
         gap(),
+
+        /// select codes
         Container(
             padding: AppPadding.inner,
             decoration: BoxDecoration(
@@ -107,8 +111,13 @@ class MaterialRequestFormScreen extends GetView<MaterialRequestFormController> {
                 Row(
                   children: [
                     Expanded(
-                      child: CustomDropDownWithLabel(
+                      child: bottomSheetItemMenuWithLabel<SearchData>(
                           items: [],
+                          allowSearch: true,
+                          searchApi: searchCodesMenuItems,
+                          fromApi: () async {
+                            return searchCodesMenuItems("");
+                          },
                           onChanged: (value) {},
                           labelText: Strings.orderCode,
                           hintText: "Select " + Strings.orderCode),
@@ -118,8 +127,12 @@ class MaterialRequestFormScreen extends GetView<MaterialRequestFormController> {
                       () => Visibility(
                         visible: controller.isAddonYear.value,
                         child: Expanded(
-                          child: CustomDropDownWithLabel(
+                          child: bottomSheetItemMenuWithLabel(
                               items: [],
+                              searchApi: searchCodesMenuItems,
+                              fromApi: () async {
+                                return searchCodesMenuItems("");
+                              },
                               onChanged: (value) {},
                               labelText: "",
                               hintText: "Select Code"),
@@ -290,14 +303,26 @@ class MaterialRequestFormScreen extends GetView<MaterialRequestFormController> {
           Row(
             children: [
               Expanded(
-                  child: CustomDropDownWithLabel(
+                  child: bottomSheetItemMenuWithLabel<FabricModel>(
+
                       items: [],
+                      fromApi: () async {
+                        var resp = await FabricModel.getFabrics();
+                        return List.generate(
+                            resp.items.length,
+                            (index) => DropDownItem(
+                                id: index,
+                                key: resp.items[index].fabricId.toString(),
+                                title: resp.items[index].fabricNo ?? "_",
+                                value: resp.items[index]));
+                      },
+
                       onChanged: (item) {},
                       hintText: Strings.fabric,
                       labelText: Strings.fabric)),
               gap(space: 30),
               Expanded(
-                  child: CustomDropDownWithLabel(
+                  child: bottomSheetItemMenuWithLabel(
                 items: [],
                 onChanged: (item) {},
                 labelText: Strings.color,
@@ -309,7 +334,7 @@ class MaterialRequestFormScreen extends GetView<MaterialRequestFormController> {
           Row(
             children: [
               Expanded(
-                  child: CustomDropDownWithLabel(
+                  child: bottomSheetItemMenuWithLabel(
                       items: [],
                       onChanged: (item) {},
                       hintText: Strings.box,

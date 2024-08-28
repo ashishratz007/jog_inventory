@@ -55,36 +55,38 @@ class CustomAppBar extends StatelessWidget {
             drawer: hasDrawer ? HomeDrawerWidget() : null,
             appBar: appbar(),
             body: SafeArea(child: body),
-            bottomNavigationBar:bottomNavBar == null? null : Visibility(
-                visible: bottomNavBar != null,
-                child: SafeArea(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Container(
-                          constraints: BoxConstraints(
-                            maxHeight: 300,
-                            minHeight: 70,
-                          ),
-                          decoration: BoxDecoration(
-                              color: Colours.white,
-                              boxShadow: containerShadow(
-                                bottom: false,
-                                left: false,
-                                right: false,
+            bottomNavigationBar: bottomNavBar == null
+                ? null
+                : Visibility(
+                    visible: bottomNavBar != null,
+                    child: SafeArea(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                              constraints: BoxConstraints(
+                                maxHeight: 300,
+                                minHeight: 70,
+                              ),
+                              decoration: BoxDecoration(
+                                  color: Colours.white,
+                                  boxShadow: containerShadow(
+                                    bottom: false,
+                                    left: false,
+                                    right: false,
+                                  )),
+                              padding: EdgeInsets.only(right: 16, left: 16),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  bottomNavBar!,
+                                ],
                               )),
-                          padding: EdgeInsets.only(right: 16, left: 16),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              bottomNavBar!,
-                            ],
-                          )),
-                    ],
-                  ),
-                ))),
+                        ],
+                      ),
+                    ))),
       ),
     );
   }
@@ -158,13 +160,14 @@ class CustomAppBar extends StatelessWidget {
             /// implemented size box so that we can have title at center everytime
 
             if (trailingButton != null) trailingButton!,
-            hasNotification
-                ? Icon(
-                    Icons.notifications_outlined,
-                    size: 30,
-                    color: Colors.white,
-                  )
-                : SizedBox(width: 42),
+            if (hasNotification)
+              Icon(
+                Icons.notifications_outlined,
+                size: 30,
+                color: Colors.white,
+              ),
+            if (!hasNotification && (trailingButton == null))
+              SizedBox(width: 42),
             // Container(
             //     margin: EdgeInsets.only(left: 15),
             //     padding:

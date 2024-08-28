@@ -1,4 +1,5 @@
 import 'package:jog_inventory/modules/auth/bindings/bindings.dart';
+import 'package:jog_inventory/modules/forecast/screens/addforecast_screen.dart';
 import 'package:jog_inventory/modules/home/screens/home.dart';
 import 'package:jog_inventory/modules/material/models/material_request_detail.dart';
 import 'package:jog_inventory/modules/material/screens/finish_material_rq.dart';
@@ -71,4 +72,15 @@ List<GetPage<dynamic>> getRoutes = [
       ///
     ],
   ),
+
+  /// forecast
+  GetPage(
+    name: AppRoutesString.addForecast,
+    page: () => AddForecastScreen(),
+    bindings: [
+      ///
+    ],
+  ),
+
+
 ];

@@ -15,12 +15,13 @@ class Pagination<T> {
     required this.currentPage,
     required this.pageSize,
     required this.totalPages,
-  });
+    List<T>? items
+  }): this.items = items??[];
 
 // From JSON
   factory Pagination.fromJson(Map<String, dynamic> json) {
     return Pagination(
-      totalItems: ParseData.toInt(json['total_items']) ?? 0,
+      totalItems: ParseData.toInt(json['total_items']??json['total']) ?? 0,
       currentPage: ParseData.toInt(json['current_page']) ?? 0,
       pageSize: ParseData.toInt(json['page_size']) ?? 0,
       totalPages: ParseData.toInt(json['total_pages']) ?? 0,

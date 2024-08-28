@@ -1,4 +1,5 @@
 import 'package:barcode_scan2/platform_wrapper.dart';
+import 'package:jog_inventory/common/globals/global.dart';
 
 import '../../../common/exports/main_export.dart';
 
@@ -8,6 +9,9 @@ class HomeController extends GetxController {
 
   @override
   void onInit() {
+    debugPrint("="*100);
+    debugPrint(globalData.authToken);
+    debugPrint("="*100);
     // TODO: implement onInit
     super.onInit();
   }

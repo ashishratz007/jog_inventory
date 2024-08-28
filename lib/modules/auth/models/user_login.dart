@@ -44,19 +44,18 @@ class UserLoginModel extends BaseModel {
   /// save user login info like email password ( credentials )
   static storeUserCreds(UserLoginModel info) async {
     var data = info.toJson();
-    await storage.userBox.put(userLoginCreds, data);
+    await storage.configBox.put(userLoginCreds, data);
   }
 
   /// get user info if saved (credentials)
   static UserLoginModel? getUserCreds() {
-    var info = storage.userBox.get(userLoginCreds, defaultValue: null);
+    var info = storage.configBox.get(userLoginCreds, defaultValue: null);
     // storage.userBox.delete(userInfo);
     if (info != null) {
       return UserLoginModel.fromJson(info);
     }
     return null;
   }
-
 
   /// store user data
   static storeUserInfo(UserInfoModel info) async {
@@ -80,23 +79,19 @@ class UserLoginModel extends BaseModel {
   }
 }
 
-
-
 class UserLoginResponse {
-
   String? accessToken;
   String? tokenType;
   String? message;
   int? status;
   UserInfoModel? employee;
 
-
   UserLoginResponse(
       {this.accessToken,
-        this.tokenType,
-        this.message,
-        this.status,
-        this.employee});
+      this.tokenType,
+      this.message,
+      this.status,
+      this.employee});
 
   UserLoginResponse.fromJson(Map<String, dynamic> json) {
     accessToken = json['accessToken'];
@@ -140,20 +135,20 @@ class UserInfoModel {
 
   UserInfoModel(
       {this.employeeId,
-        this.employeeName,
-        this.employeeEmail,
-        this.employeeTel,
-        this.employeePositionId,
-        this.customerId,
-        this.employeePassword,
-        this.employeeAuth,
-        this.employeeImage,
-        this.employeeLoginStat,
-        this.employeeLoginTime,
-        this.employeeLastLogin,
-        this.cookieStart,
-        this.employeeStat,
-        this.magnifierMode});
+      this.employeeName,
+      this.employeeEmail,
+      this.employeeTel,
+      this.employeePositionId,
+      this.customerId,
+      this.employeePassword,
+      this.employeeAuth,
+      this.employeeImage,
+      this.employeeLoginStat,
+      this.employeeLoginTime,
+      this.employeeLastLogin,
+      this.cookieStart,
+      this.employeeStat,
+      this.magnifierMode});
 
   UserInfoModel.fromJson(Map<dynamic, dynamic> json) {
     employeeId = json['employee_id'];
