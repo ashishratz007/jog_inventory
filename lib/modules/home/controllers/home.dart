@@ -9,9 +9,9 @@ class HomeController extends GetxController {
 
   @override
   void onInit() {
-    debugPrint("="*100);
+    debugPrint("=" * 100);
     debugPrint(globalData.authToken);
-    debugPrint("="*100);
+    debugPrint("=" * 100);
     // TODO: implement onInit
     super.onInit();
   }
@@ -27,15 +27,17 @@ class HomeController extends GetxController {
     var result = await BarcodeScanner.scan();
 
     var ids = result.rawContent.split(" ");
-    if (ids.length == 0) return;
-    var pacId = ids[0];
-    var fabId = ids[1];
+    if (ids.length != 1) {
+      print(ids.length);
+      var pacId = ids[0];
+      var fabId = ids[1];
 
-    if (fabId.isNotEmpty) {
-      Get.toNamed(AppRoutesString.materialDetailById,
-          arguments: {appKeys.fabId: fabId, appKeys.pacId: pacId});
-    } else {
-      errorSnackBar(message: "Unable to get data from QR");
+      if (fabId.isNotEmpty) {
+        Get.toNamed(AppRoutesString.materialDetailById,
+            arguments: {appKeys.fabId: fabId, appKeys.pacId: pacId});
+      } else {
+        errorSnackBar(message: "Unable to get data from QR");
+      }
     }
   }
 
