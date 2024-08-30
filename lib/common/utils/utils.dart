@@ -534,3 +534,8 @@ Widget checkBox(
         color: value ? selectedColor : color,
       ));
 }
+
+
+Future<void> delay(int seconds,{Function()? onDone} )async{
+  return Future.delayed(Duration(seconds: 2),onDone);
+}

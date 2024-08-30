@@ -232,7 +232,10 @@ class _SelectItemMenuWidgetState<T> extends State<_SelectItemMenuWidget<T>>
         isLoading.value = false;
         isSearchLoading.value = false;
       } catch (e, trace) {
-        error = "Unable to load items";
+        if(e is String) error = e;
+        else {
+          error = "Unable to load items";
+        }
         isLoading.value = false;
         isSearchLoading.value = false;
       } finally {
@@ -434,7 +437,7 @@ class _SelectItemMenuWidgetState<T> extends State<_SelectItemMenuWidget<T>>
                                       size: 30,
                                     ),
                                     gap(space: 10),
-                                    Text("Error Loading Data.\nTry again!",
+                                    Text("${error??"Error Loading Data."}\nTry again!",
                                         textAlign: TextAlign.center,
                                         style: appTextTheme.titleMedium),
                                     gap(space: 10),

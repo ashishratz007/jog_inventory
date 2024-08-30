@@ -6,7 +6,7 @@ class SearchOrderModal extends BaseModel {
   @override
   String get endPoint => 'api/order-title';
 
-  List<SearchData>? data;
+  List<OrderCodeData>? data;
   String? message;
   int? status;
 
@@ -14,9 +14,9 @@ class SearchOrderModal extends BaseModel {
 
   SearchOrderModal.fromJson(Map<String, dynamic> json) {
     if (json['data'] != null) {
-      data = <SearchData>[];
+      data = <OrderCodeData>[];
       json['data'].forEach((v) {
-        data!.add(SearchData.fromJson(v));
+        data!.add(OrderCodeData.fromJson(v));
       });
     }
     message = json['message'];
@@ -33,10 +33,12 @@ class SearchOrderModal extends BaseModel {
     return data;
   }
 
-  static Future<SearchOrderModal> searchData(String query) async {
+  static Future<SearchOrderModal> searchData(String query, {bool showAll = false}) async {
     var resp = await SearchOrderModal().create(
-      queryParameters: {
-        'order_code': query,
+      isFormData: true,
+      data: {
+        if(query.trim().isNotEmpty)'order_code': query,
+        if(showAll)'all': 'allcode'.toString(),
       },
     );
 
@@ -44,7 +46,7 @@ class SearchOrderModal extends BaseModel {
   }
 }
 
-class SearchData {
+class OrderCodeData {
   bool? selected = false;
   int? orderLkrTitleId;
   String? orderTitle;
@@ -58,7 +60,7 @@ class SearchData {
   String? addDate;
   int? enable;
 
-  SearchData(
+  OrderCodeData(
       {this.orderLkrTitleId,
       this.orderTitle,
       this.haveOrderForm,
@@ -71,7 +73,7 @@ class SearchData {
       this.addDate,
       this.enable});
 
-  SearchData.fromJson(Map<String, dynamic> json) {
+  OrderCodeData.fromJson(Map<String, dynamic> json) {
     orderLkrTitleId = json['order_lkr_title_id'];
     orderTitle = json['order_title'];
     haveOrderForm = json['have_order_form'];
@@ -103,13 +105,13 @@ class SearchData {
 }
 
 
-Future<List<DropDownItem<SearchData>>> searchCodesMenuItems(
+Future<List<DropDownItem<OrderCodeData>>> searchCodesMenuItems(
     String query) async {
   var data = await SearchOrderModal.searchData(query);
   var list = data.data ?? [];
   return List.generate(
       data.data?.length ?? 0,
-      (index) => DropDownItem<SearchData>(
+      (index) => DropDownItem<OrderCodeData>(
           id: index,
           title: list[index].orderTitle ?? "",
           key: list[index].orderTitle ?? "_",

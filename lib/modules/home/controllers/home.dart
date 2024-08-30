@@ -9,10 +9,11 @@ class HomeController extends GetxController {
 
   @override
   void onInit() {
-    debugPrint("=" * 100);
-    debugPrint(globalData.authToken);
-    debugPrint("=" * 100);
-    // TODO: implement onInit
+    if (config.isDebugMode) {
+      debugPrint("=" * 100);
+      debugPrint(globalData.authToken);
+      debugPrint("=" * 100);
+    }
     super.onInit();
   }
 

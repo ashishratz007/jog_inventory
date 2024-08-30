@@ -3,7 +3,6 @@ import 'package:jog_inventory/common/base_model/common_model.dart';
 
 import '../../../common/exports/main_export.dart';
 
-
 /// fabric class
 class FabricModel extends BaseModel {
   @override
@@ -139,6 +138,59 @@ class FabricModel extends BaseModel {
   }
 }
 
+/// fabric category
+class FabricCategoryModel extends BaseModel {
+  @override
+  String get endPoint => "/api/get-cat";
+
+  int? catId;
+  int? typeId;
+  String? catCode;
+  String? catNameEn;
+  String? catNameTh;
+  int? enable;
+
+  FabricCategoryModel({
+    this.catId,
+    this.typeId,
+    this.catCode,
+    this.catNameEn,
+    this.catNameTh,
+    this.enable,
+  });
+
+  // Assuming ParseData class with static parsing methods is available
+  factory FabricCategoryModel.fromJson(Map<String, dynamic> json) {
+    return FabricCategoryModel(
+      catId: ParseData.toInt(json['cat_id']),
+      typeId: ParseData.toInt(json['type_id']),
+      catCode: ParseData.string(json['cat_code']),
+      catNameEn: ParseData.string(json['cat_name_en']),
+      catNameTh: ParseData.string(json['cat_name_th']),
+      enable: ParseData.toInt(json['enable']),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'cat_id': catId,
+      'type_id': typeId,
+      'cat_code': catCode,
+      'cat_name_en': catNameEn,
+      'cat_name_th': catNameTh,
+      'enable': enable,
+    };
+  }
+
+  static Future<List<FabricCategoryModel>> fetchAll() async {
+    List<FabricCategoryModel> items = [];
+    var resp = await FabricCategoryModel().create();
+    items = ParseData.toList(resp.data['data'] ?? [],
+        itemBuilder: (json) => FabricCategoryModel.fromJson(json));
+    return items;
+  }
+}
+
 /// fabric colors
 class FabricColorModel extends BaseModel {
   @override
@@ -160,7 +212,7 @@ class FabricColorModel extends BaseModel {
     };
   }
 
-  static Future<List<FabricColorModel>> getColors(String catId) async {
+  static Future<List<FabricColorModel>> getColors(int catId) async {
     var resp =
         await FabricColorModel().create(queryParameters: {'cat_id': catId});
     return ParseData.toList<FabricColorModel>(resp.data['data'],
@@ -177,6 +229,8 @@ class ColorBoxesModel extends BaseModel {
   String? fabricBox;
   String? fabricNo;
   double? fabricBalance;
+
+  String get title => "$fabricBox/$fabricNo ($fabricBalance kg.)";
 
   ColorBoxesModel({
     this.fabricId,
@@ -204,10 +258,9 @@ class ColorBoxesModel extends BaseModel {
   }
 
   static Future<List<ColorBoxesModel>> fetchBoxes(
-      String cartId, String colorName) async {
+      int cartId, String colorName) async {
     List<ColorBoxesModel> boxes = [];
-    var resp = await ColorBoxesModel().get(
-        queryParameters: {
+    var resp = await ColorBoxesModel().create(queryParameters: {
       'cat_id': cartId,
       'color_name': colorName,
     });
@@ -217,4 +270,19 @@ class ColorBoxesModel extends BaseModel {
     }
     return boxes;
   }
+}
+
+
+class RemoveCodeModel extends BaseModel{
+  @override
+  String get endPoint => "/api/remove-order";
+
+  List<int> codes = [];
+  RemoveCodeModel(this.codes);
+
+
+  Future removeCodes() async {
+    return await this.create(isFormData: true, data: {'order_lk': codes.join(",").toString()});
+  }
+
 }

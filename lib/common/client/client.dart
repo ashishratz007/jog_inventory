@@ -9,7 +9,6 @@ class _DioClient {
   Init() {
     _dio = Dio(
       BaseOptions(
-        // baseUrl: 'http://103.177.16.158/salesrep',
         baseUrl: config.baseUrl,
         connectTimeout: Duration(seconds: 20),
         contentType: "application/json",
