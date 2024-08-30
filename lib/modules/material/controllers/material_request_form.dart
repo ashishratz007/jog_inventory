@@ -1,3 +1,5 @@
+import 'package:jog_inventory/common/utils/error_message.dart';
+import 'package:jog_inventory/modules/material/models/material_request.dart';
 import 'package:jog_inventory/modules/material/models/material_rq_form.dart';
 import 'package:jog_inventory/modules/material/models/fabric.dart';
 import 'package:jog_inventory/modules/material/models/search.dart';
@@ -7,9 +9,12 @@ class MaterialRequestFormController extends GetxController {
   RxBool isLoading = false.obs;
   RxBool isBusy = false.obs;
   RxBool isUpdate = false.obs;
+  int? materialRQId;
+  MaterialRequestDetailModel? materialRqData;
+  MaterialRequestModel? materialRqDetail;
   RxBool isAddonYear = false.obs;
   RxBool enableAdd = false.obs;
-  RxList<MaterialRQFormItem> items = <MaterialRQFormItem>[].obs;
+  RxList<MaterialRQItem> items = <MaterialRQItem>[].obs;
 
   OrderCodeData? selectedOrderCode;
 
@@ -28,13 +33,21 @@ class MaterialRequestFormController extends GetxController {
   void onInit() {
     if (Get.arguments != null) {
       isUpdate.value = true;
+      materialRqDetail = Get.arguments[appKeys.materialRQDetail];
+      materialRQId = Get.arguments[appKeys.materialRQId];
     }
     super.onInit();
   }
 
+  readArgs() {
+    if (isUpdate.value) {
+      getMaterialDetail();
+    }
+  }
+
   @override
   void onReady() {
-    // TODO: implement onReady
+    readArgs();
     super.onReady();
   }
 
@@ -49,16 +62,37 @@ class MaterialRequestFormController extends GetxController {
     fabricController.clearItems;
     fabricColorController.clearItems;
     colorBoxController.clearItems;
-    var item = new MaterialRQFormItem(
-      selectedFabCate: selectedFabCate!,
-      selectedFabColorBoxes: selectedFabColorBoxes!,
-      selectedFabColor: selectedFabColor!,
-    );
-    items.add(item);
+    items.add(MaterialRQItem(
+      balanceAfter: selectedFabColorBoxes?.fabricBalance?.toString(),
+      balanceBefore: selectedFabColorBoxes?.fabricBalance?.toString(),
+      catNameEn: selectedFabCate?.catNameEn,
+      fabricBalance: selectedFabColorBoxes?.fabricBalance,
+      fabricBox: selectedFabColorBoxes?.fabricBox,
+      fabricColor: selectedFabColor?.fabricColor,
+      fabricId: selectedFabColorBoxes?.fabricId,
+      fabricNo: selectedFabColorBoxes?.fabricNo,
+      catCode: selectedFabCate?.catCode,
+    ));
     selectedFabCate = null;
     selectedFabColorBoxes = null;
     selectedFabColor = null;
     enableAdd.toggle();
+  }
+
+  getMaterialDetail() {
+    isLoading.value = true;
+    MaterialRequestDetailModel.fetch(materialRQId!).then((value) {
+      isLoading.value = false;
+      items.value = value.orders ?? [];
+    }).onError((e, trace) {
+      isLoading.value = false;
+      showErrorMessage(
+        Get.context!,
+        error: e,
+        trace: trace,
+        onRetry: () {},
+      );
+    });
   }
 
   /// get and register controller
@@ -93,6 +127,7 @@ class MaterialRequestFormController extends GetxController {
       isBusy.value = false;
       Get.back();
       successSnackBar(message: "Material RQ added successfully");
+
       ///
     }).onError((e, trace) {
       isLoading.value = false;

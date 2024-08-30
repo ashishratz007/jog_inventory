@@ -38,11 +38,14 @@ class _AppDateTimeFormat {
   }
 
   String toYYMMDDHHMMSS({
-    DateTime? dateTime,
+    DateTime? date,
     bool useNextLine = false,
+    bool removeTime = false,
   }) {
-    dateTime ??= DateTime.now();
-    return DateFormat('yyyy-MM-dd HH:mm:ss').format(dateTime);
+    date ??= DateTime.now();
+    var data = DateFormat('yyyy-MM-dd HH:mm:ss').format(date);
+    if (removeTime) return data.split(" ").first;
+    return data;
   }
 }
 

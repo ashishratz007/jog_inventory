@@ -1,4 +1,5 @@
 import '../../../common/exports/main_export.dart';
+import '../models/material_request.dart';
 
 class FinishedMaterialDetailScreen extends StatefulWidget {
   const FinishedMaterialDetailScreen({super.key});
@@ -10,6 +11,19 @@ class FinishedMaterialDetailScreen extends StatefulWidget {
 
 class _FinishedMaterialDetailScreenState
     extends State<FinishedMaterialDetailScreen> {
+  RxBool isLoading = false.obs;
+  List<MaterialRQItem> items  = [];
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  getMaterialData() async {
+    var  materialRQId = Get.arguments[appKeys.materialRQId];
+    MaterialRequestDetailModel.fetch(materialRQId);
+  }
+
   @override
   Widget build(BuildContext context) {
     return CustomAppBar(title: "Finished Detail", body: body());

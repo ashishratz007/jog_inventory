@@ -1,7 +1,7 @@
 import 'package:jog_inventory/common/utils/date_formator.dart';
 import 'package:jog_inventory/common/utils/dotted_border.dart';
 import 'package:jog_inventory/modules/material/controllers/material_request_form.dart';
-import 'package:jog_inventory/modules/material/models/material_rq_form.dart';
+import 'package:jog_inventory/modules/material/models/material_request.dart';
 import 'package:jog_inventory/modules/material/models/fabric.dart';
 import 'package:jog_inventory/modules/material/models/search.dart';
 import 'package:jog_inventory/modules/material/widgets/order_codes_remove.dart';
@@ -30,7 +30,6 @@ class MaterialRequestFormScreen extends GetView<MaterialRequestFormController> {
             padding: AppPadding.pagePadding,
             child: Column(
               children: [
-                /// TODO Update
                 if (controller.isUpdate.value) ...[
                   orderInfo(),
                   gap(),
@@ -43,15 +42,25 @@ class MaterialRequestFormScreen extends GetView<MaterialRequestFormController> {
                 ],
                 gap(),
 
-                /// Items
+                /// Loading effects
+                Obx(() => Visibility(
+                      visible: controller.isLoading.value,
+                      child: listLoadingEffect(height: 100),
+                    )),
+
+                /// Items list
                 Obx(
-                  () => Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      ...displayItemsWidget(),
-                    ],
+                  () => Visibility(
+                    visible: !controller.isLoading.value,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ...displayItemsWidget(),
+                      ],
+                    ),
                   ),
                 ),
+
                 gap(),
               ],
             ),
@@ -191,7 +200,7 @@ class MaterialRequestFormScreen extends GetView<MaterialRequestFormController> {
                   style:
                       appTextTheme.labelMedium?.copyWith(color: Colours.white)),
               gap(),
-              Text("New",
+              Text(controller.materialRqDetail?.rqStatus ?? "_",
                   style:
                       appTextTheme.labelMedium?.copyWith(color: Colours.white)),
               Expanded(child: SizedBox()),
@@ -205,7 +214,7 @@ class MaterialRequestFormScreen extends GetView<MaterialRequestFormController> {
                   style:
                       appTextTheme.labelMedium?.copyWith(color: Colours.white)),
               gap(),
-              Text("EX-5227A",
+              Text(controller.materialRqDetail?.orderCode ?? "_",
                   style:
                       appTextTheme.labelSmall?.copyWith(color: Colours.white)),
               Expanded(child: SizedBox()),
@@ -213,7 +222,7 @@ class MaterialRequestFormScreen extends GetView<MaterialRequestFormController> {
                   style:
                       appTextTheme.labelMedium?.copyWith(color: Colours.white)),
               gap(),
-              Text("24-08-06",
+              Text(appDateTimeFormat.toYYMMDDHHMMSS(removeTime: true),
                   style:
                       appTextTheme.labelSmall?.copyWith(color: Colours.white)),
             ],
@@ -224,14 +233,14 @@ class MaterialRequestFormScreen extends GetView<MaterialRequestFormController> {
   }
 
   List<Widget> displayItemsWidget() {
-    return displayList<MaterialRQFormItem>(
+    return displayList<MaterialRQItem>(
       items: controller.items,
       showGap: true,
       builder: (item, index) => itemTileWidget(item),
     );
   }
 
-  Widget itemTileWidget(MaterialRQFormItem item) {
+  Widget itemTileWidget(MaterialRQItem item) {
     return Container(
       padding: AppPadding.inner,
       decoration:
@@ -241,15 +250,15 @@ class MaterialRequestFormScreen extends GetView<MaterialRequestFormController> {
         children: [
           Row(
             children: [
-              Text("${item.selectedFabColorBoxes.fabricNo ?? ""}",
+              Text("${item.fabricNo ?? ""}",
                   style: appTextTheme.labelSmall
                       ?.copyWith(color: Colours.greyLight)),
               gap(space: 10),
-              Text("${item.selectedFabCate.catCode} ,",
+              Text("${item.catNameEn} ,",
                   style: appTextTheme.labelSmall
                       ?.copyWith(color: Colours.primaryText)),
               gap(space: 10),
-              Text("${item.selectedFabColor.fabricColor}",
+              Text("${item.fabricColor}",
                   style: appTextTheme.labelSmall
                       ?.copyWith(color: Colours.greyLight)),
               Expanded(child: SizedBox()),
@@ -272,7 +281,7 @@ class MaterialRequestFormScreen extends GetView<MaterialRequestFormController> {
                   style: appTextTheme.labelSmall
                       ?.copyWith(color: Colours.greyLight)),
               gap(space: 5),
-              Text("${item.selectedFabColorBoxes.fabricBox ?? 0}",
+              Text("${item.fabricBox ?? 0}",
                   style: appTextTheme.labelSmall
                       ?.copyWith(color: Colours.blackLite)),
               Expanded(child: SizedBox()),
@@ -280,7 +289,7 @@ class MaterialRequestFormScreen extends GetView<MaterialRequestFormController> {
                   style: appTextTheme.labelSmall
                       ?.copyWith(color: Colours.greyLight)),
               gap(space: 10),
-              Text("${item.selectedFabColorBoxes.fabricBalance ?? 0.0} kg",
+              Text("${item.fabricBalance ?? 0.0} kg",
                   style: appTextTheme.labelSmall
                       ?.copyWith(color: Colours.blackLite)),
               gap(space: 50),

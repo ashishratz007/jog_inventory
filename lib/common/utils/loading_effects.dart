@@ -15,7 +15,7 @@ Widget shimmerEffects(
       : child;
 }
 
-Widget listLoadingEffect({int count =5}) {
+Widget listLoadingEffect({int count =5, double height = 45}) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
@@ -26,7 +26,7 @@ Widget listLoadingEffect({int count =5}) {
                 child: shimmerEffects(
                   isLoading: true,
                   child: Container(
-                    height: 45,
+                    height: height,
                     width: Get.width,
                     decoration: BoxDecoration(
                         color: Colors.white,

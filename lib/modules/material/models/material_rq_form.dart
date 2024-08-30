@@ -1,10 +1,11 @@
 import 'package:jog_inventory/common/base_model/base_model.dart';
 import 'package:jog_inventory/modules/material/models/fabric.dart';
+import 'package:jog_inventory/modules/material/models/material_request.dart';
 
 class MaterialRqFormModel extends BaseModel {
   @override
   String get endPoint => "/api/add-request";
-  List<MaterialRQFormItem> items = [];
+  List<MaterialRQItem> items = [];
   String order_code; // order code
   int order_lkr_title_id; // order code id
 
@@ -19,7 +20,7 @@ class MaterialRqFormModel extends BaseModel {
       'order_code': order_code,
       'order_lkr_title_id': order_lkr_title_id,
       'fabric_id_list': items
-          .map((item) => item.selectedFabColorBoxes.fabricId!)
+          .map((item) => item.fabricId!)
           .toList()
           .join(",")
           .toString(),

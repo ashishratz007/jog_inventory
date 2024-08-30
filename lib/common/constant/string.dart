@@ -70,6 +70,8 @@ class _AppKeys {
   final walkThrough = "walkThrough";
   final fabId = "fabId";
   final pacId = "pacId";
+  final materialRQId = "materialRQId";
+  final materialRQDetail = "materialRQDetail";
 }
 
 var appKeys = _AppKeys();
