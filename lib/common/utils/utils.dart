@@ -539,3 +539,46 @@ Widget checkBox(
 Future<void> delay(int seconds,{Function()? onDone} )async{
   return Future.delayed(Duration(seconds: 2),onDone);
 }
+
+DateTime timeNow( ) => DateTime.now();
+
+
+/// get month name
+///
+String getMonthName(int monthIndex, {bool short = false}) {
+  if (monthIndex < 1 || monthIndex > 12) {
+    return "Invalid Month Index";
+  }
+
+  List<String> shortNames = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec"
+  ];
+
+  List<String> fullNames = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December"
+  ];
+
+  return short ? shortNames[monthIndex - 1] : fullNames[monthIndex - 1];
+}

@@ -1,4 +1,5 @@
 import 'package:jog_inventory/common/base_model/base_model.dart';
+import 'package:jog_inventory/common/base_model/common_model.dart';
 
 import '../../../common/exports/main_export.dart';
 
@@ -61,7 +62,7 @@ class MaterialRequestModel extends BaseModel {
     };
   }
 
-  static Future<List<MaterialRequestModel>> fetch(int page,
+  static Future<Pagination<MaterialRequestModel>> fetch(int page,
       {bool isFinished = false}) async {
     List<MaterialRequestModel> list = [];
     var resp = await MaterialRequestModel().create(
@@ -74,7 +75,24 @@ class MaterialRequestModel extends BaseModel {
       list = ParseData.toList<MaterialRequestModel>(resp.data['data'],
           itemBuilder: (json) => MaterialRequestModel.fromJson(json));
     }
-    return list;
+    var pagination = Pagination<MaterialRequestModel>.fromJson(resp.data );
+    pagination.items = list;
+    return pagination;
+  }
+
+
+  static Future updateMaterialRq(int rqId, List<String> fabricList)async{
+    ///api/update-request-fabric
+   var url = "/api/update-request-fabric";
+   var data = {
+     'fabric_id_list': fabricList.join(","),
+     'rq_id': rqId,
+   };
+    MaterialRequestModel().create(
+      url: url,
+      isFormData: true,
+      data: data,
+    );
   }
 }
 
@@ -207,5 +225,50 @@ class MaterialRQItem {
       newForm: ParseData.toInt(json['new_form']),
       catNameEn: ParseData.string(json['cat_name_en']),
     );
+  }
+}
+
+class MonthlyUsage {
+  double? used;
+  double? cost;
+
+  MonthlyUsage({this.used, this.cost});
+
+  // Assuming ParseData class with static parsing methods is available
+  factory MonthlyUsage.fromJson(Map<String, dynamic> json) {
+    return MonthlyUsage(
+      used: ParseData.toDouble(json['used']),
+      cost: ParseData.toDouble(json['cost']),
+    );
+  }
+}
+
+class UsageDataModel extends BaseModel {
+  @override
+  String get endPoint => "/api/monthly-report";
+  // "total_used": "134,648.72",
+  // "total_cost": "41,231,059.85",
+  String totalUsed;
+  String totalCost;
+  Map<String, MonthlyUsage> monthlyUsage;
+
+  UsageDataModel({required this.monthlyUsage,required this.totalCost,required this.totalUsed});
+
+  factory UsageDataModel.fromJson(Map<String, dynamic> json) {
+    Map<String, MonthlyUsage> monthlyData = {};
+    json['data'].forEach((month, data) {
+      monthlyData[month] = MonthlyUsage.fromJson(data);
+    });
+    return UsageDataModel(monthlyUsage: monthlyData, totalCost:  json['total_used']??"", totalUsed: json["total_used"]??"");
+  }
+
+  static Future<UsageDataModel> fetch(String year) async {
+    var resp = await UsageDataModel(monthlyUsage: {},totalCost:"",totalUsed:"").create(
+      isFormData: true,
+      data: {
+        "y_select": year,
+      },
+    );
+    return UsageDataModel.fromJson(resp.data);
   }
 }

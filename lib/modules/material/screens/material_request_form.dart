@@ -1,4 +1,4 @@
-import 'package:jog_inventory/common/utils/date_formator.dart';
+import 'package:jog_inventory/common/utils/date_formater.dart';
 import 'package:jog_inventory/common/utils/dotted_border.dart';
 import 'package:jog_inventory/modules/material/controllers/material_request_form.dart';
 import 'package:jog_inventory/modules/material/models/material_request.dart';
@@ -211,20 +211,23 @@ class MaterialRequestFormScreen extends GetView<MaterialRequestFormController> {
           Row(
             children: [
               Text(Strings.orderCode,
-                  style:
-                      appTextTheme.labelMedium?.copyWith(color: Colours.white)),
-              gap(),
+                  style: appTextTheme.labelMedium
+                      ?.copyWith(color: Colours.white, fontSize: 13)),
+              gap(space: 5),
               Text(controller.materialRqDetail?.orderCode ?? "_",
-                  style:
-                      appTextTheme.labelSmall?.copyWith(color: Colours.white)),
+                  style: appTextTheme.labelSmall
+                      ?.copyWith(color: Colours.white, fontSize: 13)),
               Expanded(child: SizedBox()),
               Text(Strings.date,
-                  style:
-                      appTextTheme.labelMedium?.copyWith(color: Colours.white)),
-              gap(),
-              Text(appDateTimeFormat.toYYMMDDHHMMSS(removeTime: true),
-                  style:
-                      appTextTheme.labelSmall?.copyWith(color: Colours.white)),
+                  style: appTextTheme.labelMedium
+                      ?.copyWith(color: Colours.white, fontSize: 13)),
+              gap(space: 5),
+              Text(
+                  appDateTimeFormat.toYYMMDDHHMMSS(
+                      removeTime: true,
+                      date: controller.materialRqDetail?.rqDate),
+                  style: appTextTheme.labelSmall
+                      ?.copyWith(color: Colours.white, fontSize: 13)),
             ],
           )
         ],
@@ -468,7 +471,9 @@ class MaterialRequestFormScreen extends GetView<MaterialRequestFormController> {
                   title: Strings.deleteRQ,
                   color: Colours.redBg,
                   textColor: Colours.red,
-                  onTap: () {},
+                  onTap: () {
+                    controller.deleteMaterialRQRequest();
+                  },
                   isFullWidth: false,
                   radius: 15,
                 )),
@@ -476,7 +481,10 @@ class MaterialRequestFormScreen extends GetView<MaterialRequestFormController> {
                 height: 40,
                 child: PrimaryButton(
                   title: Strings.submit,
-                  onTap: () {},
+                  onTap: () {
+                    controller.updateFormRequest();
+                  },
+                  isBusy: controller.isBusy.value,
                   isFullWidth: false,
                   radius: 15,
                 )),

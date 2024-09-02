@@ -1,3 +1,6 @@
+import 'package:jog_inventory/common/utils/date_formater.dart';
+import 'package:jog_inventory/common/utils/error_message.dart';
+
 import '../../../common/exports/main_export.dart';
 import '../models/material_request.dart';
 
@@ -12,16 +15,45 @@ class FinishedMaterialDetailScreen extends StatefulWidget {
 class _FinishedMaterialDetailScreenState
     extends State<FinishedMaterialDetailScreen> {
   RxBool isLoading = false.obs;
-  List<MaterialRQItem> items  = [];
+  List<MaterialRQItem> items = [];
+  MaterialRequestDetailModel materialDetail = MaterialRequestDetailModel();
+  MaterialRequestModel materialRqDetail = MaterialRequestModel();
+
+  double get total {
+    var val = 0.0;
+    materialDetail.orders?.forEach((item) {
+      val += item.fabricTotal ?? 0.0;
+    });
+    return val;
+  }
+
+  double get usedKg {
+    var val = 0.0;
+    materialDetail.orders?.forEach((item) {
+      val += double.tryParse(item.used ?? "_") ?? 0.0;
+    });
+    return val;
+  }
 
   @override
   void initState() {
+    materialRqDetail = Get.arguments[appKeys.materialRQDetail];
+    getMaterialData();
     super.initState();
   }
 
   getMaterialData() async {
-    var  materialRQId = Get.arguments[appKeys.materialRQId];
-    MaterialRequestDetailModel.fetch(materialRQId);
+    isLoading.value = true;
+    try {
+      var materialRQId = Get.arguments[appKeys.materialRQId];
+      materialDetail = await MaterialRequestDetailModel.fetch(materialRQId);
+      isLoading.value = false;
+    } catch (error, trace) {
+      isLoading.value = false;
+      showErrorMessage(context, error: error, trace: trace, onRetry: () {
+        getMaterialData();
+      });
+    }
   }
 
   @override
@@ -32,20 +64,34 @@ class _FinishedMaterialDetailScreenState
   Widget body() {
     return SingleChildScrollView(
         padding: AppPadding.pagePadding,
-        child: Column(
-          children: [
-            orderInfo(),
-            gap(space: 20),
-            dottedDivider(color: Colours.greyLight),
-            gap(space: 20),
-            itemTileWidget(),
-            gap(),
-            totalWidget(),
+        child: Obx(
+          () => Column(
+            children: [
+              orderInfo(),
+              gap(space: 20),
 
-            ///
-            gap(),
-            safeAreaBottom(context),
-          ],
+              Visibility(
+                  visible: isLoading.value,
+                  child: listLoadingEffect(count: 2, height: 100)),
+              if (!isLoading.value) ...[
+                dottedDivider(color: Colours.greyLight),
+                gap(space: 20),
+                ...displayList(
+                    showGap: true,
+                    items: materialDetail.orders,
+                    builder: (item, index) {
+                      var item = materialDetail.orders![index];
+                      return itemTileWidget(item, index);
+                    }),
+                gap(),
+                totalWidget(),
+              ],
+
+              ///
+              gap(),
+              safeAreaBottom(context),
+            ],
+          ),
         ));
   }
 
@@ -63,7 +109,7 @@ class _FinishedMaterialDetailScreenState
                   style:
                       appTextTheme.labelMedium?.copyWith(color: Colours.white)),
               gap(),
-              Text("New",
+              Text(materialRqDetail.rqStatus ?? "",
                   style:
                       appTextTheme.labelMedium?.copyWith(color: Colours.white)),
               Expanded(child: SizedBox()),
@@ -77,7 +123,7 @@ class _FinishedMaterialDetailScreenState
                   style:
                       appTextTheme.labelMedium?.copyWith(color: Colours.white)),
               gap(),
-              Text("EX-5227A",
+              Text(materialRqDetail.orderCode ?? "_",
                   style:
                       appTextTheme.labelSmall?.copyWith(color: Colours.white)),
             ],
@@ -89,7 +135,9 @@ class _FinishedMaterialDetailScreenState
                   style:
                       appTextTheme.labelMedium?.copyWith(color: Colours.white)),
               gap(),
-              Text("24-08-06 10:48:45",
+              Text(
+                  appDateTimeFormat.toYYMMDDHHMMSS(
+                      date: materialRqDetail.rqDate),
                   style:
                       appTextTheme.labelSmall?.copyWith(color: Colours.white)),
             ],
@@ -101,7 +149,9 @@ class _FinishedMaterialDetailScreenState
                   style:
                       appTextTheme.labelMedium?.copyWith(color: Colours.white)),
               gap(),
-              Text("24-08-06 10:48:45",
+              Text(
+                  appDateTimeFormat.toYYMMDDHHMMSS(
+                      date: materialRqDetail.finishDate),
                   style:
                       appTextTheme.labelSmall?.copyWith(color: Colours.white)),
             ],
@@ -111,7 +161,7 @@ class _FinishedMaterialDetailScreenState
     );
   }
 
-  Widget itemTileWidget() {
+  Widget itemTileWidget(MaterialRQItem item, int index) {
     return Container(
         padding: AppPadding.inner,
         decoration: BoxDecoration(
@@ -122,7 +172,7 @@ class _FinishedMaterialDetailScreenState
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("1",
+            Text(item.fabricNo ?? "_",
                 style: appTextTheme.titleSmall
                     ?.copyWith(color: Colours.blackLite)),
             gap(space: 10),
@@ -132,10 +182,11 @@ class _FinishedMaterialDetailScreenState
                 children: [
                   Row(
                     children: [
-                      Text("Ak PRO MAX LIGHT , ",
+                      Text("${item.catNameEn} , ",
                           style: appTextTheme.titleSmall
                               ?.copyWith(color: Colours.primaryText)),
-                      Text("Brown", style: appTextTheme.titleSmall?.copyWith()),
+                      Text("${item.fabricColor}",
+                          style: appTextTheme.titleSmall?.copyWith()),
                       Expanded(child: SizedBox()),
                       displayAssetsWidget(AppIcons.edit, height: 20)
                     ],
@@ -143,25 +194,40 @@ class _FinishedMaterialDetailScreenState
                   gap(space: 10),
                   Row(
                     children: [
-                      Expanded(child: displayTitleSubtitle("Box", "15")),
-                      Expanded(child: displayTitleSubtitle("Used", "15.00 kg")),
-                    ],
-                  ),
-                  gap(space: 5),
-                  Row(
-                    children: [
-                      Expanded(child: displayTitleSubtitle("Bal before", "15")),
                       Expanded(
+                          flex: 3,
                           child:
-                              displayTitleSubtitle("Unit price", "15.00 kg")),
+                              displayTitleSubtitle("Box", "${item.fabricBox}")),
+                      Expanded(
+                          flex: 2,
+                          child:
+                              displayTitleSubtitle("Used", "${item.used} kg")),
                     ],
                   ),
                   gap(space: 5),
                   Row(
                     children: [
-                      Expanded(child: displayTitleSubtitle("Bal after", "15")),
                       Expanded(
-                          child: displayTitleSubtitle("Total", "15.00 kg")),
+                          flex: 3,
+                          child: displayTitleSubtitle(
+                              "Bal before", "${item.balanceBefore} kg")),
+                      Expanded(
+                          flex: 2,
+                          child: displayTitleSubtitle(
+                              "Unit price", "${item.fabricInPrice??0}")),
+                    ],
+                  ),
+                  gap(space: 5),
+                  Row(
+                    children: [
+                      Expanded(
+                          flex: 3,
+                          child: displayTitleSubtitle(
+                              "Bal after", "${item.balanceAfter} kg")),
+                      Expanded(
+                          flex: 2,
+                          child: displayTitleSubtitle(
+                              "Total", "${item.fabricAmount??0}")),
                     ],
                   ),
                 ],
@@ -244,14 +310,14 @@ class _FinishedMaterialDetailScreenState
                 gap(space: 10),
                 Expanded(
                     child: Text(
-                  "25.00 kg",
+                  "${usedKg} kg",
                   style: appTextTheme.labelMedium
                       ?.copyWith(color: Colours.blackLite),
                   textAlign: TextAlign.center,
                 )),
                 Expanded(
                     child: Text(
-                  "90000",
+                  formatNumber(total.toString()),
                   style: appTextTheme.labelMedium?.copyWith(
                     color: Colours.blackLite,
                   ),

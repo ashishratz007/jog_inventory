@@ -1,11 +1,11 @@
 import 'package:jog_inventory/common/utils/bottom_sheet.dart';
-import 'package:jog_inventory/common/utils/date_formator.dart';
 import 'package:jog_inventory/common/utils/menu.dart';
 import 'package:jog_inventory/modules/material/controllers/material_request_list.dart';
 import 'package:jog_inventory/modules/material/models/material_request.dart';
 import 'package:jog_inventory/modules/material/widgets/search_filter.dart';
 import 'package:jog_inventory/modules/material/widgets/summary_popup.dart';
 import '../../../common/exports/main_export.dart';
+import '../../../common/utils/date_formater.dart';
 
 class MaterialRequestListScreen extends GetView<MaterialRequestListController> {
   const MaterialRequestListScreen({super.key});
@@ -151,63 +151,64 @@ class MaterialRequestListScreen extends GetView<MaterialRequestListController> {
   }
 
   Widget summeryAndPage() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        TextBorderButton(
-            onTap: () {
-              showAppBottomSheet(Get.context!, ViewSummaryBodyScreen());
-            },
-            title: Strings.viewSummary,
-            color: Colours.primary,
-            borderColor: Colours.primary),
+    return Obx(()=> Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          TextBorderButton(
+              onTap: () {
+                showAppBottomSheet(Get.context!, ViewSummaryBodyScreen());
+              },
+              title: Strings.viewSummary,
+              color: Colours.primary,
+              borderColor: Colours.primary),
 
-        /// Page Count
-        Row(
-          children: [
-            Text("Page",
-                style: appTextTheme.titleSmall?.copyWith(
-                    color: Colours.blackLite, fontWeight: FontWeight.w700)),
-            Gap(10),
-            popupMenu(Get.context!,
-                items: [
-                  ...List.generate(
-                      10,
-                      (index) => MenuItem(
-                          title: '${index + 1}',
-                          onTap: (value) {
-                            ///
-                          },
-                          id: index,
-                          key: "$index"))
-                ],
-                menuIcon: Container(
-                  height: 40,
-                  width: 70,
-                  decoration: BoxDecoration(
-                      color: Colours.white,
-                      border: Border.all(color: Colours.border),
-                      borderRadius: BorderRadius.circular(5)),
-                  child: Center(
-                      child: Text("${0}",
-                          style: appTextTheme.titleSmall?.copyWith(
-                              color: Colours.blackLite,
-                              fontWeight: FontWeight.w700))),
-                )),
-            Gap(10),
-            Text("of ${10}",
-                style: appTextTheme.titleSmall?.copyWith(
-                    color: Colours.blackLite, fontWeight: FontWeight.w700)),
-          ],
-        )
-      ],
+          /// Page Count
+          Row(
+            children: [
+              Text("Page",
+                  style: appTextTheme.titleSmall?.copyWith(
+                      color: Colours.blackLite, fontWeight: FontWeight.w700)),
+              Gap(10),
+              popupMenu(Get.context!,
+                  items: [
+                    ...List.generate(
+                        controller.isProducing.value? controller.producing?.totalPages??0:  controller.finishedList?.totalPages??0,
+                        (index) => MenuItem(
+                            title: '${index + 1}',
+                            onTap: (value) {
+                              controller.filterByPage( index +1);
+                            },
+                            id: index,
+                            key: "$index"))
+                  ],
+                  menuIcon: Container(
+                    height: 40,
+                    width: 70,
+                    decoration: BoxDecoration(
+                        color: Colours.white,
+                        border: Border.all(color: Colours.border),
+                        borderRadius: BorderRadius.circular(5)),
+                    child: Center(
+                        child: Text("${controller.isProducing.value? controller.producingPage:controller.finishPage}",
+                            style: appTextTheme.titleSmall?.copyWith(
+                                color: Colours.blackLite,
+                                fontWeight: FontWeight.w700))),
+                  )),
+              Gap(10),
+              Text("of ${ controller.isProducing.value? controller.producing?.totalPages??0:  controller.finishedList?.totalPages??0}",
+                  style: appTextTheme.titleSmall?.copyWith(
+                      color: Colours.blackLite, fontWeight: FontWeight.w700)),
+            ],
+          )
+        ],
+      ),
     );
   }
 
   List<Widget> displayProductionItems() {
     return displayList<MaterialRequestModel>(
       showGap: true,
-      items: controller.producing,
+      items: controller.producing?.items,
       builder: (item, index) {
         return producingItemTileWidget(item, index);
       },
@@ -216,7 +217,7 @@ class MaterialRequestListScreen extends GetView<MaterialRequestListController> {
 
   List<Widget> displayFinishedItems() {
     return displayList<MaterialRequestModel>(
-      items: controller.finishedList,
+      items: controller.finishedList?.items,
       showGap: true,
       builder: (item, index) {
         return finishedItemTileWidget(item, index);
@@ -239,7 +240,7 @@ class MaterialRequestListScreen extends GetView<MaterialRequestListController> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "${index+1}",
+                    "${index + 1}",
                     style: appTextTheme.titleSmall
                         ?.copyWith(color: Colours.blackLite),
                   ),
@@ -272,7 +273,7 @@ class MaterialRequestListScreen extends GetView<MaterialRequestListController> {
                                 ?.copyWith(color: Colours.greyLight)),
                         gap(space: 10),
                         Text(
-                          "${item.itemNum??0}",
+                          "${item.itemNum ?? 0}",
                           style: appTextTheme.titleSmall?.copyWith(),
                           textAlign: TextAlign.center,
                         ),
@@ -330,8 +331,8 @@ class MaterialRequestListScreen extends GetView<MaterialRequestListController> {
                     onTap: () {
                       Get.toNamed(AppRoutesString.materialRequestForm,
                           arguments: {
-                          appKeys.materialRQId : item.rqId,
-                          appKeys.materialRQDetail : item,
+                            appKeys.materialRQId: item.rqId,
+                            appKeys.materialRQDetail: item,
                           });
                     },
                     isFullWidth: false,
@@ -342,8 +343,17 @@ class MaterialRequestListScreen extends GetView<MaterialRequestListController> {
                 PrimaryButton(
                     color: Colours.greenLight,
                     title: Strings.finish,
-                    onTap: () {
-                      Get.toNamed(AppRoutesString.materialRQFinish);
+                    onTap: () async {
+                      var data = await Get.toNamed(
+                          AppRoutesString.materialRQFinish,
+                          arguments: {
+                            appKeys.materialRQId: item.rqId,
+                            appKeys.materialRQDetail: item,
+                          });
+                      if (data == true) {
+                        controller.finishedList?.clear();
+                        controller.changeTabs(true);
+                      }
                     },
                     isFullWidth: false,
                     padding:
@@ -360,7 +370,10 @@ class MaterialRequestListScreen extends GetView<MaterialRequestListController> {
   Widget finishedItemTileWidget(MaterialRequestModel item, int index) {
     return InkWell(
       onTap: () {
-        Get.toNamed(AppRoutesString.materialRQFinishDetail);
+        Get.toNamed(AppRoutesString.materialRQFinishDetail, arguments:  {
+          appKeys.materialRQId: item.rqId,
+          appKeys.materialRQDetail: item,
+        });
       },
       child: Container(
           decoration: BoxDecoration(
@@ -378,7 +391,7 @@ class MaterialRequestListScreen extends GetView<MaterialRequestListController> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "${index+1}",
+                          "${index + 1}",
                           style: appTextTheme.titleSmall
                               ?.copyWith(color: Colours.blackLite),
                         ),
@@ -400,7 +413,9 @@ class MaterialRequestListScreen extends GetView<MaterialRequestListController> {
                           size: 18,
                         ),
                         gap(space: 5),
-                        chipWidget( appDateTimeFormat.toYYMMDDHHMMSS(date: item.finishDate),
+                        chipWidget(
+                            appDateTimeFormat.toYYMMDDHHMMSS(
+                                date: item.finishDate),
                             color: Colours.redBg,
                             textColor: Colours.red,
                             fontSize: 12),
@@ -428,7 +443,7 @@ class MaterialRequestListScreen extends GetView<MaterialRequestListController> {
                                   ?.copyWith(color: Colours.greyLight)),
                           gap(space: 10),
                           Text(
-                            "${item.itemNum??0}",
+                            "${item.itemNum ?? 0}",
                             style: appTextTheme.titleSmall?.copyWith(),
                             textAlign: TextAlign.center,
                           ),
@@ -466,7 +481,7 @@ class MaterialRequestListScreen extends GetView<MaterialRequestListController> {
                                   ?.copyWith(color: Colours.greyLight)),
                           gap(space: 10),
                           Text(
-                            "${item.gTotal??0}",
+                            "${item.gTotal ?? 0}",
                             style: appTextTheme.titleSmall
                                 ?.copyWith(color: Colours.greenLight),
                             textAlign: TextAlign.center,
@@ -494,7 +509,7 @@ class MaterialRequestListScreen extends GetView<MaterialRequestListController> {
                                       ?.copyWith(color: Colours.greyLight)),
                               gap(space: 10),
                               Text(
-                                "${item.isAddon??0}",
+                                "${item.isAddon ?? 0}",
                                 style: appTextTheme.titleSmall?.copyWith(),
                                 textAlign: TextAlign.center,
                               ),
@@ -516,7 +531,7 @@ class MaterialRequestListScreen extends GetView<MaterialRequestListController> {
                                         ?.copyWith(color: Colours.greyLight)),
                                 gap(space: 10),
                                 Text(
-                                  item.employeeName??"_",
+                                  item.employeeName ?? "_",
                                   style: appTextTheme.titleSmall?.copyWith(),
                                   textAlign: TextAlign.center,
                                 ),

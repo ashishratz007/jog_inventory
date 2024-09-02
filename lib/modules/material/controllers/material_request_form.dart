@@ -135,4 +135,33 @@ class MaterialRequestFormController extends GetxController {
       errorSnackBar(message: "Error posting data");
     });
   }
+
+  /// delete RQ
+  deleteMaterialRQRequest() {
+    deleteItemPopup(Get.context!, onDelete: (context) async {
+      try {
+        await DeleteMaterialRQModel(rq_id: materialRqDetail!.rqId!.toString())
+            .create();
+      } catch (e, trace) {
+        errorSnackBar(message: "Error removing data!");
+      }
+    }, onComplete: () {
+      Get.back(result: true);
+      successSnackBar(message: "Item removed successfully");
+    });
+  }
+
+  updateFormRequest() async {
+    isBusy.value = true;
+    MaterialRequestModel.updateMaterialRq(materialRqDetail!.rqId!,
+            items.map((f) => f.fabricId!.toString()).toList())
+        .then((va) {
+      isBusy.value = false;
+      Get.back();
+      successSnackBar(message: "Request updated");
+    }).onError((error, trace) {
+      isBusy.value = false;
+     errorSnackBar(message: "Unable to update data");
+    });
+  }
 }

@@ -47,7 +47,6 @@ class SearchOrderModal extends BaseModel {
 }
 
 class OrderCodeData {
-  bool? selected = false;
   int? orderLkrTitleId;
   String? orderTitle;
   String? haveOrderForm;

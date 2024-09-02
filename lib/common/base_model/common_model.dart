@@ -7,7 +7,11 @@ class Pagination<T> {
   int currentPage;
   int pageSize;
   int totalPages;
+  int get length => items.length;
   bool get hasNext => currentPage < totalPages;
+  clear(){
+    items.clear();
+  }
 
   List<T> items = [];
   Pagination({
@@ -21,7 +25,7 @@ class Pagination<T> {
 // From JSON
   factory Pagination.fromJson(Map<String, dynamic> json) {
     return Pagination(
-      totalItems: ParseData.toInt(json['total_items']??json['total']) ?? 0,
+      totalItems: ParseData.toInt(json['total_items']??json['total']??json['total_records']) ?? 0,
       currentPage: ParseData.toInt(json['current_page']) ?? 0,
       pageSize: ParseData.toInt(json['page_size']) ?? 0,
       totalPages: ParseData.toInt(json['total_pages']) ?? 0,

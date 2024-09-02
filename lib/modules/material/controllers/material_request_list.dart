@@ -1,3 +1,4 @@
+import 'package:jog_inventory/common/base_model/common_model.dart';
 import 'package:jog_inventory/common/utils/error_message.dart';
 import 'package:jog_inventory/modules/material/models/material_request.dart';
 
@@ -7,11 +8,11 @@ class MaterialRequestListController extends GetxController {
   RxBool isLoading = false.obs;
   RxBool isBusy = false.obs;
   RxBool isProducing = true.obs;
-  RxInt finishPage = 0.obs;
-  RxInt producingPage = 0.obs;
+  RxInt finishPage = 1.obs; //current page
+  RxInt producingPage = 1.obs; // current page
 
-  List<MaterialRequestModel> finishedList = [];
-  List<MaterialRequestModel> producing = [];
+  Pagination<MaterialRequestModel>? finishedList;
+  Pagination<MaterialRequestModel>? producing;
 
   @override
   void onInit() {
@@ -29,26 +30,37 @@ class MaterialRequestListController extends GetxController {
   changeTabs(bool isFinished) {
     if (isFinished) {
       isProducing.value = false;
-      if(finishedList.length == 0)
-      getDataList(isFinished: true);
+      if ((finishedList?.length ?? 0) == 0) getDataList(isFinished: true);
     } else {
       isProducing.value = true;
     }
   }
 
+  // page filter
+  filterByPage(int page) {
+    if (isProducing.value) {
+      producingPage.value = page;
+    } else {
+      finishPage.value = page;
+    }
+    getDataList(
+      isFinished: !isProducing.value,
+    );
+  }
+
   /// functions
   getDataList({bool isFinished = false, bool clearData = false}) {
     if (clearData) {
-      finishedList.clear();
-      producing.clear();
-      producingPage.value = 0;
-      finishPage.value = 0;
+      finishedList?.clear();
+      producing?.clear();
+      producingPage.value = 1;
+      finishPage.value = 1;
     }
-    if (isFinished) {
-      finishPage.value++;
-    } else {
-      producingPage.value++;
-    }
+    // if (isFinished) {
+    //   finishPage.value++;
+    // } else {
+    //   producingPage.value++;
+    // }
     isLoading.value = true;
     MaterialRequestModel.fetch(
             isFinished ? finishPage.value : producingPage.value,
@@ -56,13 +68,16 @@ class MaterialRequestListController extends GetxController {
         .then((value) {
       isLoading.value = false;
       if (isFinished) {
-        finishedList.addAll(value);
+        finishedList = (value);
       } else {
-        producing.addAll(value);
+        producing = (value);
       }
+    isProducing.refresh();
     }).onError((e, trace) {
       isLoading.value = false;
-      showErrorMessage(Get.context!, error: e, trace: trace, onRetry: () {});
+      showErrorMessage(Get.context!, error: e, trace: trace, onRetry: () {
+        getDataList(isFinished: isFinished,clearData: clearData);
+      });
     });
   }
 
