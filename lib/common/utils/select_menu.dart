@@ -322,35 +322,67 @@ class _SelectItemMenuWidgetState<T> extends State<_SelectItemMenuWidget<T>>
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Expanded(
-                        child: Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            _selectedItems?.firstOrNull?.title ??
-                                widget.hintText ??
-                                '',
-                            style: TextStyle(
-                              color: _selectedItems == null
-                                  ? widget.hintColor ?? Colors.grey
-                                  : widget.selectedTextColor ?? Colors.black87,
-                              fontSize: widget.fontSize,
+                    // for multi select
+                    if (widget.allowMultiSelect &&
+                        (_selectedItems?.isNotEmpty ?? false))
+                      Expanded(
+                        child: Container(
+                          height: widget.height ?? 70,
+                          child: Center(
+                            child: ListView(
+                              scrollDirection: Axis.horizontal,
+                              children: _selectedItems!
+                                  .map((item) => Container(
+                                        margin: EdgeInsets.only(right: 5),
+                                        child: Chip(
+                                          backgroundColor: Colours.primaryBlueBg,
+                                            onDeleted: () {
+                                              addRemoveItem(item);
+                                              setState(() {});
+                                            },
+                                            padding: EdgeInsets.only(
+                                                top: 5, bottom: 5),
+                                            label: Text(item.title,
+                                                style:
+                                                    appTextTheme.titleSmall)),
+                                      ))
+                                  .toList(),
                             ),
                           ),
                         ),
-                        Transform.rotate(
-                          angle: 1.55,
-                          child: Icon(
-                            Icons.arrow_forward_ios_rounded,
-                            color: widget.iconColor ??
-                                (focusNode.hasFocus
-                                    ? Colors.blue
-                                    : Colors.black),
-                            size: 15,
+                      )
+                    // for select items
+                    else
+                      Expanded(
+                          child: Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              _selectedItems?.firstOrNull?.title ??
+                                  widget.hintText ??
+                                  '',
+                              style: TextStyle(
+                                color: _selectedItems == null
+                                    ? widget.hintColor ?? Colors.grey
+                                    : widget.selectedTextColor ??
+                                        Colors.black87,
+                                fontSize: widget.fontSize,
+                              ),
+                            ),
                           ),
-                        ),
-                      ],
-                    )),
+                          Transform.rotate(
+                            angle: 1.55,
+                            child: Icon(
+                              Icons.arrow_forward_ios_rounded,
+                              color: widget.iconColor ??
+                                  (focusNode.hasFocus
+                                      ? Colors.blue
+                                      : Colors.black),
+                              size: 15,
+                            ),
+                          ),
+                        ],
+                      )),
                   ],
                 ),
               ),
