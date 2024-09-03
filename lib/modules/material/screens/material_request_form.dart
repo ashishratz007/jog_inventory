@@ -127,8 +127,8 @@ class MaterialRequestFormScreen extends GetView<MaterialRequestFormController> {
                     Expanded(
                       child: bottomSheetMenuWithLabel<OrderCodeData>(
                           items: [],
-                          allowSearch: false,
-                          allowMultiSelect: true,
+                          allowSearch: true,
+                          allowMultiSelect: false,
                           searchApi: searchCodesMenuItems,
                           fromApi: () async {
                             return searchCodesMenuItems("");
