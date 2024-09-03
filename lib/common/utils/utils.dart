@@ -535,13 +535,11 @@ Widget checkBox(
       ));
 }
 
-
-Future<void> delay(int seconds,{Function()? onDone} )async{
-  return Future.delayed(Duration(seconds: 2),onDone);
+Future<void> delay(int seconds, {Function()? onDone}) async {
+  return Future.delayed(Duration(seconds: 2), onDone);
 }
 
-DateTime timeNow( ) => DateTime.now();
-
+DateTime timeNow() => DateTime.now();
 
 /// get month name
 ///
@@ -581,4 +579,14 @@ String getMonthName(int monthIndex, {bool short = false}) {
   ];
 
   return short ? shortNames[monthIndex - 1] : fullNames[monthIndex - 1];
+}
+
+String generateCodeFromDateTime() {
+  DateTime dateTime = DateTime.now();
+  String formattedDate = DateFormat('yyMMddHHmm').format(dateTime);
+  return 'OR-$formattedDate';
+}
+
+List<T> generateList<T>(List<T>? items, T Function(int) builder) {
+  return List.generate(items?.length ?? 0, builder);
 }

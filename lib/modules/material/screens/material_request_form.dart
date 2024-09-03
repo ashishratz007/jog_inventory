@@ -125,15 +125,17 @@ class MaterialRequestFormScreen extends GetView<MaterialRequestFormController> {
                 Row(
                   children: [
                     Expanded(
-                      child: bottomSheetItemMenuWithLabel<OrderCodeData>(
+                      child: bottomSheetMenuWithLabel<OrderCodeData>(
                           items: [],
-                          allowSearch: true,
+                          allowSearch: false,
+                          allowMultiSelect: true,
                           searchApi: searchCodesMenuItems,
                           fromApi: () async {
                             return searchCodesMenuItems("");
                           },
                           onChanged: (value) {
-                            controller.selectedOrderCode = value?.value;
+                            controller.selectedOrderCode =
+                                value?.firstOrNull?.value;
                           },
                           labelText: Strings.orderCode,
                           hintText: "Select " + Strings.orderCode),
@@ -143,7 +145,7 @@ class MaterialRequestFormScreen extends GetView<MaterialRequestFormController> {
                       () => Visibility(
                         visible: controller.isAddonYear.value,
                         child: Expanded(
-                          child: bottomSheetItemMenuWithLabel(
+                          child: bottomSheetMenuWithLabel(
                               items: [],
                               searchApi: searchCodesMenuItems,
                               fromApi: () async {
@@ -165,9 +167,9 @@ class MaterialRequestFormScreen extends GetView<MaterialRequestFormController> {
                     gap(space: 10),
                     Obx(
                       () => InkWell(
-                          onTap: () {
-                            controller.isAddonYear.toggle();
-                          },
+                          // onTap: () {
+                          //   controller.isAddonYear.toggle();
+                          // },
                           child: Icon(
                               !controller.isAddonYear.value
                                   ? Icons.check_box_outline_blank_rounded
@@ -350,7 +352,7 @@ class MaterialRequestFormScreen extends GetView<MaterialRequestFormController> {
                 children: [
                   /// Fabric
                   Expanded(
-                      child: bottomSheetItemMenuWithLabel<FabricCategoryModel>(
+                      child: bottomSheetMenuWithLabel<FabricCategoryModel>(
                           controller: controller.fabricController,
                           items: [],
                           allowSearch: true,
@@ -365,7 +367,8 @@ class MaterialRequestFormScreen extends GetView<MaterialRequestFormController> {
                                     value: items[index]));
                           },
                           onChanged: (item) {
-                            controller.selectedFabCate = item?.value;
+                            controller.selectedFabCate =
+                                item?.firstOrNull?.value;
                             controller.fabricColorController.clearItems!();
                           },
                           hintText: Strings.fabric,
@@ -374,7 +377,7 @@ class MaterialRequestFormScreen extends GetView<MaterialRequestFormController> {
 
                   /// Color
                   Expanded(
-                      child: bottomSheetItemMenuWithLabel<FabricColorModel>(
+                      child: bottomSheetMenuWithLabel<FabricColorModel>(
                     controller: controller.fabricColorController,
                     items: [],
                     fromApi: () async {
@@ -393,7 +396,7 @@ class MaterialRequestFormScreen extends GetView<MaterialRequestFormController> {
                               value: colors[index]));
                     },
                     onChanged: (item) {
-                      controller.selectedFabColor = item?.value;
+                      controller.selectedFabColor = item?.firstOrNull?.value;
                       controller.colorBoxController.clearItems!();
                     },
                     labelText: Strings.color,
@@ -407,11 +410,12 @@ class MaterialRequestFormScreen extends GetView<MaterialRequestFormController> {
               Row(
                 children: [
                   Expanded(
-                      child: bottomSheetItemMenuWithLabel<ColorBoxesModel>(
+                      child: bottomSheetMenuWithLabel<ColorBoxesModel>(
                           items: [],
                           controller: controller.colorBoxController,
                           onChanged: (item) {
-                            controller.selectedFabColorBoxes = item?.value;
+                            controller.selectedFabColorBoxes =
+                                item?.firstOrNull?.value;
                           },
                           fromApi: () async {
                             /// for color not selected

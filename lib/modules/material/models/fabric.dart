@@ -272,17 +272,126 @@ class ColorBoxesModel extends BaseModel {
   }
 }
 
-
-class RemoveCodeModel extends BaseModel{
+class RemoveCodeModel extends BaseModel {
   @override
   String get endPoint => "/api/remove-order";
 
   List<int> codes = [];
   RemoveCodeModel(this.codes);
 
-
   Future removeCodes() async {
-    return await this.create(isFormData: true, data: {'order_lk': codes.join(",").toString()});
+    return await this.create(
+        isFormData: true, data: {'order_lk': codes.join(",").toString()});
+  }
+}
+
+class FabricTypeModel extends BaseModel {
+  @override
+  String get endPoint => "/api/get-type";
+
+  int? catId;
+  String? catNameEn;
+
+  FabricTypeModel({this.catId, this.catNameEn});
+
+  // Assuming ParseData class with static parsing methods is available
+  factory FabricTypeModel.fromJson(Map<String, dynamic> json) {
+    return FabricTypeModel(
+      catId: ParseData.toInt(json['cat_id']),
+      catNameEn: ParseData.string(json['cat_name_en']),
+    );
   }
 
+  // Optional toJson method if you need to serialize the object back to JSON
+  Map<String, dynamic> toJson() {
+    return {
+      'cat_id': catId,
+      'cat_name_en': catNameEn,
+    };
+  }
+
+  static Future<List<FabricTypeModel>> fetchAll() async {
+    List<FabricTypeModel> fabricTypes = [];
+    var resp = await FabricTypeModel().create(queryParameters: {"type_id": 1});
+    resp.data['data'].forEach((json) {
+      fabricTypes.add(FabricTypeModel.fromJson(json));
+    });
+
+    return fabricTypes;
+  }
+}
+
+class TypeCategoryModel extends BaseModel {
+  @override
+  String get endPoint => "/api/get-type-cat";
+  DateTime? fabricDateCreate;
+  String? catNameEn;
+  String? fabricColor;
+  String? fabricNo;
+  String? fabricBox;
+  String? fabricBalance;
+  int? fabricUsed;
+  int? fabricAmount;
+  int? fabricId;
+  String? catId;
+  String? typeId;
+
+  TypeCategoryModel({
+    this.fabricDateCreate,
+    this.catNameEn,
+    this.fabricColor,
+    this.fabricNo,
+    this.fabricBox,
+    this.fabricBalance,
+    this.fabricUsed,
+    this.fabricAmount,
+    this.fabricId,
+    this.catId,
+    this.typeId,
+  });
+
+  factory TypeCategoryModel.fromJson(Map<String, dynamic> json) {
+    return TypeCategoryModel(
+      fabricDateCreate: ParseData.toDateTime(json['fabric_date_create']),
+      catNameEn: ParseData.string(json['cat_name_en']),
+      fabricColor: ParseData.string(json['fabric_color']),
+      fabricNo: ParseData.string(json['fabric_no']),
+      fabricBox: ParseData.string(json['fabric_box']),
+      fabricBalance: ParseData.string(json['fabric_balance']),
+      fabricUsed: ParseData.toInt(json['fabric_used']),
+      fabricAmount: ParseData.toInt(json['fabric_amount']),
+      fabricId: ParseData.toInt(json['fabric_id']),
+      catId: ParseData.string(json['cat_id']),
+      typeId: ParseData.string(json['type_id']),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'fabric_date_create': fabricDateCreate?.toIso8601String(),
+      'cat_name_en': catNameEn,
+      'fabric_color': fabricColor,
+      'fabric_no': fabricNo,
+      'fabric_box': fabricBox,
+      'fabric_balance': fabricBalance,
+      'fabric_used': fabricUsed,
+      'fabric_amount': fabricAmount,
+      'fabric_id': fabricId,
+      'cat_id': catId,
+      'type_id': typeId,
+    };
+  }
+
+  static Future<List<TypeCategoryModel>> fetchAll(String cat_id) async {
+    List<TypeCategoryModel> fabricTypes = [];
+    var resp = await TypeCategoryModel().create(queryParameters: {
+      "type_id": 1,
+      "cat_id": cat_id,
+    }, data: {});
+    resp.data['data'].forEach((json) {
+      fabricTypes.add(TypeCategoryModel.fromJson(json));
+    });
+
+    return fabricTypes;
+  }
 }
