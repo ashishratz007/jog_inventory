@@ -61,6 +61,10 @@ class _AppString {
   final String autoGenCode = "Auto generate code";
   final String note = "Note";
   final String enterComments = "Enter comments";
+
+  // no code list
+  final String noCodeRqList = "No order code RQ list";
+
 }
 
 /// [Strings] class is for the constant string in the application which will we use commonly to avoid multiple independent value with same string

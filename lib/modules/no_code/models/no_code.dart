@@ -43,4 +43,3 @@ class NoCodeRequestModel extends BaseModel {
   }
 }
 
-class AddNoCodeItem extends BaseModel {}

@@ -29,7 +29,7 @@ class BaseModel {
       body = data ?? toJson();
     var endpoint = [
       (url ?? this.endPoint),
-      if (pathSuffix != null) ("/$pathSuffix" ?? ""),
+      if (pathSuffix != null) ("/$pathSuffix"),
     ].join("");
     return dioClient.post(endpoint, body, queryParameters: queryParameters);
   }

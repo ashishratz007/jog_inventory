@@ -28,7 +28,7 @@ class Pagination<T> {
       totalItems: ParseData.toInt(json['total_items']??json['total']??json['total_records']) ?? 0,
       currentPage: ParseData.toInt(json['current_page']) ?? 0,
       pageSize: ParseData.toInt(json['page_size']) ?? 0,
-      totalPages: ParseData.toInt(json['total_pages']) ?? 0,
+      totalPages: ParseData.toInt(json['total_pages']??json['last_page']) ?? 0,
     );
   }
 }

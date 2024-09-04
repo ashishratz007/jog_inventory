@@ -75,19 +75,18 @@ class MaterialRequestModel extends BaseModel {
       list = ParseData.toList<MaterialRequestModel>(resp.data['data'],
           itemBuilder: (json) => MaterialRequestModel.fromJson(json));
     }
-    var pagination = Pagination<MaterialRequestModel>.fromJson(resp.data );
+    var pagination = Pagination<MaterialRequestModel>.fromJson(resp.data);
     pagination.items = list;
     return pagination;
   }
 
-
-  static Future updateMaterialRq(int rqId, List<String> fabricList)async{
+  static Future updateMaterialRq(int rqId, List<String> fabricList) async {
     ///api/update-request-fabric
-   var url = "/api/update-request-fabric";
-   var data = {
-     'fabric_id_list': fabricList.join(","),
-     'rq_id': rqId,
-   };
+    var url = "/api/update-request-fabric";
+    var data = {
+      'fabric_id_list': fabricList.join(","),
+      'rq_id': rqId,
+    };
     MaterialRequestModel().create(
       url: url,
       isFormData: true,
@@ -252,18 +251,26 @@ class UsageDataModel extends BaseModel {
   String totalCost;
   Map<String, MonthlyUsage> monthlyUsage;
 
-  UsageDataModel({required this.monthlyUsage,required this.totalCost,required this.totalUsed});
+  UsageDataModel(
+      {required this.monthlyUsage,
+      required this.totalCost,
+      required this.totalUsed});
 
   factory UsageDataModel.fromJson(Map<String, dynamic> json) {
     Map<String, MonthlyUsage> monthlyData = {};
     json['data'].forEach((month, data) {
       monthlyData[month] = MonthlyUsage.fromJson(data);
     });
-    return UsageDataModel(monthlyUsage: monthlyData, totalCost:  json['total_used']??"", totalUsed: json["total_used"]??"");
+    return UsageDataModel(
+        monthlyUsage: monthlyData,
+        totalCost: json['total_used'] ?? "",
+        totalUsed: json["total_used"] ?? "");
   }
 
   static Future<UsageDataModel> fetch(String year) async {
-    var resp = await UsageDataModel(monthlyUsage: {},totalCost:"",totalUsed:"").create(
+    var resp =
+        await UsageDataModel(monthlyUsage: {}, totalCost: "", totalUsed: "")
+            .create(
       isFormData: true,
       data: {
         "y_select": year,

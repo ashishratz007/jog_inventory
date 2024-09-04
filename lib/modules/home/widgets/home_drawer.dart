@@ -28,7 +28,8 @@ class HomeDrawerWidget extends Drawer {
                   boxShadow: [
                     BoxShadow(
                       color: Colors.grey.withOpacity(0.5), // Shadow color
-                      spreadRadius: 2, // How far the shadow spreads horizontally
+                      spreadRadius:
+                          2, // How far the shadow spreads horizontally
                       blurRadius: 3, // The blur effect of the shadow
                       offset: Offset(0,
                           2), // Offset of the shadow (x, y) - positive y for bottom shadow
@@ -37,39 +38,49 @@ class HomeDrawerWidget extends Drawer {
                 ),
                 child: Row(
                   children: [
-                    CircleAvatar(radius: 20, child: CircleAvatar(radius: 19,backgroundColor: Colours.primary,),),
+                    CircleAvatar(
+                      radius: 20,
+                      child: CircleAvatar(
+                        radius: 19,
+                        backgroundColor: Colours.primary,
+                      ),
+                    ),
                     gap(space: 10),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "Hi, ${globalData.activeUser?.employeeName??"_"}",
-                            style: appTextTheme.titleSmall?.copyWith(color: Colours.white),
+                            "Hi, ${globalData.activeUser?.employeeName ?? "_"}",
+                            style: appTextTheme.titleSmall
+                                ?.copyWith(color: Colours.white),
                           ),
                           gap(space: 5),
                           Text(
-                            "${globalData.activeUser?.employeeEmail??"_"}",
-                            style: appTextTheme.labelSmall?.copyWith(color: Colours.white),
+                            "${globalData.activeUser?.employeeEmail ?? "_"}",
+                            style: appTextTheme.labelSmall
+                                ?.copyWith(color: Colours.white),
                             maxLines: 1,
-
                           ),
                         ],
                       ),
                     ),
                     gap(space: 5),
-                    Icon(Icons.arrow_forward_ios_rounded,
+                    Icon(
+                      Icons.arrow_forward_ios_rounded,
                       color: Colours.white,
-                      size: 15,)
+                      size: 15,
+                    )
                   ],
                 ),
               ),
               gap(space: 10),
-        
+
               /// drawer tile
               drawerTile(
                 context,
-                leading: Icon(Icons.file_copy,color: Colours.greyLight,size: 20),
+                leading:
+                    Icon(Icons.file_copy, color: Colours.greyLight, size: 20),
                 title: "Material RQ list",
                 textColor: Colours.black,
                 hideTrailing: true,
@@ -81,21 +92,22 @@ class HomeDrawerWidget extends Drawer {
               /// drawer tile
               drawerTile(
                 context,
-                leading:Icon(Icons.file_copy,color: Colours.greyLight,size: 20),
+                leading:
+                    Icon(Icons.file_copy, color: Colours.greyLight, size: 20),
                 title: "No code RQ list",
                 textColor: Colours.black,
                 hideTrailing: true,
                 onTap: () {
-                  Get.toNamed(AppRoutesString.home);
+                  Get.toNamed(AppRoutesString.noCodeRequestList);
                 },
               ),
-        
+
               // setupTiles(),
               Expanded(child: SizedBox()),
               Divider(
                 color: Colours.border,
               ),
-        
+
               /// Log out user
               drawerTile(
                 context,
@@ -174,14 +186,12 @@ class HomeDrawerWidget extends Drawer {
   Widget setupTiles() {
     return drawerExpansionWidget(
       "Setup",
-      Icon(Icons.settings,color: Colours.greyLight,size: 20),
+      Icon(Icons.settings, color: Colours.greyLight, size: 20),
       children: [
         DrawerItem(
           title: "Supplier",
           count: 0,
-          onTap: () {
-
-          },
+          onTap: () {},
         ),
         DrawerItem(
           title: "Position",

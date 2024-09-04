@@ -48,6 +48,7 @@ class MaterialRequestListController extends GetxController {
     );
   }
 
+  /// api calls
   /// functions
   getDataList({bool isFinished = false, bool clearData = false}) {
     if (clearData) {
@@ -91,5 +92,4 @@ class MaterialRequestListController extends GetxController {
         MaterialRequestListController());
   }
 
-  /// api calls
 }

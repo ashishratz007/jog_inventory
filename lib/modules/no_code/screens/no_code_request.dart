@@ -2,6 +2,7 @@ import 'package:jog_inventory/common/utils/date_formater.dart';
 import 'package:jog_inventory/common/utils/validation.dart';
 import 'package:jog_inventory/modules/material/models/fabric.dart';
 import 'package:jog_inventory/modules/no_code/controllers/no_code_request.dart';
+import 'package:jog_inventory/modules/no_code/models/no_code_item.dart';
 import 'package:jog_inventory/modules/no_code/widgits/fabric_detail.dart';
 import '../../../common/exports/main_export.dart';
 
@@ -18,6 +19,7 @@ class NoCodeRequestFormScreen extends GetView<NoCodeRequestController> {
   }
 
   Widget body() {
+    controller.getItems();
     return SingleChildScrollView(
       padding: AppPadding.pagePadding,
       child: Form(
@@ -44,6 +46,22 @@ class NoCodeRequestFormScreen extends GetView<NoCodeRequestController> {
             // note
             noteWidget(),
 
+            Obx(
+              () => Visibility(
+                visible: controller.addedItems.length > 0,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    gap(),
+                    ...displayList<NoCodeRQUsedItemModel>(
+                        showGap: true,
+                        items: controller.addedItems,
+                        builder: (item, index) => itemTileWidget(item, index)),
+                  ],
+                ),
+              ),
+            ),
+
             ///
             gap(),
             safeAreaBottom(Get.context!),
@@ -68,13 +86,96 @@ class NoCodeRequestFormScreen extends GetView<NoCodeRequestController> {
   }
 
   Widget noteWidget() {
-    return TextFieldWithLabel(
-        labelText: Strings.note,
-        enabled: true,
-        hintText: Strings.enterComments,
-        validator: appValidation.validateEmptyField,
-        controller: controller.noteController,
-        maxLines: 2);
+    return Obx(
+      () => TextFieldWithLabel(
+          labelText: Strings.note,
+          enabled: !controller.isCodeGenerated.value,
+          hintText: Strings.enterComments,
+          validator: appValidation.validateEmptyField,
+          controller: controller.noteController,
+          maxLines: controller.isCodeGenerated.value ? 1 : 2),
+    );
+  }
+
+  Widget itemTileWidget(NoCodeRQUsedItemModel item, int index) {
+    return Container(
+        padding: AppPadding.inner,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: containerShadow(),
+          color: Colours.white,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Text("${item.catName??""} , ",
+                    style: appTextTheme.titleSmall
+                        ?.copyWith(color: Colours.primaryText)),
+                Text("${item.usedDetailColor??""}", style: appTextTheme.titleSmall?.copyWith()),
+                Expanded(child: SizedBox()),
+                IconButton(onPressed: (){
+                  controller.deleteItem(item);
+                }, icon: Icon(Icons.delete_outlined,size: 20,color: Colours.red,))
+              ],
+            ),
+            // gap(space: 10),
+            Row(
+              children: [
+                Expanded(
+                    flex: 3,
+                    child: displayTitleSubtitle(
+                        "Type", "${item.typeId == 1 ? "Fabric" : ""}")),
+                Expanded(
+                    flex: 2,
+                    child: displayTitleSubtitle(
+                        "Used", "${item.usedDetailUsed} kg")),
+              ],
+            ),
+            gap(space: 5),
+            Row(
+              children: [
+                Expanded(
+                    flex: 3,
+                    child:
+                        displayTitleSubtitle("NO", "${item.usedDetailNo} kg")),
+                Expanded(
+                    flex: 2,
+                    child: displayTitleSubtitle(
+                        "Price", "${item.usedDetailPrice?? 0}")),
+              ],
+            ),
+            gap(space: 5),
+            Row(
+              children: [
+                Expanded(
+                    flex: 3,
+                    child: displayTitleSubtitle(
+                        "Balance", "${item.usedDetailSize} kg")),
+                Expanded(
+                    flex: 2,
+                    child: displayTitleSubtitle(
+                        "Total", "${item.usedDetailTotal ?? 0}")),
+              ],
+            ),
+          ],
+        ));
+  }
+
+  Widget displayTitleSubtitle(String title, String subtitle) {
+    return Row(
+      children: [
+        Text(title,
+            style: appTextTheme.titleSmall?.copyWith(color: Colours.greyLight)),
+        gap(space: 10),
+        Text(
+          subtitle,
+          style: appTextTheme.titleSmall?.copyWith(),
+          textAlign: TextAlign.center,
+        ),
+      ],
+    );
   }
 
   Widget submitButton() {
@@ -139,7 +240,8 @@ class NoCodeRequestFormScreen extends GetView<NoCodeRequestController> {
                               value: data[index]));
                     },
                     onChanged: (item) {
-                      controller.categoryId = item?.firstOrNull?.value?.catId?.toString();
+                      controller.categoryId =
+                          item?.firstOrNull?.value?.catId?.toString();
                     },
                     labelText: Strings.selectMaterial,
                     hintText: Strings.selectMaterial,
@@ -169,6 +271,7 @@ class NoCodeRequestFormScreen extends GetView<NoCodeRequestController> {
                         openFabricDetailsPopup(controller.categoryId!,
                             onDone: () {
                           controller.selectMaterialController.resetItems;
+                          controller.getItems();
                         });
                     },
                     isFullWidth: false,

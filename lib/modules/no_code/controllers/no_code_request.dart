@@ -1,5 +1,7 @@
 import 'package:jog_inventory/common/utils/date_formater.dart';
+import 'package:jog_inventory/common/utils/error_message.dart';
 import 'package:jog_inventory/modules/no_code/models/no_code.dart';
+import 'package:jog_inventory/modules/no_code/models/no_code_item.dart';
 import '../../../common/exports/main_export.dart';
 
 class NoCodeRequestController extends GetxController {
@@ -7,6 +9,7 @@ class NoCodeRequestController extends GetxController {
   RxBool isBusy = false.obs;
   RxBool isCodeGenerated = false.obs;
   String? usedCode;
+  RxList<NoCodeRQUsedItemModel> addedItems = <NoCodeRQUsedItemModel>[].obs;
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
@@ -59,4 +62,29 @@ class NoCodeRequestController extends GetxController {
   }
 
   /// api calls
+  getItems() {
+    if (usedCode == null) return;
+    NoCodeRQUsedItemModel.fetchAll(usedCode!).then((value) {
+      addedItems.value = value;
+    }).onError((error, trace) {
+      showErrorMessage(
+        Get.context!,
+        error: error,
+        trace: trace,
+        onRetry: () {
+          getItems();
+        },
+      );
+    });
+  }
+
+  deleteItem(NoCodeRQUsedItemModel item) {
+    deleteItemPopup(Get.context!, onDelete: (context) async {
+     await item.deleteItem().then((value) {
+        addedItems.remove(item);
+      }).onError((error, trace) {
+        errorSnackBar(message: "Error deleting item");
+      });
+    });
+  }
 }

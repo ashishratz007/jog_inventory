@@ -287,7 +287,8 @@ class _ColorManager {
 var colorManager = _ColorManager();
 
 formatNumber(String number) {
-  return NumberFormat("#,##0.00").format(double.parse(number));
+  print(number);
+  return NumberFormat("#,##0.00").format(double.tryParse(number));
 }
 
 String encodeBase64(String value) {
