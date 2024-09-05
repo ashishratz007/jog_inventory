@@ -28,12 +28,12 @@ class _NoCodeRqListScreenState extends State<NoCodeRqListScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            /// search TODO
+            /// search
             gap(),
             searchWidget(),
             gap(),
 
-            /// filters TODO
+            /// filters
             summeryAndPage(),
             gap(),
 
@@ -64,32 +64,28 @@ class _NoCodeRqListScreenState extends State<NoCodeRqListScreen> {
   }
 
   Widget searchWidget() {
-    return InkWell(
-      onTap: () {
-        ///
-      },
-      child: IgnorePointer(
-        ignoring: true,
-        child: PrimaryTextField(
-          allowShadow: true,
-          radius: 10,
-          hintText: "Search",
-          prefixIcon: Padding(
-              padding: EdgeInsets.only(left: 10, right: 10),
-              child: Icon(
-                Icons.search,
-                color: Colours.greyLight,
-                size: 25,
-              )),
+    return PrimaryTextField(
+        allowShadow: true,
+        radius: 10,
+        hintText: "Search",
+        prefixIcon: Padding(
+          padding: EdgeInsets.only(left: 10, right: 10),
+          child: Icon(
+            Icons.search,
+            color: Colours.greyLight,
+            size: 25,
+          ),
         ),
-      ),
-    );
+        onChanged: (value) {
+          controller.getItems(1, search: value);
+        });
   }
 
   Widget summeryAndPage() {
-    return Obx(()=> shimmerEffects(
-      isLoading: controller.isLoading.value,
-      child: Row(
+    return Obx(
+      () => shimmerEffects(
+        isLoading: controller.isLoading.value,
+        child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             TextBorderButton(
@@ -114,7 +110,7 @@ class _NoCodeRqListScreenState extends State<NoCodeRqListScreen> {
                           (index) => MenuItem(
                               title: '${index + 1}',
                               onTap: (value) {
-                                // controller.filterByPage( index +1);
+                                controller.getItems(index + 1);
                               },
                               id: index,
                               key: "$index"))
@@ -127,7 +123,8 @@ class _NoCodeRqListScreenState extends State<NoCodeRqListScreen> {
                           border: Border.all(color: Colours.border),
                           borderRadius: BorderRadius.circular(5)),
                       child: Center(
-                          child: Text("${controller.pagination?.currentPage??1}",
+                          child: Text(
+                              "${controller.pagination?.currentPage ?? 1}",
                               style: appTextTheme.titleSmall?.copyWith(
                                   color: Colours.blackLite,
                                   fontWeight: FontWeight.w700))),
@@ -140,7 +137,7 @@ class _NoCodeRqListScreenState extends State<NoCodeRqListScreen> {
             )
           ],
         ),
-    ),
+      ),
     );
   }
 
@@ -157,10 +154,9 @@ class _NoCodeRqListScreenState extends State<NoCodeRqListScreen> {
   Widget itemTileWidget(NoCodeRQItemModel item, int index) {
     return InkWell(
       onTap: () {
-        // Get.toNamed(AppRoutesString.materialRQFinishDetail, arguments:  {
-        //   appKeys.materialRQId: item.rqId,
-        //   appKeys.materialRQDetail: item,
-        // });
+        Get.toNamed(AppRoutesString.noCodeRequestDetail, arguments: {
+          appKeys.usedItem: item,
+        });
       },
       child: Container(
           decoration: BoxDecoration(
@@ -181,17 +177,19 @@ class _NoCodeRqListScreenState extends State<NoCodeRqListScreen> {
                           ?.copyWith(color: Colours.blackLite),
                     ),
                     gap(),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(item.usedCode ?? "_",
-                            style: appTextTheme.titleSmall?.copyWith()),
-                        gap(space: 10),
-                        Text(item.usedOrderCode ?? "_",
-                            style: appTextTheme.titleSmall?.copyWith()),
-                      ],
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text((item.usedCode ?? "_").trim(),
+                              style: appTextTheme.titleSmall?.copyWith()),
+                          gap(space: 10),
+                          Text((item.usedOrderCode ?? "_").trim(),
+                              style: appTextTheme.titleSmall?.copyWith()),
+                        ],
+                      ),
                     ),
-                    Expanded(child: SizedBox()),
+                    // Expanded(child: SizedBox()),
                     chipWidget(
                       appDateTimeFormat.toYYMMDDHHMMSS(date: item.usedDate),
                     )
@@ -199,30 +197,9 @@ class _NoCodeRqListScreenState extends State<NoCodeRqListScreen> {
                 ),
               ),
               divider(),
-              gap(),
+              // gap(space: 10),
 
               /// info
-              // Stack(
-              //   children: [
-              //     Positioned(
-              //       bottom: 0,
-              //       right: 0,
-              //       child: Container(
-              //         height: 50,
-              //         width: 60,
-              //         decoration: BoxDecoration(
-              //             color: Colours.primaryBlueBg,
-              //             borderRadius:
-              //                 BorderRadius.only(topLeft: Radius.circular(15))),
-              //         child: Center(
-              //             child: Icon(
-              //           Icons.arrow_forward,
-              //           color: Colours.blueDark,
-              //         )),
-              //       ),
-              //     )
-              //   ],
-              // ),
               Padding(
                 padding: AppPadding.inner,
                 child: Row(
@@ -264,6 +241,7 @@ class _NoCodeRqListScreenState extends State<NoCodeRqListScreen> {
                         ],
                       ),
                     ),
+
                   ],
                 ),
               ),

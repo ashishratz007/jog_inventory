@@ -76,6 +76,8 @@ class _AppKeys {
   final pacId = "pacId";
   final materialRQId = "materialRQId";
   final materialRQDetail = "materialRQDetail";
+  final usedKey = "usedKey";
+  final usedItem = "usedItem";
 }
 
 var appKeys = _AppKeys();

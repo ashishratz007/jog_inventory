@@ -15,6 +15,7 @@ abstract class AppRoutesString {
   static const materialRQFinishDetail = "$materialRQFinish/detail";
   static const noCodeRequest = "${home}/no_code_request";
   static const noCodeRequestList = "${home}/no_code_request_list";
+  static const noCodeRequestDetail = "${noCodeRequestList}/no_code_detail";
 
   /// forecast
   static const addForecast = "${home}/add_forecast";

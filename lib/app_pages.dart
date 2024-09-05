@@ -8,7 +8,8 @@ import 'package:jog_inventory/modules/material/screens/material_request_form.dar
 import 'package:jog_inventory/modules/material/screens/material_request_list.dart';
 import 'package:jog_inventory/modules/material/screens/material_scan_details.dart';
 import 'package:jog_inventory/modules/material/screens/submit_order.dart';
-import 'package:jog_inventory/modules/no_code/screens/no_code_request.dart';
+import 'package:jog_inventory/modules/no_code/screens/no_code_detail.dart';
+import 'package:jog_inventory/modules/no_code/screens/no_code_request_form.dart';
 import 'package:jog_inventory/modules/no_code/screens/no_code_rq_list.dart';
 import 'common/exports/main_export.dart';
 
@@ -79,6 +80,14 @@ List<GetPage<dynamic>> getRoutes = [
   GetPage(
     name: AppRoutesString.noCodeRequestList,
     page: () => NoCodeRqListScreen(),
+    bindings: [
+      ///
+    ],
+  ),
+
+  GetPage(
+    name: AppRoutesString.noCodeRequestDetail,
+    page: () => NoCodeDetailScreen(),
     bindings: [
       ///
     ],

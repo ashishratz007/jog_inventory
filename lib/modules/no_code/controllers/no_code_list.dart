@@ -1,4 +1,3 @@
-import 'package:jog_inventory/common/base_model/base_model.dart';
 import 'package:jog_inventory/common/base_model/common_model.dart';
 import 'package:jog_inventory/common/utils/error_message.dart';
 import 'package:jog_inventory/modules/no_code/models/no_code_item.dart';
@@ -7,6 +6,7 @@ import '../../../common/exports/main_export.dart';
 class NoCodeListRequestController extends GetxController {
   RxBool isLoading = false.obs;
   RxBool isBusy = false.obs;
+  TextEditingController searchController = TextEditingController();
   Pagination<NoCodeRQItemModel>? pagination;
   RxList<NoCodeRQItemModel> items = <NoCodeRQItemModel>[].obs;
 
@@ -36,7 +36,7 @@ class NoCodeListRequestController extends GetxController {
   /// api calls
   getItems(int page, {String? search}) {
     isLoading.value = true;
-    NoCodeRQItemModel.fetchAll().then((value) {
+    NoCodeRQItemModel.fetchAll(page: page, search: search).then((value) {
       isLoading.value = false;
       items.value = value.items;
       pagination = value;

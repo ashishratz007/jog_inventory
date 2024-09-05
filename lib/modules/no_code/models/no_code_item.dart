@@ -14,9 +14,10 @@ class NoCodeRQUsedItemModel extends BaseModel {
   int? catId;
   String? usedDetailColor;
   String? usedDetailNo;
+  double? balance;
   String? usedDetailSize;
   String? catName;
-  int? usedDetailUsed;
+  double? usedDetailUsed;
   int? usedDetailUnitType;
   int? usedDetailPrice;
   int? usedDetailTotal;
@@ -29,6 +30,7 @@ class NoCodeRQUsedItemModel extends BaseModel {
     this.catId,
     this.usedDetailColor,
     this.usedDetailNo,
+    this.balance,
     this.usedDetailSize,
     this.usedDetailUsed,
     this.usedDetailUnitType,
@@ -47,9 +49,10 @@ class NoCodeRQUsedItemModel extends BaseModel {
       catId: ParseData.toInt(json['cat_id']),
       usedDetailColor: ParseData.string(json['used_detail_color']),
       usedDetailNo: ParseData.string(json['used_detail_no']),
+      balance: ParseData.toDouble(json['balance']),
       usedDetailSize: ParseData.string(json['used_detail_size']),
       catName: ParseData.string(json['cat_name_en']),
-      usedDetailUsed: ParseData.toInt(json['used_detail_used']),
+      usedDetailUsed: ParseData.toDouble(json['used_detail_used']),
       usedDetailUnitType: ParseData.toInt(json['used_detail_unit_type']),
       usedDetailPrice: ParseData.toInt(json['used_detail_price']),
       usedDetailTotal: ParseData.toInt(json['used_detail_total']),
@@ -66,7 +69,7 @@ class NoCodeRQUsedItemModel extends BaseModel {
       'cat_id': catId,
       'used_detail_color': usedDetailColor,
       'used_detail_no': usedDetailNo,
-      'used_detail_size': usedDetailSize,
+      'used_detail_size': balance,
       'used_detail_used': usedDetailUsed,
       'used_detail_unit_type': usedDetailUnitType,
       'used_detail_price': usedDetailPrice,
@@ -155,18 +158,27 @@ class NoCodeRQItemModel extends BaseModel {
     };
   }
 
-  static Future<Pagination<NoCodeRQItemModel>> fetchAll({String? search, int page = 1}) async {
+  static Future<Pagination<NoCodeRQItemModel>> fetchAll(
+      {String? search, int page = 1}) async {
     List<NoCodeRQItemModel> items = [];
     var resp = await NoCodeRQItemModel().create(data: {
-      if(search != null)"search": search,
+      if (search != null) "search": search,
       "page": page,
-
     }, isFormData: true);
     resp.data['data']
         .forEach((json) => items.add(NoCodeRQItemModel.fromJson(json)));
     var paginated = Pagination<NoCodeRQItemModel>.fromJson(resp.data);
     paginated.items = items;
     return paginated;
+  }
+
+  Future deleteItem() async {
+    var url = "/api/draw-main-delete";
+    return await NoCodeRQItemModel().create(
+      url: url,
+      data: {"used_id": usedId},
+      isFormData: true,
+    );
   }
 }
 
@@ -204,7 +216,7 @@ class NoCodeDataSummaryModel extends BaseModel {
     var resp = await NoCodeDataSummaryModel().create(data: {
       "year": year,
     }, isFormData: true);
-   return NoCodeDataSummaryModel.fromJson(resp.data);
+    return NoCodeDataSummaryModel.fromJson(resp.data);
   }
 }
 

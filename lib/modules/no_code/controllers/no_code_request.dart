@@ -8,6 +8,7 @@ class NoCodeRequestController extends GetxController {
   RxBool isLoading = false.obs;
   RxBool isBusy = false.obs;
   RxBool isCodeGenerated = false.obs;
+  RxBool isForUpdate = false.obs;
   String? usedCode;
   RxList<NoCodeRQUsedItemModel> addedItems = <NoCodeRQUsedItemModel>[].obs;
 
@@ -23,13 +24,11 @@ class NoCodeRequestController extends GetxController {
 
   @override
   void onInit() {
-    // TODO: implement onInit
     super.onInit();
   }
 
   @override
   void onReady() {
-    // TODO: implement onReady
     super.onReady();
   }
 
@@ -48,6 +47,19 @@ class NoCodeRequestController extends GetxController {
       }).onError((error, trace) {
         isBusy.value = false;
         errorSnackBar(message: "Error posting data");
+      });
+    }
+  }
+
+  updateNoCodeRequest() {
+    if (formKey.currentState?.validate() ?? false) {
+      isBusy.value = true;
+      NoCodeRequestModel.updateItems(addedItems).then((onValue) {
+        isBusy.value = false;
+        isForUpdate.value = false;
+      }).onError((error, trace) {
+        isBusy.value = false;
+        errorSnackBar(message: "Error updating data");
       });
     }
   }
@@ -80,7 +92,7 @@ class NoCodeRequestController extends GetxController {
 
   deleteItem(NoCodeRQUsedItemModel item) {
     deleteItemPopup(Get.context!, onDelete: (context) async {
-     await item.deleteItem().then((value) {
+      await item.deleteItem().then((value) {
         addedItems.remove(item);
       }).onError((error, trace) {
         errorSnackBar(message: "Error deleting item");

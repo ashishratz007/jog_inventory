@@ -99,7 +99,10 @@ Widget chooseFileButton(
 
 abstract final class ParseData {
   static String? string(value) {
-    return value ?? null;
+    if (value is String && value.trim().isNotEmpty) {
+      return value.trim();
+    }
+    return null;
   }
 
   /// parse double
@@ -287,7 +290,6 @@ class _ColorManager {
 var colorManager = _ColorManager();
 
 formatNumber(String number) {
-  print(number);
   return NumberFormat("#,##0.00").format(double.tryParse(number));
 }
 

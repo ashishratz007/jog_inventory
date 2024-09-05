@@ -110,14 +110,21 @@ class NoCodeRequestFormScreen extends GetView<NoCodeRequestController> {
           children: [
             Row(
               children: [
-                Text("${item.catName??""} , ",
+                Text("${item.catName ?? ""} , ",
                     style: appTextTheme.titleSmall
                         ?.copyWith(color: Colours.primaryText)),
-                Text("${item.usedDetailColor??""}", style: appTextTheme.titleSmall?.copyWith()),
+                Text("${item.usedDetailColor ?? ""}",
+                    style: appTextTheme.titleSmall?.copyWith()),
                 Expanded(child: SizedBox()),
-                IconButton(onPressed: (){
-                  controller.deleteItem(item);
-                }, icon: Icon(Icons.delete_outlined,size: 20,color: Colours.red,))
+                IconButton(
+                    onPressed: () {
+                      controller.deleteItem(item);
+                    },
+                    icon: Icon(
+                      Icons.delete_outlined,
+                      size: 20,
+                      color: Colours.red,
+                    ))
               ],
             ),
             // gap(space: 10),
@@ -128,12 +135,33 @@ class NoCodeRequestFormScreen extends GetView<NoCodeRequestController> {
                     child: displayTitleSubtitle(
                         "Type", "${item.typeId == 1 ? "Fabric" : ""}")),
                 Expanded(
-                    flex: 2,
-                    child: displayTitleSubtitle(
-                        "Used", "${item.usedDetailUsed} kg")),
+                  flex: 3,
+                  child: Row(
+                    children: [
+                      Text("Used",
+                          style: appTextTheme.titleSmall
+                              ?.copyWith(color: Colours.greyLight)),
+                      gap(space: 10),
+                      Expanded(
+                          child: PrimaryTextField(
+                              padding: EdgeInsets.only(left: 15, right: 15),
+                              height: 35,
+                              initialValue: "${item.usedDetailUsed ?? 0.0} kg",
+                              inputFormatters: [
+                                FilteringTextInputFormatter.allow(
+                                    RegExp(r'^\d+\.?\d*$')),
+                              ],
+                              onChanged: (value) {
+                                item.usedDetailUsed =
+                                    double.tryParse(value) ?? 0.0;
+                                controller.isForUpdate.value = true;
+                              })),
+                    ],
+                  ),
+                )
               ],
             ),
-            gap(space: 5),
+            gap(space: 10),
             Row(
               children: [
                 Expanded(
@@ -141,9 +169,9 @@ class NoCodeRequestFormScreen extends GetView<NoCodeRequestController> {
                     child:
                         displayTitleSubtitle("NO", "${item.usedDetailNo} kg")),
                 Expanded(
-                    flex: 2,
+                    flex: 3,
                     child: displayTitleSubtitle(
-                        "Price", "${item.usedDetailPrice?? 0}")),
+                        "Price", "${item.usedDetailPrice ?? 0}")),
               ],
             ),
             gap(space: 5),
@@ -152,9 +180,9 @@ class NoCodeRequestFormScreen extends GetView<NoCodeRequestController> {
                 Expanded(
                     flex: 3,
                     child: displayTitleSubtitle(
-                        "Balance", "${item.usedDetailSize} kg")),
+                        "Balance", "${item.balance ?? 0.0} kg")),
                 Expanded(
-                    flex: 2,
+                    flex: 3,
                     child: displayTitleSubtitle(
                         "Total", "${item.usedDetailTotal ?? 0}")),
               ],
@@ -178,25 +206,6 @@ class NoCodeRequestFormScreen extends GetView<NoCodeRequestController> {
     );
   }
 
-  Widget submitButton() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Container(
-          height: 50,
-          child: ClipRRect(
-              child: PrimaryButton(
-            title: Strings.submit,
-            onTap: () {},
-            isFullWidth: false,
-            radius: 15,
-          )),
-        ),
-      ],
-    );
-  }
-
   Widget viewWidget() {
     return Obx(
       () => Column(
@@ -213,7 +222,17 @@ class NoCodeRequestFormScreen extends GetView<NoCodeRequestController> {
                   controller.createNoCodeRequest();
                 }),
           ),
-          if (controller.isCodeGenerated.value) ...[
+          Visibility(
+            visible: controller.isForUpdate.value,
+            child: PrimaryButton(
+                isBusy: controller.isBusy.value,
+                title: "Update",
+                onTap: () {
+                  controller.updateNoCodeRequest();
+                }),
+          ),
+          if (controller.isCodeGenerated.value &&
+              !controller.isForUpdate.value) ...[
             Row(
               children: [
                 // Expanded(
@@ -265,14 +284,15 @@ class NoCodeRequestFormScreen extends GetView<NoCodeRequestController> {
                       size: 20,
                     ),
                     onTap: () {
-                      if (controller.categoryId == null)
+                      if (controller.categoryId == null) {
                         errorSnackBar(message: "Select material type");
-                      else
+                      } else {
                         openFabricDetailsPopup(controller.categoryId!,
                             onDone: () {
                           controller.selectMaterialController.resetItems;
                           controller.getItems();
                         });
+                      }
                     },
                     isFullWidth: false,
                     radius: 15,

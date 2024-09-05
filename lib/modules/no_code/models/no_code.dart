@@ -1,4 +1,5 @@
 import 'package:jog_inventory/common/base_model/base_model.dart';
+import 'package:jog_inventory/modules/no_code/models/no_code_item.dart';
 
 class NoCodeRequestModel extends BaseModel {
   @override
@@ -37,6 +38,21 @@ class NoCodeRequestModel extends BaseModel {
         'fabric_id': fabric_ids.join(","),
         'used_id': used_id,
         'cat_id': cat_id,
+      },
+      isFormData: true,
+    );
+  }
+
+
+  static Future updateItems(List<NoCodeRQUsedItemModel> items)async{
+    var url = "/api/draw-update-used";
+    return await NoCodeRequestModel().create(
+      url: url,
+      data: {
+        "used_detail_id": items.map((e) => e.usedDetailId??0).toList().join(","),
+        "used_detail_used": items.map((e) => e.usedDetailUsed??0.0).toList().join(","),
+        "materials_id": items.map((e) => e.materialsId??0).toList().join(","),
+        "type_id": items.map((e)=> e.typeId??0).toList().join(","),
       },
       isFormData: true,
     );
