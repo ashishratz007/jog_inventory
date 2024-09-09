@@ -2,10 +2,16 @@ import 'package:jog_inventory/modules/material/controllers/scan_qr.dart';
 import 'package:jog_inventory/modules/material/widgets/select_jog_code_popup.dart';
 import '../../../common/exports/main_export.dart';
 
-class MaterialRequestDetailScreen
-    extends GetView<MaterialScanDetailsController> {
+class MaterialRequestDetailScreen extends StatefulWidget {
   const MaterialRequestDetailScreen({super.key});
 
+  @override
+  State<MaterialRequestDetailScreen> createState() =>
+      _MaterialRequestDetailScreenState();
+}
+
+class _MaterialRequestDetailScreenState
+    extends State<MaterialRequestDetailScreen> {
   MaterialScanDetailsController get controller =>
       MaterialScanDetailsController.getController();
 
@@ -106,29 +112,43 @@ class MaterialRequestDetailScreen
             Divider(
               color: Colours.bgGrey,
             ),
-            displayDataTiles('Warehouse Location',
-                controller.scanDetailsModal?.data?.fabric?.fabricBox ?? "_"),
+            displayDataTiles(
+                'Warehouse Location',
+                controller.scanDetailsModal?.data?.fabric?.supplierId
+                        ?.supplierAddress ??
+                    "_"),
             gap(space: 10)
           ],
         ));
   }
 
   Widget displaySearchWidget() {
-    return TextFieldWithLabel(
-      allowShadow: true,
-      labelText: 'Search for JOG Code',
-      radius: 10,
-      hintText: "Search",
+    return InkWell(
       onTap: () {
-        showSelectCodeMenu(Get.context!);
+        showSelectCodeMenu(
+          Get.context!,
+          scanDetailsModal: controller.scanDetailsModal!,
+          fabricId: controller.fabId,
+          pacId: controller.pacId,
+        );
       },
-      prefixIcon: Padding(
-          padding: EdgeInsets.only(left: 10, right: 10),
-          child: Icon(
-            Icons.search,
-            color: Colours.greyLight,
-            size: 25,
-          )),
+      child: TextFieldWithLabel(
+        enabled: false,
+        allowShadow: true,
+        labelText: 'Search for JOG Code',
+        radius: 10,
+        hintText: "Search",
+        // onTap: () {
+        //   showSelectCodeMenu(Get.context!);
+        // },
+        prefixIcon: Padding(
+            padding: EdgeInsets.only(left: 10, right: 10),
+            child: Icon(
+              Icons.search,
+              color: Colours.greyLight,
+              size: 25,
+            )),
+      ),
     );
   }
 
@@ -140,15 +160,16 @@ class MaterialRequestDetailScreen
           padding: AppPadding.inner,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                title,
-                style:
-                    appTextTheme.titleSmall?.copyWith(color: Colours.greyLight),
-              ),
-              Text(
-                value,
-                style: appTextTheme.titleSmall?.copyWith(color: Colours.black),
+              Text(title,
+                  style: appTextTheme.titleSmall
+                      ?.copyWith(color: Colours.greyLight)),
+              gap(),
+              Flexible(
+                child: Text(value,
+                    style: appTextTheme.titleSmall
+                        ?.copyWith(color: Colours.black)),
               ),
             ],
           ),

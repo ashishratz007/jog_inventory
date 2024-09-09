@@ -14,7 +14,7 @@ class _AppString {
 
   ///
   final String checkOutDate = "Checkout Date";
-  final String quantityInStock = "Quantity in Stock";
+  final String quantityInStock = "Quantity in Stock(KG)";
   final String quantityRequired = "Quantity Required";
   final String qtdRequested = "QTD Requested";
   final String previousCheckQtd = "Previous Checkout Qtd";
@@ -64,7 +64,6 @@ class _AppString {
 
   // no code list
   final String noCodeRqList = "No order code RQ list";
-
 }
 
 /// [Strings] class is for the constant string in the application which will we use commonly to avoid multiple independent value with same string
@@ -74,10 +73,12 @@ class _AppKeys {
   final walkThrough = "walkThrough";
   final fabId = "fabId";
   final pacId = "pacId";
+  final ethCode = "ethCode";
   final materialRQId = "materialRQId";
   final materialRQDetail = "materialRQDetail";
   final usedKey = "usedKey";
   final usedItem = "usedItem";
+  final materialRQScan = "materialRQScan";
 }
 
 var appKeys = _AppKeys();

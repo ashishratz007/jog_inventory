@@ -189,7 +189,7 @@ class _FinishMaterialRQScreenState extends State<FinishMaterialRQScreen> {
           // info
           Row(
             children: [
-              Text("${item.fabricNo}",
+              Text("${item.fabricNo??""}",
                   style: appTextTheme.labelSmall
                       ?.copyWith(color: Colours.greyLight)),
               gap(space: 10),
@@ -211,7 +211,7 @@ class _FinishMaterialRQScreenState extends State<FinishMaterialRQScreen> {
                   style: appTextTheme.labelSmall
                       ?.copyWith(color: Colours.greyLight)),
               gap(space: 5),
-              Text("${item.fabricBox}",
+              Text("${item.fabricBox??""}",
                   style: appTextTheme.labelSmall
                       ?.copyWith(color: Colours.blackLite)),
               Expanded(child: SizedBox()),
@@ -237,12 +237,19 @@ class _FinishMaterialRQScreenState extends State<FinishMaterialRQScreen> {
                 flex: 1,
                 child: TextFieldWithLabel(
                     inputFormatters: [
-                      FilteringTextInputFormatter.allow(
-                          RegExp(r'[0-9.]')), // Allow digits and decimal point
-                    ],
+                      amountFormatter()],
+                    keyboardType: TextInputType.number,
                     labelText: "Balance after",
                     hintText: "in kgs",
-                    validator: appValidation.validateEmptyField,
+                    validator: (String? val){
+                      if(val == null || ((val??"").trim() == "")) return appValidation.validateEmptyField(val);
+                      if(!compareBalance(val, item.fabricBalance)){
+                        var message = "Value must be less than or equal to balance.";
+                        errorSnackBar(message: message);
+                        return message;
+                      }
+                      return null;
+                    },
                     onChanged: (val) {
                       item.balanceAfter = val;
                     }),

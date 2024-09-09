@@ -431,7 +431,7 @@ class MaterialRequestFormScreen extends GetView<MaterialRequestFormController> {
                                 (index) => DropDownItem(
                                     id: index,
                                     key: items[index].fabricId.toString(),
-                                    title: items[index].title,
+                                    title: items[index].title??"0.0",
                                     value: items[index]));
                           },
                           hintText: Strings.box,

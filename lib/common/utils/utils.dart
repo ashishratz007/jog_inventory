@@ -102,6 +102,7 @@ abstract final class ParseData {
     if (value is String && value.trim().isNotEmpty) {
       return value.trim();
     }
+    if(value != null)return "${value}";
     return null;
   }
 
@@ -593,3 +594,16 @@ String generateCodeFromDateTime() {
 List<T> generateList<T>(List<T>? items, T Function(int) builder) {
   return List.generate(items?.length ?? 0, builder);
 }
+
+bool compareBalance(dynamic value, dynamic balance) {
+  double parsedValue = ParseData.toDouble("${value}") ?? 0.0;
+  double parsedBalance = ParseData.toDouble("${balance}") ?? 0.0;
+
+  return parsedValue <= parsedBalance;
+}
+
+FilteringTextInputFormatter amountFormatter(){
+  return FilteringTextInputFormatter.allow(
+      RegExp(r'^\d+\.?\d*$'));
+}
+

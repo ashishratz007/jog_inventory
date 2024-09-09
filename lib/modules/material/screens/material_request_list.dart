@@ -128,30 +128,22 @@ class MaterialRequestListScreen extends GetView<MaterialRequestListController> {
   }
 
   Widget searchWidget() {
-    return InkWell(
-      onTap: () {
-        showAppBottomSheet(Get.context!, FilterMaterialList());
-      },
-      child: IgnorePointer(
-        ignoring: true,
-        child: PrimaryTextField(
-          allowShadow: true,
-          radius: 10,
-          hintText: "Search",
-          prefixIcon: Padding(
-              padding: EdgeInsets.only(left: 10, right: 10),
-              child: Icon(
-                Icons.search,
-                color: Colours.greyLight,
-                size: 25,
-              )),
-        ),
-      ),
+    return PrimaryTextField(
+      radius: 10,
+      hintText: "Search",
+      prefixIcon: Padding(
+          padding: EdgeInsets.only(left: 10, right: 10),
+          child: Icon(
+            Icons.search,
+            color: Colours.greyLight,
+            size: 25,
+          )),
     );
   }
 
   Widget summeryAndPage() {
-    return Obx(()=> Row(
+    return Obx(
+      () => Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           TextBorderButton(
@@ -172,11 +164,13 @@ class MaterialRequestListScreen extends GetView<MaterialRequestListController> {
               popupMenu(Get.context!,
                   items: [
                     ...List.generate(
-                        controller.isProducing.value? controller.producing?.totalPages??0:  controller.finishedList?.totalPages??0,
+                        controller.isProducing.value
+                            ? controller.producing?.totalPages ?? 0
+                            : controller.finishedList?.totalPages ?? 0,
                         (index) => MenuItem(
                             title: '${index + 1}',
                             onTap: (value) {
-                              controller.filterByPage( index +1);
+                              controller.filterByPage(index + 1);
                             },
                             id: index,
                             key: "$index"))
@@ -189,13 +183,15 @@ class MaterialRequestListScreen extends GetView<MaterialRequestListController> {
                         border: Border.all(color: Colours.border),
                         borderRadius: BorderRadius.circular(5)),
                     child: Center(
-                        child: Text("${controller.isProducing.value? controller.producingPage:controller.finishPage}",
+                        child: Text(
+                            "${controller.isProducing.value ? controller.producingPage : controller.finishPage}",
                             style: appTextTheme.titleSmall?.copyWith(
                                 color: Colours.blackLite,
                                 fontWeight: FontWeight.w700))),
                   )),
               Gap(10),
-              Text("of ${ controller.isProducing.value? controller.producing?.totalPages??0:  controller.finishedList?.totalPages??0}",
+              Text(
+                  "of ${controller.isProducing.value ? controller.producing?.totalPages ?? 0 : controller.finishedList?.totalPages ?? 0}",
                   style: appTextTheme.titleSmall?.copyWith(
                       color: Colours.blackLite, fontWeight: FontWeight.w700)),
             ],
@@ -370,7 +366,7 @@ class MaterialRequestListScreen extends GetView<MaterialRequestListController> {
   Widget finishedItemTileWidget(MaterialRequestModel item, int index) {
     return InkWell(
       onTap: () {
-        Get.toNamed(AppRoutesString.materialRQFinishDetail, arguments:  {
+        Get.toNamed(AppRoutesString.materialRQFinishDetail, arguments: {
           appKeys.materialRQId: item.rqId,
           appKeys.materialRQDetail: item,
         });

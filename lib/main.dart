@@ -4,6 +4,7 @@ import 'common/exports/main_export.dart';
 
 void main() async {
   setSafeAreaColor();
+
   /// dio client which will make our api calls
   dioClient.Init();
 
@@ -12,7 +13,6 @@ void main() async {
 
   runApp(const JogInventory());
 }
-
 
 class JogInventory extends StatelessWidget {
   const JogInventory({super.key});
@@ -32,7 +32,8 @@ class JogInventory extends StatelessWidget {
           textTheme: appTextTheme,
           elevatedButtonTheme: ElevatedButtonThemeData(
             style: ButtonStyle(
-              overlayColor: WidgetStateColor.resolveWith((states) => Colours.primaryBg),
+              overlayColor:
+                  WidgetStateColor.resolveWith((states) => Colours.primaryBg),
             ),
           ),
           buttonTheme: ButtonThemeData(
@@ -46,21 +47,21 @@ class JogInventory extends StatelessWidget {
           dropdownMenuTheme: dropDownMenuTheme(),
           highlightColor: Colours.primary,
           hoverColor: Colours.primaryBg,
-          splashColor:  Colours.primaryBg,
+          splashColor: Colours.primaryBg,
           hintColor: Colors.black,
           focusColor: Colours.primary,
           datePickerTheme: datePickerTheme(),
-
           colorScheme: ColorScheme.fromSeed(
             seedColor: Colors.white,
             primary: Colours.primary,
             onSurface: Colours.primary,
-
           ),
           useMaterial3: true,
         ),
         // initialRoute: AppRoutesString.submit_order,
-        initialRoute: globalData.authToken == null?AppRoutesString.login: AppRoutesString.home,
+        initialRoute: globalData.authToken == null
+            ? AppRoutesString.login
+            : AppRoutesString.home,
         getPages: getRoutes,
         builder: (context, child) {
           return MediaQuery(
@@ -107,7 +108,7 @@ DropdownMenuThemeData dropDownMenuTheme() {
   return DropdownMenuThemeData(
       inputDecorationTheme: InputDecorationTheme(
           contentPadding:
-          EdgeInsets.only(left: 16, right: 16, top: 10, bottom: 10),
+              EdgeInsets.only(left: 16, right: 16, top: 10, bottom: 10),
           labelStyle: appTextTheme.titleMedium),
       menuStyle: MenuStyle(
         padding: WidgetStateProperty.all(EdgeInsets.all(0)),

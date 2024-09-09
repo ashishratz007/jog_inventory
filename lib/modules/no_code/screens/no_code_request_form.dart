@@ -148,13 +148,16 @@ class NoCodeRequestFormScreen extends GetView<NoCodeRequestController> {
                               height: 35,
                               initialValue: "${item.usedDetailUsed ?? 0.0} kg",
                               inputFormatters: [
-                                FilteringTextInputFormatter.allow(
-                                    RegExp(r'^\d+\.?\d*$')),
-                              ],
+                                amountFormatter()],
                               onChanged: (value) {
+                                if(compareBalance(value, item.balance)){
                                 item.usedDetailUsed =
                                     double.tryParse(value) ?? 0.0;
                                 controller.isForUpdate.value = true;
+                              }
+                              else{
+                                errorSnackBar(message: "Value should not be grater than balance.");
+                                }
                               })),
                     ],
                   ),

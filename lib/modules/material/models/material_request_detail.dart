@@ -1,4 +1,5 @@
 import 'package:jog_inventory/common/base_model/base_model.dart';
+import 'package:jog_inventory/common/exports/common.dart';
 
 class MaterialRequestDetail extends BaseModel {
   @override
@@ -77,15 +78,15 @@ class Fabric {
   String? fabricColor;
   String? fabricNo;
   String? fabricBox;
-  int? fabricInPiece;
+  double? fabricInPiece;
   int? fabricTypeUnit;
-  int? fabricInPrice;
+  double? fabricInPrice;
   dynamic fabricInTotal;
   dynamic fabricUsed;
   String? fabricAdjust;
-  int? fabricBalance;
+  double? fabricBalance;
   dynamic fabricTotal;
-  int? fabricAmount;
+  double? fabricAmount;
   String? fabricDateCreate;
   int? fabricUserCreate;
   String? fabricDateUpdate;
@@ -131,15 +132,15 @@ class Fabric {
     fabricColor = json['fabric_color'];
     fabricNo = json['fabric_no'];
     fabricBox = json['fabric_box'];
-    fabricInPiece = json['fabric_in_piece'];
+    fabricInPiece = ParseData.toDouble(json['fabric_in_piece']);
     fabricTypeUnit = json['fabric_type_unit'];
-    fabricInPrice = json['fabric_in_price'];
+    fabricInPrice = ParseData.toDouble(json['fabric_in_price']);
     fabricInTotal = json['fabric_in_total'];
     fabricUsed = json['fabric_used'];
     fabricAdjust = json['fabric_adjust'];
-    fabricBalance = json['fabric_balance'];
+    fabricBalance = ParseData.toDouble(json['fabric_balance']);
     fabricTotal = json['fabric_total'];
-    fabricAmount = json['fabric_amount'];
+    fabricAmount = ParseData.toDouble(json['fabric_amount']);
     fabricDateCreate = json['fabric_date_create'];
     fabricUserCreate = json['fabric_user_create'];
     fabricDateUpdate = json['fabric_date_update'];

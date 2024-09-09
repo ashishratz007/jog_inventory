@@ -7,18 +7,25 @@ class MaterialRqFormModel extends BaseModel {
   String get endPoint => "/api/add-request";
   List<MaterialRQItem> items = [];
   String order_code; // order code
+  String? balance_after;
+  String? item_note;
   int order_lkr_title_id; // order code id
 
-  MaterialRqFormModel(
-      {required this.order_code,
-      required this.order_lkr_title_id,
-      required this.items});
+  MaterialRqFormModel({
+    required this.order_code,
+    required this.order_lkr_title_id,
+    required this.items,
+    this.balance_after,
+    this.item_note,
+  });
 
   @override
   Map<String, dynamic> toJson() {
     return {
       'order_code': order_code,
       'order_lkr_title_id': order_lkr_title_id,
+      'balance_after': order_lkr_title_id,
+      'item_note': item_note,
       'fabric_id_list':
           items.map((item) => item.fabricId!).toList().join(",").toString(),
     };

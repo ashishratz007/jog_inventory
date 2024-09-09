@@ -230,7 +230,7 @@ class ColorBoxesModel extends BaseModel {
   String? fabricNo;
   double? fabricBalance;
 
-  String get title => "$fabricBox/$fabricNo ($fabricBalance kg.)";
+  String get title => "${fabricBox??""}/${fabricNo ?? ""} (${fabricBalance??0.0} kg.)";
 
   ColorBoxesModel({
     this.fabricId,

@@ -120,17 +120,15 @@ class MaterialRequestFormController extends GetxController {
         order_lkr_title_id: selectedOrderCode!.orderLkrTitleId!,
         items: items);
 
-    isLoading.value = true;
     isBusy.value = true;
     requestData.addForm().then((value) {
-      isLoading.value = false;
       isBusy.value = false;
       Get.back();
+      Get.toNamed(AppRoutesString.materialRequestList);
       successSnackBar(message: "Material RQ added successfully");
 
       ///
     }).onError((e, trace) {
-      isLoading.value = false;
       isBusy.value = false;
       errorSnackBar(message: "Error posting data");
     });
@@ -161,7 +159,7 @@ class MaterialRequestFormController extends GetxController {
       successSnackBar(message: "Request updated");
     }).onError((error, trace) {
       isBusy.value = false;
-     errorSnackBar(message: "Unable to update data");
+      errorSnackBar(message: "Unable to update data");
     });
   }
 }

@@ -1,13 +1,15 @@
 import 'package:get/get.dart';
+import 'package:jog_inventory/modules/material/models/material_request_detail.dart';
 import 'package:jog_inventory/modules/material/models/search.dart';
 import '../../../common/exports/main_export.dart';
 
-void showSelectCodeMenu<SearchData>(BuildContext context) {
+void showSelectCodeMenu<OrderCodeData>(BuildContext context,
+    {required ScanDetailsModal scanDetailsModal,required String fabricId,required String pacId}) {
   Rx<TextEditingController> controller = TextEditingController().obs;
   RxBool isLoading = false.obs;
   RxInt selectedIndex = (-1).obs;
   String? error;
-  List<DropDownItem<SearchData>> items = [];
+  List<DropDownItem<OrderCodeData>> items = [];
 
   showModalBottomSheet(
     context: context,
@@ -54,8 +56,8 @@ void showSelectCodeMenu<SearchData>(BuildContext context) {
                           var data = await SearchOrderModal.searchData(query);
                           if ((data.data?.length ?? 0) > 0) items.clear();
                           data.data?.forEach((item) {
-                            SearchData? itemData = item as SearchData?;
-                            items.add(DropDownItem<SearchData>(
+                            OrderCodeData? itemData = item as OrderCodeData?;
+                            items.add(DropDownItem<OrderCodeData>(
                                 id: item.orderLkrTitleId ?? 0,
                                 title: item.orderTitle ?? "_",
                                 key: "${item.orderLkrTitleId}",
@@ -183,7 +185,7 @@ void showSelectCodeMenu<SearchData>(BuildContext context) {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: displayList<
-                                                DropDownItem<SearchData>>(
+                                                DropDownItem<OrderCodeData>>(
                                             items: items,
                                             builder: (item, index) {
                                               return Obx(
@@ -265,7 +267,12 @@ void showSelectCodeMenu<SearchData>(BuildContext context) {
                                         Get.back();
                                         Get.toNamed(
                                             AppRoutesString.submit_order,
-                                            arguments: {});
+                                            arguments: {
+                                              appKeys.fabId: fabricId,
+                                              appKeys.pacId: pacId,
+                                              appKeys.materialRQScan: scanDetailsModal,
+                                              appKeys.ethCode: items[selectedIndex.value].value,
+                                            });
                                       }),
                                 ),
                               )

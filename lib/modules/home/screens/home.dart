@@ -10,7 +10,7 @@ class HomeScreen extends GetView<HomeController> {
   Widget build(BuildContext context) {
     return CustomAppBar(
       hasDrawer: true,
-      title: "title",
+      title: "Home",
       body: bodyWidget(),
     );
   }
