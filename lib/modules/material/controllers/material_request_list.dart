@@ -50,7 +50,7 @@ class MaterialRequestListController extends GetxController {
 
   /// api calls
   /// functions
-  getDataList({bool isFinished = false, bool clearData = false}) {
+  getDataList({bool isFinished = false, bool clearData = false,String? query}) {
     if (clearData) {
       finishedList?.clear();
       producing?.clear();
@@ -65,7 +65,9 @@ class MaterialRequestListController extends GetxController {
     isLoading.value = true;
     MaterialRequestModel.fetch(
             isFinished ? finishPage.value : producingPage.value,
-            isFinished: isFinished)
+            isFinished: isFinished,
+            query: query??""
+    )
         .then((value) {
       isLoading.value = false;
       if (isFinished) {

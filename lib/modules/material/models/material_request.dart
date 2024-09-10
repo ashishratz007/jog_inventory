@@ -14,7 +14,8 @@ class MaterialRequestModel extends BaseModel {
   int? itemNum;
   String? employeeName;
   String? gUsed;
-  int? gTotal;
+  String? addonNum;
+  String? gTotal;
   int? isAddon;
   String? rqStatus;
 
@@ -29,6 +30,7 @@ class MaterialRequestModel extends BaseModel {
     this.gTotal,
     this.isAddon,
     this.rqStatus,
+    this.addonNum,
   });
 
   // Assuming ParseData class with static parsing methods is available
@@ -41,9 +43,10 @@ class MaterialRequestModel extends BaseModel {
       itemNum: ParseData.toInt(json['item_num']),
       employeeName: ParseData.string(json['employee_name']),
       gUsed: ParseData.string(json['g_used']),
-      gTotal: ParseData.toInt(json['g_total']),
+      gTotal: ParseData.string(json['g_total']),
       isAddon: ParseData.toInt(json['is_addon']),
       rqStatus: ParseData.string(json['rq_status']),
+      addonNum: ParseData.string(json['addon_num']),
     );
   }
 
@@ -63,12 +66,15 @@ class MaterialRequestModel extends BaseModel {
   }
 
   static Future<Pagination<MaterialRequestModel>> fetch(int page,
-      {bool isFinished = false}) async {
+      {bool isFinished = false, required String query}) async {
     List<MaterialRequestModel> list = [];
     var resp = await MaterialRequestModel().create(
       isFormData: true,
       queryParameters: {"page": page},
-      data: {"status": isFinished ? "finish" : "producing"},
+      data: {
+        "status": isFinished ? "finish" : "producing",
+       if(query.trim().isNotEmpty) "search": query,
+      },
     );
 
     if (resp.data is Map && resp.data['data'] is List) {
@@ -100,17 +106,24 @@ class MaterialRequestDetailModel extends BaseModel {
   String get endPoint => "/api/material-request";
 
   List<MaterialRQItem>? orders;
-  MaterialRequestDetailModel({this.orders});
+  List<ExtraRQItem>? extraItems;
+  GrandTotal? extraItemsTotal;
+
+  MaterialRequestDetailModel({this.orders, this.extraItems, this.extraItemsTotal});
 
   factory MaterialRequestDetailModel.fromJson(Map<String, dynamic> json) {
     return MaterialRequestDetailModel(
         orders: ParseData.toList<MaterialRQItem>(json['Order'],
-            itemBuilder: (json) => MaterialRQItem.fromJson(json)));
+            itemBuilder: (json) => MaterialRQItem.fromJson(json)),
+      extraItems: ParseData.toList<ExtraRQItem>(json['items'],
+            itemBuilder: (json) => ExtraRQItem.fromJson(json)),
+        extraItemsTotal:json['grand_totals'] == null ? null : GrandTotal.fromJson(json['grand_totals']),
+    );
   }
 
   static Future<MaterialRequestDetailModel> fetch(int id) async {
     var resp = await MaterialRequestDetailModel().get(pathSuffix: "/${id}");
-    return MaterialRequestDetailModel.fromJson(resp.data);
+    return MaterialRequestDetailModel.fromJson(resp.data['data']);
   }
 }
 
@@ -140,7 +153,7 @@ class MaterialRQItem {
   int? fabricUsed;
   String? fabricAdjust;
   double? fabricBalance;
-  int? fabricTotal;
+  double? fabricTotal;
   int? fabricAmount;
   DateTime? fabricDateCreate;
   int? fabricUserCreate;
@@ -214,7 +227,7 @@ class MaterialRQItem {
       fabricUsed: ParseData.toInt(json['fabric_used']),
       fabricAdjust: ParseData.string(json['fabric_adjust']),
       fabricBalance: ParseData.toDouble(json['fabric_balance']),
-      fabricTotal: ParseData.toInt(json['fabric_total']),
+      fabricTotal: ParseData.toDouble(json['fabric_total']),
       fabricAmount: ParseData.toInt(json['fabric_amount']),
       fabricDateCreate: ParseData.toDateTime(json['fabric_date_create']),
       fabricUserCreate: ParseData.toInt(json['fabric_user_create']),
@@ -277,5 +290,61 @@ class UsageDataModel extends BaseModel {
       },
     );
     return UsageDataModel.fromJson(resp.data);
+  }
+}
+
+
+class ExtraRQItem {
+  String? catName;
+  String? fabricColor;
+  String? fabricBox;
+  String? fabricNo;
+  double? balanceBefore;
+  double? balanceAfter;
+  double? used;
+  double? pricePerKg;
+  double? total;
+  String? itemNote;
+
+  ExtraRQItem({
+    this.catName,
+    this.fabricColor,
+    this.fabricBox,
+    this.fabricNo,
+    this.balanceBefore,
+    this.balanceAfter,
+    this.used,
+    this.pricePerKg,
+    this.total,
+    this.itemNote,
+  });
+
+  factory ExtraRQItem.fromJson(Map<String, dynamic> json) {
+    return ExtraRQItem(
+      catName: ParseData.string(json['cat_name']),
+      fabricColor: ParseData.string(json['fabric_color']),
+      fabricBox: ParseData.string(json['fabric_box']),
+      fabricNo: ParseData.string(json['fabric_no']),
+      balanceBefore: ParseData.toDouble(json['balance_before']),
+      balanceAfter: ParseData.toDouble(json['balance_after']),
+      used: ParseData.toDouble(json['used']),
+      pricePerKg: ParseData.toDouble(json['price_per_kg']),
+      total: ParseData.toDouble(json['total']),
+      itemNote: ParseData.string(json['item_note']),
+    );
+  }
+}
+
+class GrandTotal {
+  double? grandUsed;
+  double? grandTotal;
+
+  GrandTotal({this.grandUsed, this.grandTotal});
+
+  factory GrandTotal.fromJson(Map<String, dynamic> json) {
+    return GrandTotal(
+      grandUsed: ParseData.toDouble(json['grand_used']),
+      grandTotal: ParseData.toDouble(json['grand_total']),
+    );
   }
 }

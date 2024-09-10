@@ -1,3 +1,4 @@
+import 'package:jog_inventory/common/constant/enums.dart';
 import 'package:jog_inventory/modules/material/controllers/scan_qr.dart';
 import 'package:jog_inventory/modules/material/widgets/select_jog_code_popup.dart';
 import '../../../common/exports/main_export.dart';
@@ -83,8 +84,8 @@ class _MaterialRequestDetailScreenState
               color: Colours.bgGrey,
             ),
             displayDataTiles(
-                'Quantity',
-                controller.scanDetailsModal?.data?.fabric?.fabricInTotal
+                'Quantity(${FabricMaterialType.getTitle(controller.scanDetailsModal?.data?.fabric?.fabricTypeUnit ?? 1)})',
+                controller.scanDetailsModal?.data?.fabric?.fabricBalance
                         ?.toString() ??
                     "_"),
             Divider(
@@ -95,7 +96,11 @@ class _MaterialRequestDetailScreenState
             Divider(
               color: Colours.bgGrey,
             ),
-            displayDataTiles('Material Type', '_'),
+            displayDataTiles(
+                'Material Type',
+                FabricMaterialType.getTitle(
+                    controller.scanDetailsModal?.data?.fabric?.fabricTypeUnit ??
+                        1)),
             Divider(
               color: Colours.bgGrey,
             ),

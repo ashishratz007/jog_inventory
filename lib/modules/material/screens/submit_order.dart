@@ -1,3 +1,4 @@
+import 'package:jog_inventory/common/constant/enums.dart';
 import 'package:jog_inventory/common/utils/date_formater.dart';
 import 'package:jog_inventory/common/utils/dotted_border.dart';
 import 'package:jog_inventory/common/utils/validation.dart';
@@ -223,7 +224,9 @@ class _SubmitOrderScreenState extends State<SubmitOrderScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(Strings.quantityInStock,
+                Text(Strings.quantityInStock+"(${FabricMaterialType.getTitle(
+                    controller.scanDetailsModal.data?.fabric?.fabricTypeUnit ??
+                        1)})",
                     style: appTextTheme.titleMedium
                         ?.copyWith(color: Colours.greyLight)),
                 Text(
@@ -381,7 +384,9 @@ class _SubmitOrderScreenState extends State<SubmitOrderScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(Strings.quantityInStock,
+                Text(Strings.quantityInStock+"(${FabricMaterialType.getTitle(
+                    controller.scanDetailsModal.data?.fabric?.fabricTypeUnit ??
+                        1)})",
                     style: appTextTheme.titleMedium
                         ?.copyWith(color: Colours.greyLight)),
                 Text(

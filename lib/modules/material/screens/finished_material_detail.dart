@@ -22,8 +22,15 @@ class _FinishedMaterialDetailScreenState
   double get total {
     var val = 0.0;
     materialDetail.orders?.forEach((item) {
-      val += item.fabricTotal ?? 0.0;
+      var value =
+          double.parse("${item.used ?? 0.0}") * (item.fabricInPrice ?? 0.0);
+      val += value;
     });
+
+    if(materialDetail.extraItemsTotal != null) {
+      val += materialDetail.extraItemsTotal?.grandTotal ?? 0.0;
+    }
+
     return val;
   }
 
@@ -32,6 +39,9 @@ class _FinishedMaterialDetailScreenState
     materialDetail.orders?.forEach((item) {
       val += double.tryParse(item.used ?? "_") ?? 0.0;
     });
+    if (materialDetail.extraItemsTotal != null) {
+      val += materialDetail.extraItemsTotal?.grandUsed ?? 0.0;
+    }
     return val;
   }
 
@@ -66,6 +76,7 @@ class _FinishedMaterialDetailScreenState
         padding: AppPadding.pagePadding,
         child: Obx(
           () => Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               orderInfo(),
               gap(space: 20),
@@ -76,14 +87,30 @@ class _FinishedMaterialDetailScreenState
               if (!isLoading.value) ...[
                 dottedDivider(color: Colours.greyLight),
                 gap(space: 20),
-                ...displayList(
+                ...displayList<MaterialRQItem>(
                     showGap: true,
                     items: materialDetail.orders,
                     builder: (item, index) {
                       var item = materialDetail.orders![index];
                       return itemTileWidget(item, index);
                     }),
+
+                /// additional items
                 gap(),
+
+                if ((materialDetail.extraItems?.length ?? 0) > 0) ...[
+                  Text("Additional items", style: appTextTheme.labelMedium),
+                  gap(space: 15),
+                  ...displayList<ExtraRQItem>(
+                      showGap: true,
+                      items: materialDetail.extraItems,
+                      builder: (item, index) {
+                        return extraItemTileWidget(item, index);
+                      })
+                ],
+                gap(),
+
+                /// items total
                 totalWidget(),
               ],
 
@@ -164,74 +191,143 @@ class _FinishedMaterialDetailScreenState
   Widget itemTileWidget(MaterialRQItem item, int index) {
     return Container(
         padding: AppPadding.inner,
+        width: Get.width,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
           boxShadow: containerShadow(),
           color: Colours.white,
         ),
-        child: Row(
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(item.fabricNo ?? "_",
-                style: appTextTheme.titleSmall
-                    ?.copyWith(color: Colours.blackLite)),
+            Row(
+              children: [
+                Flexible(
+                  child: Text(item.fabricNo ?? "_",
+                      style: appTextTheme.titleSmall
+                          ?.copyWith(color: Colours.blackLite)),
+                ),
+                gap(space: 10),
+                Text("${item.catNameEn} , ",
+                    style: appTextTheme.titleSmall
+                        ?.copyWith(color: Colours.primaryText)),
+                Text("${item.fabricColor}",
+                    style: appTextTheme.titleSmall?.copyWith()),
+                // Expanded(child: SizedBox()),
+                // displayAssetsWidget(AppIcons.edit, height: 20, width: 30)
+              ],
+            ),
             gap(space: 10),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Text("${item.catNameEn} , ",
+            Row(
+              children: [
+                Expanded(
+                    flex: 2,
+                    child: displayTitleSubtitle("Box", "${item.fabricBox}")),
+                Expanded(
+                    flex: 2,
+                    child: displayTitleSubtitle("Used", "${item.used} kg")),
+              ],
+            ),
+            gap(space: 5),
+            Row(
+              children: [
+                Expanded(
+                    flex: 2,
+                    child: displayTitleSubtitle(
+                        "Bal before", "${item.balanceBefore} kg")),
+                Expanded(
+                    flex: 2,
+                    child: displayTitleSubtitle(
+                        "Unit price", "${item.fabricInPrice ?? 0}")),
+              ],
+            ),
+            gap(space: 5),
+            Row(
+              children: [
+                Expanded(
+                    flex: 2,
+                    child: displayTitleSubtitle(
+                        "Bal after", "${item.balanceAfter} kg")),
+                Expanded(
+                    flex: 2,
+                    child: displayTitleSubtitle("Total",
+                        "${formatDecimal("${double.parse("${item.used ?? 0.0}") * (item.fabricInPrice ?? 0.0)}")}")),
+              ],
+            ),
+          ],
+        ));
+  }
+
+  Widget extraItemTileWidget(ExtraRQItem item, int index) {
+    return Container(
+        padding: AppPadding.inner,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: containerShadow(),
+          color: Colours.white,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Flexible(
+                      child: Text(item.fabricNo ?? "_",
                           style: appTextTheme.titleSmall
-                              ?.copyWith(color: Colours.primaryText)),
-                      Text("${item.fabricColor}",
-                          style: appTextTheme.titleSmall?.copyWith()),
-                      Expanded(child: SizedBox()),
-                      displayAssetsWidget(AppIcons.edit, height: 20)
-                    ],
-                  ),
-                  gap(space: 10),
-                  Row(
-                    children: [
-                      Expanded(
-                          flex: 3,
-                          child:
-                              displayTitleSubtitle("Box", "${item.fabricBox}")),
-                      Expanded(
-                          flex: 2,
-                          child:
-                              displayTitleSubtitle("Used", "${item.used} kg")),
-                    ],
-                  ),
-                  gap(space: 5),
-                  Row(
-                    children: [
-                      Expanded(
-                          flex: 3,
-                          child: displayTitleSubtitle(
-                              "Bal before", "${item.balanceBefore} kg")),
-                      Expanded(
-                          flex: 2,
-                          child: displayTitleSubtitle(
-                              "Unit price", "${item.fabricInPrice??0}")),
-                    ],
-                  ),
-                  gap(space: 5),
-                  Row(
-                    children: [
-                      Expanded(
-                          flex: 3,
-                          child: displayTitleSubtitle(
-                              "Bal after", "${item.balanceAfter} kg")),
-                      Expanded(
-                          flex: 2,
-                          child: displayTitleSubtitle(
-                              "Total", "${item.fabricAmount??0}")),
-                    ],
-                  ),
-                ],
-              ),
+                              ?.copyWith(color: Colours.blackLite)),
+                    ),
+                    gap(space: 10),
+                    Text("${item.catName} , ",
+                        style: appTextTheme.titleSmall
+                            ?.copyWith(color: Colours.primaryText)),
+                    Text("${item.fabricColor}",
+                        style: appTextTheme.titleSmall?.copyWith()),
+                    // Expanded(child: SizedBox()),
+                    // displayAssetsWidget(AppIcons.edit, height: 20)
+                  ],
+                ),
+                gap(space: 10),
+                Row(
+                  children: [
+                    Expanded(
+                        flex: 2,
+                        child:
+                            displayTitleSubtitle("Box", "${item.fabricBox}")),
+                    Expanded(
+                        flex: 2,
+                        child: displayTitleSubtitle("Used", "${item.used} kg")),
+                  ],
+                ),
+                gap(space: 5),
+                Row(
+                  children: [
+                    Expanded(
+                        flex: 2,
+                        child: displayTitleSubtitle(
+                            "Bal before", "${item.balanceBefore} kg")),
+                    Expanded(
+                        flex: 2,
+                        child: displayTitleSubtitle(
+                            "Unit price", "${item.pricePerKg ?? 0}")),
+                  ],
+                ),
+                gap(space: 5),
+                Row(
+                  children: [
+                    Expanded(
+                        flex: 2,
+                        child: displayTitleSubtitle(
+                            "Bal after", "${item.balanceAfter} kg")),
+                    Expanded(
+                        flex: 2,
+                        child: displayTitleSubtitle("Total",
+                            "${formatDecimal("${double.parse("${item.used ?? 0.0}") * (item.pricePerKg ?? 0.0)}")}")),
+                  ],
+                ),
+              ],
             )
           ],
         ));
@@ -240,13 +336,18 @@ class _FinishedMaterialDetailScreenState
   Widget displayTitleSubtitle(String title, String subtitle) {
     return Row(
       children: [
-        Text(title,
-            style: appTextTheme.titleSmall?.copyWith(color: Colours.greyLight)),
+        Flexible(
+          child: Text(title,
+              style:
+                  appTextTheme.titleSmall?.copyWith(color: Colours.greyLight)),
+        ),
         gap(space: 10),
-        Text(
-          subtitle,
-          style: appTextTheme.titleSmall?.copyWith(),
-          textAlign: TextAlign.center,
+        Flexible(
+          child: Text(
+            subtitle,
+            style: appTextTheme.titleSmall?.copyWith(),
+            textAlign: TextAlign.center,
+          ),
         ),
       ],
     );
@@ -310,7 +411,7 @@ class _FinishedMaterialDetailScreenState
                 gap(space: 10),
                 Expanded(
                     child: Text(
-                  "${usedKg} kg",
+                  formatDecimal("${usedKg}", suffix: "Kg"),
                   style: appTextTheme.labelMedium
                       ?.copyWith(color: Colours.blackLite),
                   textAlign: TextAlign.center,

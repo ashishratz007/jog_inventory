@@ -47,3 +47,15 @@ enum VehicleStatusType {
   String get title =>
       ["Under Review", "Approved", "Sold", "Rejected", "Archived"][index];
 }
+
+enum FabricMaterialType {
+  piece,
+  yard,
+  kg;
+
+  String get title => ["Piece", "yard", "Kg"][index];
+
+  static String getTitle(int index) {
+    return FabricMaterialType.values[index - 1].title;
+  }
+}

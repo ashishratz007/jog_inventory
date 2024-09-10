@@ -11,13 +11,20 @@ import 'package:jog_inventory/modules/material/screens/submit_order.dart';
 import 'package:jog_inventory/modules/no_code/screens/no_code_detail.dart';
 import 'package:jog_inventory/modules/no_code/screens/no_code_request_form.dart';
 import 'package:jog_inventory/modules/no_code/screens/no_code_rq_list.dart';
+import 'package:jog_inventory/splash.dart';
 import 'common/exports/main_export.dart';
 
 List<GetPage<dynamic>> getRoutes = [
   GetPage(
+    name: AppRoutesString.splash,
+    page: () => SplashScreen(),
+  ),
+
+  GetPage(
       name: AppRoutesString.login,
       page: () => LoginScreen(),
       bindings: [AuthBindings()]),
+
   GetPage(
     name: AppRoutesString.home,
     page: () => HomeScreen(),

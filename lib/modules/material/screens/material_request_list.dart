@@ -1,5 +1,8 @@
+import 'package:jog_inventory/common/animations/sliding%20container.dart';
+import 'package:jog_inventory/common/constant/images.dart';
 import 'package:jog_inventory/common/utils/bottom_sheet.dart';
 import 'package:jog_inventory/common/utils/menu.dart';
+import 'package:jog_inventory/common/widgets/imageview.dart';
 import 'package:jog_inventory/modules/material/controllers/material_request_list.dart';
 import 'package:jog_inventory/modules/material/models/material_request.dart';
 import 'package:jog_inventory/modules/material/widgets/search_filter.dart';
@@ -130,6 +133,10 @@ class MaterialRequestListScreen extends GetView<MaterialRequestListController> {
   Widget searchWidget() {
     return PrimaryTextField(
       radius: 10,
+      onChanged: (value) {
+        controller.getDataList(
+            isFinished: !controller.isProducing.value, clearData: true);
+      },
       hintText: "Search",
       prefixIcon: Padding(
           padding: EdgeInsets.only(left: 10, right: 10),
@@ -477,7 +484,7 @@ class MaterialRequestListScreen extends GetView<MaterialRequestListController> {
                                   ?.copyWith(color: Colours.greyLight)),
                           gap(space: 10),
                           Text(
-                            "${item.gTotal ?? 0}",
+                            "${formatDecimal(item.gTotal ?? "_")}",
                             style: appTextTheme.titleSmall
                                 ?.copyWith(color: Colours.greenLight),
                             textAlign: TextAlign.center,
@@ -505,7 +512,7 @@ class MaterialRequestListScreen extends GetView<MaterialRequestListController> {
                                       ?.copyWith(color: Colours.greyLight)),
                               gap(space: 10),
                               Text(
-                                "${item.isAddon ?? 0}",
+                                "${item.addonNum ?? 0}",
                                 style: appTextTheme.titleSmall?.copyWith(),
                                 textAlign: TextAlign.center,
                               ),

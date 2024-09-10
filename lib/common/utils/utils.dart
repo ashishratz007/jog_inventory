@@ -109,6 +109,9 @@ abstract final class ParseData {
   /// parse double
   static double? toDouble(value) {
     if (value == null) return null;
+    if(value is String && value.contains(",")){
+      value = value.split(",").join("");
+    }
     return double.tryParse("$value");
   }
 
@@ -607,3 +610,11 @@ FilteringTextInputFormatter amountFormatter(){
       RegExp(r'^\d+\.?\d*$'));
 }
 
+String formatDecimal(String decimalString, {int decimalPlaces = 2, String? suffix}) {
+  try {
+    double number = double.parse(decimalString);
+    return number.toStringAsFixed(decimalPlaces);
+  } catch (e) {
+    return decimalString + " $suffix"; // Return original string if parsing fails
+  }
+}

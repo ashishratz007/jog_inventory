@@ -14,7 +14,7 @@ class _AppString {
 
   ///
   final String checkOutDate = "Checkout Date";
-  final String quantityInStock = "Quantity in Stock(KG)";
+  final String quantityInStock = "Quantity in Stock";
   final String quantityRequired = "Quantity Required";
   final String qtdRequested = "QTD Requested";
   final String previousCheckQtd = "Previous Checkout Qtd";
