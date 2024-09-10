@@ -84,7 +84,7 @@ class _MaterialRequestDetailScreenState
               color: Colours.bgGrey,
             ),
             displayDataTiles(
-                'Quantity(${FabricMaterialType.getTitle(controller.scanDetailsModal?.data?.fabric?.fabricTypeUnit ?? 1)})',
+                'Balance',
                 controller.scanDetailsModal?.data?.fabric?.fabricBalance
                         ?.toString() ??
                     "_"),
@@ -98,8 +98,8 @@ class _MaterialRequestDetailScreenState
             ),
             displayDataTiles(
                 'Material Type',
-                FabricMaterialType.getTitle(
-                    controller.scanDetailsModal?.data?.fabric?.fabricTypeUnit ??
+                MaterialRQType.getTitle(
+                    controller.scanDetailsModal?.data?.fabric?.catId?.catId ??
                         1)),
             Divider(
               color: Colours.bgGrey,
@@ -110,7 +110,7 @@ class _MaterialRequestDetailScreenState
               color: Colours.bgGrey,
             ),
             displayDataTiles(
-                'Vendor Name',
+                'Supplier Name',
                 controller.scanDetailsModal?.data?.fabric?.supplierId
                         ?.supplierName ??
                     "_"),

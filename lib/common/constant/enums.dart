@@ -59,3 +59,14 @@ enum FabricMaterialType {
     return FabricMaterialType.values[index == 0 ? index:(index - 1)].title;
   }
 }
+
+enum MaterialRQType {
+  Fabric,
+  Accessory;
+
+  String get title => [ "Fabric","Accessory",][index];
+
+  static String getTitle(int index) {
+    return MaterialRQType.values[index == 0 ? index:(index - 1)].title;
+  }
+}
