@@ -73,7 +73,7 @@ class MaterialRequestModel extends BaseModel {
       queryParameters: {"page": page},
       data: {
         "status": isFinished ? "finish" : "producing",
-       if(query.trim().isNotEmpty) "search": query,
+        if (query.trim().isNotEmpty) "search": query,
       },
     );
 
@@ -109,15 +109,18 @@ class MaterialRequestDetailModel extends BaseModel {
   List<ExtraRQItem>? extraItems;
   GrandTotal? extraItemsTotal;
 
-  MaterialRequestDetailModel({this.orders, this.extraItems, this.extraItemsTotal});
+  MaterialRequestDetailModel(
+      {this.orders, this.extraItems, this.extraItemsTotal});
 
   factory MaterialRequestDetailModel.fromJson(Map<String, dynamic> json) {
     return MaterialRequestDetailModel(
-        orders: ParseData.toList<MaterialRQItem>(json['Order'],
-            itemBuilder: (json) => MaterialRQItem.fromJson(json)),
+      orders: ParseData.toList<MaterialRQItem>(json['Order'],
+          itemBuilder: (json) => MaterialRQItem.fromJson(json)),
       extraItems: ParseData.toList<ExtraRQItem>(json['items'],
-            itemBuilder: (json) => ExtraRQItem.fromJson(json)),
-        extraItemsTotal:json['grand_totals'] == null ? null : GrandTotal.fromJson(json['grand_totals']),
+          itemBuilder: (json) => ExtraRQItem.fromJson(json)),
+      extraItemsTotal: json['grand_totals'] == null
+          ? null
+          : GrandTotal.fromJson(json['grand_totals']),
     );
   }
 
@@ -293,7 +296,6 @@ class UsageDataModel extends BaseModel {
   }
 }
 
-
 class ExtraRQItem {
   String? catName;
   String? fabricColor;
@@ -304,6 +306,7 @@ class ExtraRQItem {
   double? used;
   double? pricePerKg;
   double? total;
+  int? fabricTypeUnit;
   String? itemNote;
 
   ExtraRQItem({
@@ -314,6 +317,7 @@ class ExtraRQItem {
     this.balanceBefore,
     this.balanceAfter,
     this.used,
+    this.fabricTypeUnit,
     this.pricePerKg,
     this.total,
     this.itemNote,
@@ -331,6 +335,7 @@ class ExtraRQItem {
       pricePerKg: ParseData.toDouble(json['price_per_kg']),
       total: ParseData.toDouble(json['total']),
       itemNote: ParseData.string(json['item_note']),
+      fabricTypeUnit: ParseData.toInt(json['fabric_type_unit']),
     );
   }
 }

@@ -1,3 +1,4 @@
+import 'package:jog_inventory/common/constant/enums.dart';
 import 'package:jog_inventory/common/utils/date_formater.dart';
 import 'package:jog_inventory/common/utils/error_message.dart';
 
@@ -64,6 +65,10 @@ class _FinishedMaterialDetailScreenState
         getMaterialData();
       });
     }
+  }
+
+  String showType(int index){
+    return "(${FabricMaterialType.getTitle(index)})";
   }
 
   @override
@@ -225,7 +230,7 @@ class _FinishedMaterialDetailScreenState
                     child: displayTitleSubtitle("Box", "${item.fabricBox}")),
                 Expanded(
                     flex: 2,
-                    child: displayTitleSubtitle("Used", "${item.used} kg")),
+                    child: displayTitleSubtitle("Used", "${item.used} ${showType(item.fabricTypeUnit??0)}")),
               ],
             ),
             gap(space: 5),
@@ -234,7 +239,7 @@ class _FinishedMaterialDetailScreenState
                 Expanded(
                     flex: 2,
                     child: displayTitleSubtitle(
-                        "Bal before", "${item.balanceBefore} kg")),
+                        "Bal before", "${item.balanceBefore} ${showType(item.fabricTypeUnit??0)}")),
                 Expanded(
                     flex: 2,
                     child: displayTitleSubtitle(
@@ -247,7 +252,7 @@ class _FinishedMaterialDetailScreenState
                 Expanded(
                     flex: 2,
                     child: displayTitleSubtitle(
-                        "Bal after", "${item.balanceAfter} kg")),
+                        "Bal after", "${item.balanceAfter} ${showType(item.fabricTypeUnit??0)}")),
                 Expanded(
                     flex: 2,
                     child: displayTitleSubtitle("Total",
@@ -298,7 +303,7 @@ class _FinishedMaterialDetailScreenState
                             displayTitleSubtitle("Box", "${item.fabricBox}")),
                     Expanded(
                         flex: 2,
-                        child: displayTitleSubtitle("Used", "${item.used} kg")),
+                        child: displayTitleSubtitle("Used", "${item.used} ${showType(item.fabricTypeUnit??0)}")),
                   ],
                 ),
                 gap(space: 5),
@@ -307,7 +312,7 @@ class _FinishedMaterialDetailScreenState
                     Expanded(
                         flex: 2,
                         child: displayTitleSubtitle(
-                            "Bal before", "${item.balanceBefore} kg")),
+                            "Bal before", "${item.balanceBefore} ${showType(item.fabricTypeUnit??0)}")),
                     Expanded(
                         flex: 2,
                         child: displayTitleSubtitle(

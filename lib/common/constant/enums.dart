@@ -56,6 +56,6 @@ enum FabricMaterialType {
   String get title => ["Piece", "yard", "Kg"][index];
 
   static String getTitle(int index) {
-    return FabricMaterialType.values[index - 1].title;
+    return FabricMaterialType.values[index == 0 ? index:(index - 1)].title;
   }
 }
