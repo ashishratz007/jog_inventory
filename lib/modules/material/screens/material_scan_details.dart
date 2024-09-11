@@ -80,43 +80,32 @@ class _MaterialRequestDetailScreenState
                 'Received Date',
                 controller.scanDetailsModal?.data?.fabric?.fabricDateCreate ??
                     "_"),
-            Divider(
-              color: Colours.bgGrey,
-            ),
+            Divider(color: Colours.bgGrey),
             displayDataTiles(
                 'Balance',
-                controller.scanDetailsModal?.data?.fabric?.fabricBalance
-                        ?.toString() ??
-                    "_"),
-            Divider(
-              color: Colours.bgGrey,
-            ),
+                (controller.scanDetailsModal?.data?.fabric?.fabricBalance
+                            ?.toString() ??
+                        "_") +
+                    " (${FabricMaterialType.getTitle(controller.scanDetailsModal?.data?.fabric?.fabricTypeUnit ?? 1)})"),
+            Divider(color: Colours.bgGrey),
             displayDataTiles('Roll Number',
                 controller.scanDetailsModal?.data?.fabric?.fabricNo ?? "_"),
-            Divider(
-              color: Colours.bgGrey,
-            ),
+            Divider(color: Colours.bgGrey),
             displayDataTiles(
                 'Material Type',
                 MaterialRQType.getTitle(
                     controller.scanDetailsModal?.data?.fabric?.catId?.catId ??
                         1)),
-            Divider(
-              color: Colours.bgGrey,
-            ),
+            Divider(color: Colours.bgGrey),
             displayDataTiles('Color',
                 controller.scanDetailsModal?.data?.fabric?.fabricColor ?? "_"),
-            Divider(
-              color: Colours.bgGrey,
-            ),
+            Divider(color: Colours.bgGrey),
             displayDataTiles(
                 'Supplier Name',
                 controller.scanDetailsModal?.data?.fabric?.supplierId
                         ?.supplierName ??
                     "_"),
-            Divider(
-              color: Colours.bgGrey,
-            ),
+            Divider(color: Colours.bgGrey),
             displayDataTiles(
                 'Warehouse Location',
                 controller.scanDetailsModal?.data?.fabric?.supplierId
