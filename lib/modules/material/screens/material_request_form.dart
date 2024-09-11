@@ -404,16 +404,18 @@ class MaterialRequestFormScreen extends GetView<MaterialRequestFormController> {
                             controller.selectedFabCate =
                                 item?.firstOrNull?.value;
                             controller.fabricColorController.clearItems!();
+                            controller.colorBoxController.clearItems!();
                           },
                           hintText: Strings.fabric,
                           labelText: Strings.fabric)),
-                  gap(space: 30),
+                  gap(space: 10),
 
                   /// Color
                   Expanded(
                       child: bottomSheetMenuWithLabel<FabricColorModel>(
                     controller: controller.fabricColorController,
                     items: [],
+                    allowSearch: true,
                     fromApi: () async {
                       /// for category not selected
                       if (controller.selectedFabCate?.catId == null) {
@@ -446,6 +448,7 @@ class MaterialRequestFormScreen extends GetView<MaterialRequestFormController> {
                   Expanded(
                       child: bottomSheetMenuWithLabel<ColorBoxesModel>(
                           items: [],
+                          allowSearch: true,
                           controller: controller.colorBoxController,
                           onChanged: (item) {
                             controller.selectedFabColorBoxes =
@@ -470,7 +473,7 @@ class MaterialRequestFormScreen extends GetView<MaterialRequestFormController> {
                           },
                           hintText: Strings.box,
                           labelText: Strings.box)),
-                  gap(space: 30),
+                  gap(space: 10),
                   Expanded(
                       child: Column(
                     children: [

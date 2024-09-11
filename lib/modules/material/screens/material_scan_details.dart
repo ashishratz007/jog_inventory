@@ -46,11 +46,10 @@ class _MaterialRequestDetailScreenState
     var radius = 10.0;
     return Container(
         decoration: BoxDecoration(
-          color: Colours.white,
-          boxShadow: containerShadow(),
-          border: Border.all(color: Colours.border),
-          borderRadius: BorderRadius.circular(radius),
-        ),
+            color: Colours.white,
+            boxShadow: containerShadow(),
+            border: Border.all(color: Colours.border),
+            borderRadius: BorderRadius.circular(radius)),
         child: Column(
           children: [
             Container(
