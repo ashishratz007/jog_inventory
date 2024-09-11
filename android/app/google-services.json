@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "566109691338",
+    "project_id": "jog-inventory",
+    "storage_bucket": "jog-inventory.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:566109691338:android:cfb2a6912277165ca00333",
+        "android_client_info": {
+          "package_name": "com.jogdigitialinnovations.inventory"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBVscZEmotoehVdCnJUVv50grq7PB2j6AQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
