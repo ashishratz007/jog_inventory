@@ -25,6 +25,7 @@ class _Config {
   bool get isAppInitialized => Get.context != null;
 
   bool get isDebugMode => kDebugMode;
+  bool get isReleaseMode => kReleaseMode;
   // /// currentContext
   // BuildContext get context => Get.context!;
 

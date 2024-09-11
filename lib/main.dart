@@ -1,10 +1,12 @@
 import 'package:jog_inventory/common/globals/global.dart';
 
+import 'common/client/firebase.dart';
 import 'common/exports/main_export.dart';
 
 void main() async {
   setSafeAreaColor();
-
+  /// setup firebase
+  await FirebaseCreds.init();
   /// dio client which will make our api calls
   dioClient.Init();
 
@@ -26,7 +28,7 @@ class JogInventory extends StatelessWidget {
       child: GetMaterialApp(
         // home: AnimatedLine(),
         debugShowCheckedModeBanner: false,
-        title: 'Used Car Wale',
+        title: 'JOG INVENTORY',
         theme: ThemeData(
           splashFactory: InkRipple.splashFactory,
           textTheme: appTextTheme,

@@ -1,3 +1,5 @@
+import 'package:jog_inventory/common/globals/global.dart';
+
 import '../exports/main_export.dart';
 
 class TransparentPopup extends StatelessWidget {
@@ -80,10 +82,10 @@ showErrorMessage(
     ),
   );
   // if (kReleaseMode)
-  //   throw Exception({
-  //     "user": globalData.activeUser?.username ?? "_",
-  //     "user_id": globalData.activeUser?.id ?? "_",
-  //     "error": error,
-  //     "trace": trace,
-  //   });
+    throw Exception({
+      "user": globalData.activeUser?.employeeName ?? "_",
+      "user_id": globalData.activeUser?.employeeId ?? "_",
+      "error": error,
+      "trace": trace,
+    });
 }
