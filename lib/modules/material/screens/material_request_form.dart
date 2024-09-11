@@ -1,5 +1,6 @@
 import 'package:jog_inventory/common/utils/date_formater.dart';
 import 'package:jog_inventory/common/utils/dotted_border.dart';
+import 'package:jog_inventory/modules/home/controllers/home.dart';
 import 'package:jog_inventory/modules/material/controllers/material_request_form.dart';
 import 'package:jog_inventory/modules/material/models/material_request.dart';
 import 'package:jog_inventory/modules/material/models/fabric.dart';
@@ -271,11 +272,8 @@ class MaterialRequestFormScreen extends GetView<MaterialRequestFormController> {
                   onPressed: () {
                     controller.items.remove(item);
                   },
-                  icon: Icon(
-                    Icons.delete_outlined,
-                    size: 20,
-                    color: Colours.red,
-                  ))
+                  icon:
+                      Icon(Icons.delete_outlined, size: 20, color: Colours.red))
             ],
           ),
           gap(space: 10),
@@ -309,29 +307,65 @@ class MaterialRequestFormScreen extends GetView<MaterialRequestFormController> {
     return Obx(
       () => Visibility(
         visible: !controller.enableAdd.value,
-        child: InkWell(
-          onTap: () {
-            controller.enableAdd.toggle();
-          },
-          child: DottedBorderContainer(
-              margin: EdgeInsets.only(left: 16, right: 16, bottom: 10),
-              borderColor: Colours.blueDark,
-              padding: EdgeInsets.all(15),
-              decoration: BoxDecoration(
-                color: Color(0xffdae6f5),
-                // borderRadius: BorderRadius.circular(15),
+        child: Container(
+          color: Colors.white,
+          padding: EdgeInsets.only(left: 16, right: 16, bottom: 5, top: 5),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Expanded(
+                flex: 2,
+                child: InkWell(
+                  onTap: () {
+                    controller.enableAdd.toggle();
+                  },
+                  child: DottedBorderContainer(
+                      borderColor: Colours.blueDark,
+                      padding: EdgeInsets.all(6),
+                      decoration: BoxDecoration(
+                        color: Color(0xffdae6f5),
+                        // borderRadius: BorderRadius.circular(15),
+                      ),
+                      borderRadius: BorderRadius.circular(5),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.add, color: Colours.primary, size: 18),
+                          gap(),
+                          Text("Add",
+                              style: appTextTheme.labelMedium
+                                  ?.copyWith(color: Colours.primary))
+                        ],
+                      )),
+                ),
               ),
-              borderRadius: BorderRadius.circular(15),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.add, color: Colours.primary, size: 18),
-                  gap(),
-                  Text("Add",
-                      style: appTextTheme.labelMedium
-                          ?.copyWith(color: Colours.primary))
-                ],
-              )),
+              gap(),
+              Expanded(
+                  flex: 2,
+                  child: SecondaryButton(
+                    title: "Scan",
+                    textSize: 12,
+                    isBusy: controller.scanning.value,
+                    trailing: displayAssetsWidget(AppIcons.scan, width: 15),
+                    onTap: () {
+                      var homeController =
+                          getController<HomeController>(HomeController());
+                      controller.scanning.value = true;
+                      homeController.getScanQrCodeData().then((value) {
+                        controller.scanning.value = false;
+                        if (controller.hasItem(value)) {
+                          errorSnackBar(message: "Duplicate item data!");
+                        } else
+                          controller.items.add(value);
+                      }).onError((e, trace) {
+                        controller.scanning.value = false;
+                      });
+                    },
+                  )),
+              gap(),
+            ],
+          ),
         ),
       ),
     );
@@ -431,7 +465,7 @@ class MaterialRequestFormScreen extends GetView<MaterialRequestFormController> {
                                 (index) => DropDownItem(
                                     id: index,
                                     key: items[index].fabricId.toString(),
-                                    title: items[index].title??"0.0",
+                                    title: items[index].title ?? "0.0",
                                     value: items[index]));
                           },
                           hintText: Strings.box,

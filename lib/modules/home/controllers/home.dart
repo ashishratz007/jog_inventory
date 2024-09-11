@@ -1,12 +1,14 @@
 import 'package:barcode_scan2/platform_wrapper.dart';
 import 'package:jog_inventory/common/globals/global.dart';
+import 'package:jog_inventory/modules/material/models/material_request.dart';
 
 import '../../../common/exports/main_export.dart';
+import '../../material/models/material_request_detail.dart';
 
 class HomeController extends GetxController {
   RxBool isLoading = false.obs;
   RxBool isBusy = false.obs;
-
+  HomeController();
   @override
   void onInit() {
     if (config.isDebugMode) {
@@ -24,7 +26,47 @@ class HomeController extends GetxController {
   }
 
   /// functions
-  scanQrCode() async {
+ Future<MaterialRQItem> getScanQrCodeData() async {
+   try{
+      var result = await BarcodeScanner.scan();
+
+      var ids = result.rawContent.split(" ");
+      if (ids.length != 1) {
+        print(ids.length);
+        var pacId = ids[0];
+        var fabId = ids[1];
+
+        if (fabId.isNotEmpty) {
+          var scanDetailsModal =
+              await MaterialRequestDetail.getDetails(fabId, pacId);
+          var data = scanDetailsModal.data!;
+          var fabric = scanDetailsModal.data!.fabric!;
+          return MaterialRQItem(
+            balanceAfter: "${fabric.fabricBalance!}",
+            balanceBefore: "${fabric.fabricBalance!}",
+            catNameEn: "${fabric.catId?.catNameEn!}",
+            fabricBalance: fabric.fabricBalance ?? 0.0,
+            fabricBox: "${fabric.fabricBox ?? "_"}",
+            fabricColor: "${fabric.fabricColor ?? ""}",
+            fabricId: fabric.fabricId!,
+            fabricNo: "${fabric.catId?.catNameEn!}",
+            catCode: "${fabric.catId?.catCode!}",
+            catId: fabric.catId?.catId!,
+          );
+        } else {
+          errorSnackBar(message: "Invalid QR try again");
+          throw "Invalid QR try again";
+        }
+      }
+      throw "Invalid QR try again";
+    }
+    catch(e, trace){
+      errorSnackBar(message: "Unable to get data from QR");
+      throw "Unable to get data from QR";
+    }
+  }
+
+  homeScanQrCode() async {
     var result = await BarcodeScanner.scan();
 
     var ids = result.rawContent.split(" ");
@@ -41,6 +83,7 @@ class HomeController extends GetxController {
       }
     }
   }
+
 
   /// get and register controller
   static HomeController getController() {

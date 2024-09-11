@@ -14,6 +14,7 @@ class MaterialRequestFormController extends GetxController {
   MaterialRequestModel? materialRqDetail;
   RxBool isAddonYear = false.obs;
   RxBool enableAdd = false.obs;
+  RxBool scanning = false.obs;
   RxList<MaterialRQItem> items = <MaterialRQItem>[].obs;
 
   OrderCodeData? selectedOrderCode;
@@ -52,6 +53,11 @@ class MaterialRequestFormController extends GetxController {
   }
 
   /// functions
+
+  bool hasItem(MaterialRQItem item){
+    return(items.any((i)=> i.fabricId == item.fabricId));
+  }
+
   addItem() {
     if (selectedFabCate == null ||
         selectedFabColorBoxes == null ||
@@ -62,7 +68,7 @@ class MaterialRequestFormController extends GetxController {
     fabricController.clearItems;
     fabricColorController.clearItems;
     colorBoxController.clearItems;
-    items.add(MaterialRQItem(
+    var item = MaterialRQItem(
       balanceAfter: selectedFabColorBoxes?.fabricBalance?.toString(),
       balanceBefore: selectedFabColorBoxes?.fabricBalance?.toString(),
       catNameEn: selectedFabCate?.catNameEn,
@@ -72,7 +78,14 @@ class MaterialRequestFormController extends GetxController {
       fabricId: selectedFabColorBoxes?.fabricId,
       fabricNo: selectedFabColorBoxes?.fabricNo,
       catCode: selectedFabCate?.catCode,
-    ));
+    );
+    /// already added
+    if(hasItem(item)){
+      errorSnackBar(message: "Duplicate item data!");
+    }
+    else{
+      items.add(item);
+    }
     selectedFabCate = null;
     selectedFabColorBoxes = null;
     selectedFabColor = null;

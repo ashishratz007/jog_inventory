@@ -5,6 +5,7 @@ import 'package:jog_inventory/common/constant/images.dart';
 import 'package:jog_inventory/common/exports/common.dart';
 import 'package:jog_inventory/common/globals/global.dart';
 import 'package:jog_inventory/common/utils/utils.dart';
+import 'package:jog_inventory/common/version/check_version.dart';
 import 'package:jog_inventory/common/widgets/imageview.dart';
 import 'package:lottie/lottie.dart';
 
@@ -27,6 +28,7 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   checkApp() {
+    // appUpdater.checkForUpdate();
     Future.delayed(Duration(seconds: 2), () {
       Get.toNamed(globalData.authToken == null
           ? AppRoutesString.login

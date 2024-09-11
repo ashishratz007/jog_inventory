@@ -27,6 +27,7 @@ void showSnackBar(
             style: appTextTheme.titleSmall?.copyWith(color: type.titleColor,fontWeight: FontWeight.w600),
           ),
         ),
+        gap(space: 30),
       ],
     ),
     duration: Duration(seconds: 2),

@@ -195,7 +195,7 @@ class HomeScreen extends GetView<HomeController> {
                   /// Scan button
                   SecondaryButton(
                       title: "Scan Barcode ",
-                      onTap: controller.scanQrCode,
+                      onTap: controller.homeScanQrCode,
                       radius: radius,
                       trailing: displayAssetsWidget(AppIcons.scan, width: 20))
                 ],
