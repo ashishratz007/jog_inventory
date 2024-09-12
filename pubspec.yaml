@@ -52,8 +52,9 @@ dependencies:
   shimmer: ^3.0.0
   barcode_scan2: ^4.3.3
   lottie: ^3.1.2
-  firebase_core: ^3.4.1
+  firebase_core: ^3.0.0
   firebase_crashlytics: ^4.1.1
+
 #  app_version_update: ^5.0.3
 
 dev_dependencies:

@@ -1,4 +1,3 @@
-
 import 'package:jog_inventory/modules/auth/models/user_login.dart';
 
 import '../exports/main_export.dart';
@@ -13,10 +12,10 @@ class _GlobalData {
 
   UserInfoModel? get activeUser => UserLoginModel.getUserInfo();
 
-  void logoutUser() {
+  void logoutUser() async {
+    await UserLoginModel.logoutUser();
     Get.offAllNamed(AppRoutesString.login);
   }
-
 }
 
 var globalData = _GlobalData();

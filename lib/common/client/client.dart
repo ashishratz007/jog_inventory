@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:jog_inventory/common/globals/config.dart';
 import 'package:jog_inventory/common/globals/global.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
+
 class _DioClient {
   late final Dio _dio;
 
@@ -31,12 +32,12 @@ class _DioClient {
     // Adding error handling interceptor
     _dio.interceptors.add(InterceptorsWrapper(
       onError: (DioException e, handler) {
-        if (e.message == null) {
-          var message = _handleError(e);
-          return handler.next(
-              DioException(requestOptions: e.requestOptions, message: message));
-        }
-        return handler.next(e);
+        // if (e.message == null) {
+        var message = _handleError(e);
+        return handler.next(
+            DioException(requestOptions: e.requestOptions, message: message));
+        // }
+        // return handler.next(e);
       },
     ));
 
@@ -62,7 +63,7 @@ class _DioClient {
   }
 
   String _handleError(DioException error) {
-    if (error.hashCode == 401) {
+    if (error.response?.statusCode == 401) {
       globalData.logoutUser();
       if (error.message != null)
         return error.message!;
