@@ -93,7 +93,7 @@ class _MaterialRequestDetailScreenState
             displayDataTiles(
                 'Material Type',
                 MaterialRQType.getTitle(
-                    controller.scanDetailsModal?.data?.fabric?.catId?.catId ??
+                    controller.scanDetailsModal?.data?.fabric?.catId?.typeId ??
                         1)),
             Divider(color: Colours.bgGrey),
             displayDataTiles('Color',

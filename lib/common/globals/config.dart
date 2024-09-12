@@ -39,6 +39,7 @@ class _Config {
   return storage.configBox.get(appKeys.walkThrough, defaultValue: false);
  }
 
+
 }
 
 var config = _Config();

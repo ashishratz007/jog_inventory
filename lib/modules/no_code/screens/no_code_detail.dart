@@ -143,7 +143,7 @@ class _NoCodeDetailScreenState extends State<NoCodeDetailScreen> {
                 Expanded(
                     flex: 3,
                     child:
-                        displayTitleSubtitle("NO", "${item.usedDetailNo} kg")),
+                        displayTitleSubtitle("NO", "${item.usedDetailNo}")),
                 Expanded(
                     flex: 2,
                     child: displayTitleSubtitle(
@@ -160,7 +160,7 @@ class _NoCodeDetailScreenState extends State<NoCodeDetailScreen> {
                 Expanded(
                     flex: 2,
                     child: displayTitleSubtitle(
-                        "Total", "${item.usedDetailTotal ?? 0}")),
+                        "Total", "${formatDecimal("${(item.usedDetailUsed??0.0) * (item.usedDetailPrice??0)}") }")),
               ],
             ),
           ],

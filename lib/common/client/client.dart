@@ -62,6 +62,13 @@ class _DioClient {
   }
 
   String _handleError(DioException error) {
+    if (error.hashCode == 401) {
+      globalData.logoutUser();
+      if (error.message != null)
+        return error.message!;
+      else
+        return "Unauthorized user";
+    }
     if (error.type == DioExceptionType.unknown) {
       return 'Unknown error from server!';
     } else if (error.type == DioExceptionType.sendTimeout) {
@@ -123,8 +130,8 @@ class _DioClient {
     }
   }
 
-  Future<MultipartFile> createMultipartFile(File file) async{
-   return await MultipartFile.fromFile(file.path);
+  Future<MultipartFile> createMultipartFile(File file) async {
+    return await MultipartFile.fromFile(file.path);
   }
 }
 
