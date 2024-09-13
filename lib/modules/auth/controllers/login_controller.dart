@@ -9,7 +9,6 @@ class AuthController extends GetxController {
   RxBool rememberMe = false.obs;
   RxBool showPassword = false.obs;
 
-
   @override
   void onInit() {
     var info = UserLoginModel.getUserCreds();
@@ -29,17 +28,25 @@ class AuthController extends GetxController {
 
   /// store token to local storage
   void onFormSubmit() async {
-
     setSafeAreaColor();
     isBusy.value = true;
     if (formKey.currentState?.validate() ?? false) {
       formKey.currentState?.save();
 
       try {
+        /// setup for test user so that it wont hit the main url
+        {
+          bool isTestUser = userLogin.email?.trim() ==
+              appKeys.testUserEmail; // check for test user
+          storage.setTestUser(isTestUser: isTestUser);
+          dioClient.setBaseUrl();
+        }
+        //
         var resp = await userLogin.create();
+
         /// get login response to display data
         UserLoginResponse loginResponse = UserLoginResponse.fromJson(resp.data);
-        if(loginResponse.status == 0) throw loginResponse.message??"";
+        if (loginResponse.status == 0) throw loginResponse.message ?? "";
         var token = loginResponse.accessToken;
         await UserLoginModel.storeToken(token);
         // await UserLoginModel.s(loginResponse.employee!);
@@ -47,7 +54,8 @@ class AuthController extends GetxController {
           UserLoginModel.storeUserCreds(userLogin);
         }
         UserLoginModel.storeUserInfo(loginResponse.employee!);
-        successSnackBar(message: loginResponse.message??"");
+        successSnackBar(message: loginResponse.message ?? "");
+
         /// navigate user to login page
         Get.offAllNamed(AppRoutesString.home);
       } catch (error, trace) {

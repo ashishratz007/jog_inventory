@@ -5,13 +5,14 @@ import 'common/exports/main_export.dart';
 
 void main() async {
   setSafeAreaColor();
+  /// initialize hive
+  await storage.onInit();
+
   /// setup firebase
   await FirebaseCreds.init();
   /// dio client which will make our api calls
   dioClient.Init();
 
-  /// initialize hive
-  await storage.onInit();
 
   runApp(const JogInventory());
 }

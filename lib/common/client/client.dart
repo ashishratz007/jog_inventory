@@ -55,6 +55,8 @@ class _DioClient {
     ));
   }
 
+ void setBaseUrl() => _dio.options.baseUrl = config.baseUrl;
+
   Future _setHeaderToken() async {
     var token = globalData.authToken;
     if (token != null) {

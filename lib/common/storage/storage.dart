@@ -34,6 +34,16 @@ class _Storage {
   }
 
 
+
+  /// to identify test user
+  bool get isTestUser  {
+   return configBox.get(appKeys.testUser,defaultValue: false);
+  }
+
+  void setTestUser({required bool isTestUser}) async {
+    await configBox.put(appKeys.testUser, isTestUser);
+  }
+
 }
 
 final storage = _Storage();
