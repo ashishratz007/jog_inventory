@@ -68,20 +68,20 @@ class _DioClient {
     if (error.response?.statusCode == 401) {
       globalData.logoutUser();
       if (error.message != null)
-        return error.message!;
+        throw error.message!;
       else
-        return "Unauthorized user";
+        throw "Unauthorized user";
     }
     if (error.type == DioExceptionType.unknown) {
-      return 'Unknown error from server!';
+      throw 'Unknown error from server!';
     } else if (error.type == DioExceptionType.sendTimeout) {
-      return 'Send Timeout!';
+      throw 'Send Timeout!';
     } else if (error.type == DioExceptionType.receiveTimeout) {
-      return 'Receive Timeout!';
+      throw 'Receive Timeout!';
     } else if (error.type == DioExceptionType.cancel) {
-      return 'Request to API server was cancelled';
+      throw 'Request to API server was cancelled';
     } else {
-      return 'Unexpected error occurred!';
+      throw 'Unexpected error occurred!';
     }
   }
 

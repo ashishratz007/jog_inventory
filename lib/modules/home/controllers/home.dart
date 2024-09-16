@@ -2,6 +2,7 @@ import 'package:barcode_scan2/platform_wrapper.dart';
 import 'package:jog_inventory/common/globals/global.dart';
 import 'package:jog_inventory/modules/material/models/material_request.dart';
 
+import '../../../common/client/location.dart';
 import '../../../common/exports/main_export.dart';
 import '../../material/models/material_request_detail.dart';
 
@@ -11,6 +12,7 @@ class HomeController extends GetxController {
   HomeController();
   @override
   void onInit() {
+    appLocation.init();
     if (config.isDebugMode) {
       debugPrint("=" * 100);
       debugPrint(globalData.authToken);

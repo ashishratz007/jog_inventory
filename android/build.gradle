@@ -1,14 +1,17 @@
 
 // Root-level build.gradle file
 buildscript {
+    ext.kotlin_version = '2.0.0'
+
     repositories {
         google()
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.3.1'
-//        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath 'com.google.gms:google-services:4.3.5'
+        classpath 'com.android.tools.build:gradle:7.4.2'  // Use the latest version available
+        classpath 'com.google.gms:google-services:4.3.15'  // Use the latest version available
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+//        classpath 'com.google.gms:google-services:4.3.5'
         classpath 'com.google.firebase:firebase-crashlytics-gradle:2.7.1'
         // Add your other dependencies here
     }
