@@ -9,7 +9,7 @@ import '../../material/models/material_request_detail.dart';
 class HomeController extends GetxController {
   RxBool isLoading = false.obs;
   RxBool isBusy = false.obs;
-  HomeController();
+
   @override
   void onInit() {
     appLocation.init();
