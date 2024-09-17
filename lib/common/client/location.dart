@@ -17,7 +17,7 @@ class _AppLocation {
   final double radiusInMeters = 100.0;
 
   void init() {
-    checkAppVersion.updateApp();
+    // checkAppVersion.updateApp();
     // _checkLocationPermission();
   }
 
