@@ -1,4 +1,5 @@
 import 'package:geolocator/geolocator.dart';
+import 'package:jog_inventory/common/client/app_version.dart';
 import 'dart:math';
 import '../exports/main_export.dart';
 
@@ -9,13 +10,15 @@ class _AppLocation {
   // Constant latitude and longitude for the desired location
   final double targetLatitude = 40.3445048;
   final double targetLongitude = 48.0584126;
+
   /// jog location
   // final double targetLatitude = 30.3445048;
   // final double targetLongitude = 78.0584126;
   final double radiusInMeters = 100.0;
 
   void init() {
-    _checkLocationPermission();
+    checkAppVersion.updateApp();
+    // _checkLocationPermission();
   }
 
   Future<void> _checkLocationPermission() async {
@@ -85,16 +88,42 @@ class _AppLocation {
 
   void _showNotInRangePopup() {
     showDialog(
+      barrierDismissible: false,
       context: Get.context!,
-      builder: (context) => AlertDialog(
-        title: Text('Out of Range'),
-        content: Text('You are not within the specified location range.'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: Text('OK'),
+      builder: (context) => PopScope(
+        canPop: false,
+        child: AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10), // Customize the radius here
           ),
-        ],
+          titlePadding: EdgeInsets.zero,
+          contentPadding:
+              EdgeInsets.only(left: 40, right: 40, top: 20, bottom: 20),
+          title: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              gap(),
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      'Out of Range !',
+                      textAlign: TextAlign.center,
+                      style: appTextTheme.titleMedium,
+                    ),
+                  ),
+                ],
+              ),
+              gap(space: 15),
+              Divider(height: 1, color: Colours.secondary),
+            ],
+          ),
+          content: Text(
+            'You are not within the specified location range.',
+            textAlign: TextAlign.center,
+            style: appTextTheme.labelSmall,
+          ),
+        ),
       ),
     );
   }
@@ -103,18 +132,21 @@ class _AppLocation {
     showDialog(
       barrierDismissible: false,
       context: Get.context!,
-      builder: (context) => AlertDialog(
-        title: Text('Permission Required'),
-        content: Text(message),
-        actions: [
-          TextButton(
-            onPressed: () {
-              // Optionally open settings if needed
-              Geolocator.openLocationSettings();
-            },
-            child: Text('Open Settings'),
-          ),
-        ],
+      builder: (context) => PopScope(
+        canPop: false,
+        child: AlertDialog(
+          title: Text('Permission Required'),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () {
+                // Optionally open settings if needed
+                Geolocator.openLocationSettings();
+              },
+              child: Text('Open Settings'),
+            ),
+          ],
+        ),
       ),
     );
   }

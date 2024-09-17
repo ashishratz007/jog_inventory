@@ -56,7 +56,7 @@ enum FabricMaterialType {
   String get title => ["Piece", "yard", "Kg"][index];
 
   static String getTitle(int index) {
-    return FabricMaterialType.values[index == 0 ? index:(index - 1)].title;
+    return FabricMaterialType.values[index == 0 ? index : (index - 1)].title;
   }
 }
 
@@ -64,9 +64,24 @@ enum MaterialRQType {
   Fabric,
   Accessory;
 
-  String get title => [ "Fabric","Accessory",][index];
+  String get title => ["Fabric", "Accessory"][index];
 
   static String getTitle(int index) {
-    return MaterialRQType.values[index == 0 ? index:(index - 1)].title;
+    return MaterialRQType.values[index == 0 ? index : (index - 1)].title;
+  }
+}
+
+enum PageType {
+  materialRq,
+  stockIn,
+  forCast,
+  noCodeRq;
+
+  String get title => ["materialRq", "stockIn", "forCast", "noCodeRq"][index];
+
+  String get keys => ["materialRq", "stockIn", "forCast", "noCodeRq"][index];
+
+  static String getTitle(int index) {
+    return PageType.values[index == 0 ? index : (index - 1)].title;
   }
 }

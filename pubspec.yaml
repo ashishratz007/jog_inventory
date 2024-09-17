@@ -46,6 +46,7 @@ dependencies:
   permission_handler: ^11.3.1
 
 #  app_version_update: ^5.0.3
+  package_info_plus: ^8.0.2
 
 dev_dependencies:
   flutter_test:

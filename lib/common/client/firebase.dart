@@ -13,7 +13,7 @@ class _Firebase {
       options: DefaultFirebaseOptions.currentPlatform,
     );
 
-    if(config.isReleaseMode || true){
+    if(config.isReleaseMode){
       /// Pass all uncaught "fatal" errors from the framework to Crashlytics
       FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
 
