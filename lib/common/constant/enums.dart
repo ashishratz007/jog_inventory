@@ -71,6 +71,8 @@ enum MaterialRQType {
   }
 }
 
+enum UpdateStatus { updated, update, forceUpdate }
+
 enum PageType {
   materialRq,
   stockIn,

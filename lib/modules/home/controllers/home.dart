@@ -1,7 +1,9 @@
 import 'package:barcode_scan2/platform_wrapper.dart';
 import 'package:jog_inventory/common/globals/global.dart';
+import 'package:jog_inventory/common/utils/error_message.dart';
 import 'package:jog_inventory/modules/material/models/material_request.dart';
 
+import '../../../common/client/app_version.dart';
 import '../../../common/client/location.dart';
 import '../../../common/exports/main_export.dart';
 import '../../material/models/material_request_detail.dart';
@@ -12,7 +14,7 @@ class HomeController extends GetxController {
 
   @override
   void onInit() {
-    appLocation.init();
+    // appLocation.init();
     if (config.isDebugMode) {
       debugPrint("=" * 100);
       debugPrint(globalData.authToken);
@@ -23,13 +25,24 @@ class HomeController extends GetxController {
 
   @override
   void onReady() {
-    // TODO: implement onReady
+    getAppVersion();
     super.onReady();
   }
 
+  getAppVersion() async {
+    checkAppVersion.checkForVersion().onError((e, trace) async {
+      await delay(1);
+      showErrorMessage(Get.context!,
+          error: e,
+          trace: trace,
+          onRetry: getAppVersion,
+          barrierDismissible: false);
+    });
+  }
+
   /// functions
- Future<MaterialRQItem> getScanQrCodeData() async {
-   try{
+  Future<MaterialRQItem> getScanQrCodeData() async {
+    try {
       var result = await BarcodeScanner.scan();
 
       var ids = result.rawContent.split(" ");
@@ -61,8 +74,7 @@ class HomeController extends GetxController {
         }
       }
       throw "Invalid QR try again";
-    }
-    catch(e, trace){
+    } catch (e, trace) {
       errorSnackBar(message: "Unable to get data from QR");
       throw "Unable to get data from QR";
     }
@@ -85,7 +97,6 @@ class HomeController extends GetxController {
       }
     }
   }
-
 
   /// get and register controller
   static HomeController getController() {

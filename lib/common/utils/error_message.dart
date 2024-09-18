@@ -70,10 +70,11 @@ showErrorMessage(
   required StackTrace trace,
   String? title,
   String? subtitle,
+bool barrierDismissible = true,
   required void Function() onRetry,
 }) async {
   await showDialog(
-    barrierDismissible: true,
+    barrierDismissible: barrierDismissible,
     context: context,
     builder: (context) => TransparentPopup(
       title: title ?? 'Error',

@@ -81,6 +81,7 @@ class _AppKeys {
   final materialRQScan = "materialRQScan";
   final testUser = "testUser";
   final testUserEmail = "test@jogsportswear.com";
+  final version = "version";
 }
 
 var appKeys = _AppKeys();

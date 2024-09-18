@@ -1,8 +1,13 @@
+import 'package:jog_inventory/common/base_model/base_model.dart';
+import 'package:jog_inventory/common/constant/enums.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import '../exports/common.dart';
 
 class _VersionUpdateCheck {
-  Future<void> updateApp() async {
+  late _VersionInfo version;
+
+  /// popup
+  Future<void> _updateApp() async {
     await Future.delayed(Duration(seconds: 1));
     // you also have some options to customize our Alert Dialog
     showDialog(
@@ -50,7 +55,7 @@ class _VersionUpdateCheck {
               ),
             TextButton(
               onPressed: () {
-                redirectToStore();
+                _redirectToStore();
               },
               child: Text('Update now',
                   style: appTextTheme.labelMedium
@@ -62,9 +67,9 @@ class _VersionUpdateCheck {
     );
   }
 
-  static Future<void> redirectToStore() async {
+  static Future<void> _redirectToStore() async {
     // get bundle id hen navigate to the play or app store
-    String bundleId = await getPackageName() ?? "";
+    String bundleId = await _getPackageName() ?? "";
     String playStoreUrl =
         'https://play.google.com/store/apps/details?id=${bundleId}';
     String appStoreUrl = 'https://apps.apple.com/app/$bundleId';
@@ -84,11 +89,105 @@ class _VersionUpdateCheck {
     }
   }
 
-  static Future<String?> getPackageName() async {
+  static Future<String> _getPackageName() async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     // This will return the package name (Android) or bundle ID (iOS)
     return packageInfo.packageName;
   }
+
+  /// for checking the version locally and on the server side
+  static Future<String> _getAppVersion() async {
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    // This will return the package name (Android) or bundle ID (iOS)
+    return packageInfo.version;
+  }
+
+  static Future<String> _checkVersion() async {
+      var data = await _VersionInfo.getVersion();
+      return data.version!;
+  }
+
+  Future<UpdateStatus> _compareVersion() async {
+    /// getting version from the sources
+    // server side version
+    List<int> serverParts =
+        (await _checkVersion()).split('.').map(int.parse).toList();
+    // local version
+    List<int> appParts =
+        (await _getAppVersion()).split('.').map(int.parse).toList();
+
+    if (serverParts[0] > appParts[0] ||
+        (serverParts[0] == appParts[0] && serverParts[1] > appParts[1])) {
+      return UpdateStatus.forceUpdate;
+    } else if (serverParts[2] > appParts[2]) {
+      return UpdateStatus.update;
+    } else {
+      return UpdateStatus.updated;
+    }
+  }
+
+  // main function it will be access from the home page
+  Future<void> checkForVersion() async {
+    UpdateStatus status = await _compareVersion();
+    switch (status) {
+      case UpdateStatus.updated:
+        {
+          return;
+        }
+      case UpdateStatus.forceUpdate:
+        {
+          return _updateApp();
+        }
+      case UpdateStatus.update:
+        {
+          return _updateApp();
+        }
+    }
+  }
 }
 
 var checkAppVersion = _VersionUpdateCheck();
+
+class _VersionInfo extends BaseModel {
+  @override
+  String get endPoint => "/api/version";
+
+  String? version;
+  DateTime? updatedAt;
+
+  _VersionInfo({this.version, this.updatedAt});
+
+  factory _VersionInfo.fromJson(Map<dynamic, dynamic> json) {
+    return _VersionInfo(
+      version: ParseData.string(json['version']),
+      updatedAt: ParseData.toDateTime(json['updated_at']??DateTime.now().toString()),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'version': version,
+      'updated_at': DateTime.now().toString(), // Convert DateTime to string
+    };
+  }
+
+  static Future<_VersionInfo> getVersion() async {
+    // check in cache
+    var version = storage.configBox.get(appKeys.version, defaultValue: null);
+    if (version != null) {
+      var data = _VersionInfo.fromJson(version ?? {});
+      if (!isExpired(data.updatedAt!) && data.version != null) {
+        return data;
+      }
+    }
+
+    // making request
+    var resp = await _VersionInfo().create(data: {});
+    var data =
+        _VersionInfo.fromJson((resp.data['data'] as List).firstOrNull ?? {});
+
+    // updating cache
+    storage.configBox.put(appKeys.version, data.toJson());
+    return data;
+  }
+}

@@ -98,7 +98,7 @@ class CustomAppBar extends StatelessWidget {
       preferredSize: Size(Get.width, 70),
       child: Container(
         padding: EdgeInsets.only(left: 10, right: 10, top: top - 10),
-        height: 70 + top, // safe area
+        height: config.isIOS? 100 : 80, // safe area
         decoration: BoxDecoration(
             color: Colours.secondary,
             // borderRadius: BorderRadius.only(

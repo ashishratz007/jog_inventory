@@ -400,9 +400,9 @@ String getOrdinalSuffix(int number) {
   }
 }
 
-List<int> getPast20Years() {
+List<int> getPast20Years({int count =20}) {
   int currentYear = DateTime.now().year;
-  return List<int>.generate(20, (index) => currentYear - index);
+  return List<int>.generate(count, (index) => currentYear - index);
 }
 
 void hideKeyboard(BuildContext context) {
@@ -617,4 +617,10 @@ String formatDecimal(String decimalString, {int decimalPlaces = 2, String? suffi
   } catch (e) {
     return decimalString + " $suffix"; // Return original string if parsing fails
   }
+}
+
+bool isExpired(DateTime date, {Duration duration = const Duration(hours: 12)}) {
+  DateTime now = DateTime.now();
+  DateTime expiryDate = date.add(duration);
+  return now.isAfter(expiryDate);
 }
