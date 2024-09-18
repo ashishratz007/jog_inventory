@@ -2,6 +2,7 @@ plugins {
     id "com.android.application"
     // START: FlutterFire Configuration
     id 'com.google.gms.google-services'
+    id 'com.google.firebase.crashlytics'
     // END: FlutterFire Configuration
     id "kotlin-android"
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
@@ -24,6 +25,12 @@ if (flutterVersionCode == null) {
 def flutterVersionName = localProperties.getProperty("flutter.versionName")
 if (flutterVersionName == null) {
     flutterVersionName = "1.0"
+}
+
+def keystoreProperties = new Properties()
+def keystorePropertiesFile = rootProject.file('key.properties')
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 }
 
 android {
@@ -50,11 +57,31 @@ android {
         versionName = flutterVersionName
     }
 
+    signingConfigs {
+        release {
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+            storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
+            storePassword keystoreProperties['storePassword']
+        }
+    }
+//    applicationVariants.all { variant ->
+//        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd_HHmmss")
+//        String formattedDateTime = formatter.format(new Date())
+//
+//        variant.outputs.all {
+//            outputFileName = "${variant.name}-${variant.versionName}_${formattedDateTime}.apk"
+//        }
+//    }
     buildTypes {
         release {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig = signingConfigs.debug
+            signingConfig signingConfigs.debug // for --release
+//            signingConfig signingConfigs.release //for --bundle
+//            ndk {
+//                abiFilters "armeabi", "armeabi-v7a","arm64-v8a"
+//            }
         }
     }
 }
