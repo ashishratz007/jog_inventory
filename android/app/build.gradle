@@ -79,9 +79,13 @@ android {
             // Signing with the debug keys for now, so `flutter run --release` works.
 //            signingConfig signingConfigs.debug // for --release
             signingConfig signingConfigs.release //for --bundle
-//            ndk {
-//                abiFilters "armeabi", "armeabi-v7a","arm64-v8a"
-//            }
+            ndk {
+                debugSymbolLevel 'FULL'
+            }
+            shrinkResources false // Make sure it's false for proper symbol generation
+            minifyEnabled true // Keep enabled for release builds to reduce app size
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
         }
     }
 }
