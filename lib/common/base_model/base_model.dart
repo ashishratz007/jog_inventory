@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:jog_inventory/common/client/client.dart';
 
 class BaseModel {
@@ -7,6 +8,7 @@ class BaseModel {
 
   /// [updatedAt] in case you want to store the data to the local storage and want to calculate and note storage time
   DateTime? updatedAt;
+  Duration expiry = Duration(days: 1);
 
   Map<String, dynamic> toJson() => {};
 
@@ -20,7 +22,9 @@ class BaseModel {
       {Map<String, dynamic>? queryParameters,
       String? pathSuffix,
       bool isFormData = false,
-      Map<String, dynamic>? data,/// send data manually
+      Map<String, dynamic>? data,
+
+      /// send data manually
       String? url}) {
     var body;
     if (isFormData) {

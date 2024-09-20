@@ -31,7 +31,6 @@ class HomeController extends GetxController {
 
   getAppVersion() async {
     checkAppVersion.checkForVersion().onError((e, trace) async {
-      await delay(1);
       showErrorMessage(Get.context!,
           error: e,
           trace: trace,
@@ -80,7 +79,24 @@ class HomeController extends GetxController {
     }
   }
 
-  homeScanQrCode() async {
+  RxBool isGettingLocation = false.obs;
+  checkLocation() async {
+    isGettingLocation.value = true;
+    appLocation.init(onDone: _homeScanQrCode).then((onValue) {
+      isGettingLocation.value = false;
+    }).onError((e, trace) async {
+      isGettingLocation.value = false;
+      showErrorMessage(
+        Get.context!,
+        error: "Location error please try again",
+        trace: trace,
+        onRetry: checkLocation,
+      );
+    });
+  }
+
+  _homeScanQrCode() async {
+    isGettingLocation.value = false;
     var result = await BarcodeScanner.scan();
 
     var ids = result.rawContent.split(" ");

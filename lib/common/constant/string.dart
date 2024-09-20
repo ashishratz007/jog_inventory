@@ -82,6 +82,7 @@ class _AppKeys {
   final testUser = "testUser";
   final testUserEmail = "test@jogsportswear.com";
   final version = "version";
+  final locations = "locations";
 }
 
 var appKeys = _AppKeys();

@@ -12,7 +12,8 @@ class _Config {
     if (config.isDebugMode || isTestUser) {
       return developmentUrl;
     }
-    if (isReleaseMode) return "https://api.jog-joinourgame.com/inv/";
+    if (isReleaseMode)
+      return "https://api.jog-joinourgame.com/inv/";
     return developmentUrl;
   }
 

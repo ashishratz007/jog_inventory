@@ -193,11 +193,15 @@ class HomeScreen extends GetView<HomeController> {
                   gap(),
 
                   /// Scan button
-                  SecondaryButton(
+                  Obx(
+                    () => SecondaryButton(
                       title: "Scan Barcode ",
-                      onTap: controller.homeScanQrCode,
+                      onTap: controller.checkLocation,
                       radius: radius,
-                      trailing: displayAssetsWidget(AppIcons.scan, width: 20))
+                      isBusy: controller.isGettingLocation.value,
+                      trailing: displayAssetsWidget(AppIcons.scan, width: 20),
+                    ),
+                  )
                 ],
               )),
           gap(space: 10)

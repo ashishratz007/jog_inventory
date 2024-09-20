@@ -4,12 +4,9 @@ import 'package:package_info_plus/package_info_plus.dart';
 import '../exports/common.dart';
 
 class _VersionUpdateCheck {
-  late _VersionInfo version;
 
   /// popup
   Future<void> _updateApp() async {
-    await Future.delayed(Duration(seconds: 1));
-    // you also have some options to customize our Alert Dialog
     showDialog(
       barrierDismissible: false,
       context: Get.context!,

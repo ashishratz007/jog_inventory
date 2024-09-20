@@ -1,31 +1,35 @@
 import 'package:geolocator/geolocator.dart';
-import 'package:jog_inventory/common/client/app_version.dart';
+import 'package:jog_inventory/common/base_model/base_model.dart';
+import 'package:location/location.dart';
 import 'dart:math';
 import '../exports/main_export.dart';
 
 class _AppLocation {
   bool _serviceEnabled = false;
   LocationPermission _permissionGranted = LocationPermission.denied;
-
-  // Constant latitude and longitude for the desired location
-  final double targetLatitude = 40.3445048;
-  final double targetLongitude = 48.0584126;
+  Location location = Location();
 
   /// jog location
   // final double targetLatitude = 30.3445048;
   // final double targetLongitude = 78.0584126;
-  final double radiusInMeters = 100.0;
+  final double radiusInMeters = 150.0;
 
-  void init() {
-    // checkAppVersion.updateApp();
-    // _checkLocationPermission();
+  Future<void> init({Function()? onDone}) async {
+    // location.onLocationChanged.listen((LocationData currentLocation) {
+    //   // Use current location
+    // });
+    await _userInRange(onDone: onDone);
   }
 
-  Future<void> _checkLocationPermission() async {
+  /// with user range and permission provided by the user
+  Future<void> _userInRange({Function()? onDone}) async {
     _serviceEnabled = await Geolocator.isLocationServiceEnabled();
 
     if (!_serviceEnabled) {
-      _showPermissionPopup("Location service is disabled.");
+      _showPermissionPopup(
+        "Location service is disabled.",
+        init,
+      );
       return;
     }
 
@@ -35,35 +39,64 @@ class _AppLocation {
       if (_permissionGranted == LocationPermission.deniedForever ||
           _permissionGranted == LocationPermission.denied) {
         _showPermissionPopup(
-            "Location permission denied. Please enable it in settings.");
+          "Location permission denied. Please enable it in settings.",
+          init,
+        );
         return;
       }
     }
 
-    _getCurrentLocation();
+    await _getCurrentLocation(onDone: onDone);
   }
 
-  Future<void> _getCurrentLocation() async {
+  /// check that the user is in range or not
+  Future<void> _getCurrentLocation({Function()? onDone}) async {
     try {
+      /// user current positions
       Position position = await Geolocator.getCurrentPosition();
+
+      /// range o locations
+      var locations = await LocationModel.getLocations();
+
       print("lat: ${position.latitude} , long: ${position.longitude}");
-      bool isInRange = _checkIfInRange(position.latitude, position.longitude);
+
+      int i = 0;
+      bool isInRange = false;
+      do {
+        var data = locations[i];
+        isInRange = _checkIfInRange(
+          currentLat: 30.3652408,
+          currentLong:  78.0764289,
+          posLat: data.poLat!,
+          posLong: data.poLong!,
+        );
+        i++;
+        print("Value of i is =========> ${i}");
+      } while (i < locations.length && !isInRange);
+
       if (isInRange) {
         // User is in range, proceed with your app
         print("User is within the range. Proceeding with the app.");
+        if (onDone != null) onDone();
       } else {
         // User is not in range, show popup
-        _showNotInRangePopup();
+        await _showNotInRangePopup();
       }
     } catch (e) {
-      print("Error getting location: $e");
+      throw e;
     }
   }
 
-  bool _checkIfInRange(double userLat, double userLng) {
+  bool _checkIfInRange({
+    required double currentLat,
+    required double currentLong,
+    required double posLat,
+    required double posLong,
+    double? radius,
+  }) {
     double distance =
-        _calculateDistance(userLat, userLng, targetLatitude, targetLongitude);
-    return distance <= radiusInMeters;
+        _calculateDistance(currentLat, currentLong, posLat, posLong);
+    return distance <= (radius??radiusInMeters);
   }
 
   double _calculateDistance(
@@ -86,70 +119,137 @@ class _AppLocation {
     return degrees * pi / 180;
   }
 
-  void _showNotInRangePopup() {
-    showDialog(
-      barrierDismissible: false,
+  Future<void> _showNotInRangePopup() async {
+    await showDialog(
       context: Get.context!,
-      builder: (context) => PopScope(
-        canPop: false,
-        child: AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10), // Customize the radius here
-          ),
-          titlePadding: EdgeInsets.zero,
-          contentPadding:
-              EdgeInsets.only(left: 40, right: 40, top: 20, bottom: 20),
-          title: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              gap(),
-              Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      'Out of Range !',
-                      textAlign: TextAlign.center,
-                      style: appTextTheme.titleMedium,
-                    ),
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10), // Customize the radius here
+        ),
+        titlePadding: EdgeInsets.zero,
+        contentPadding:
+            EdgeInsets.only(left: 40, right: 40, top: 20, bottom: 20),
+        title: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            gap(),
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    'Out of Range !',
+                    textAlign: TextAlign.center,
+                    style: appTextTheme.titleMedium,
                   ),
-                ],
-              ),
-              gap(space: 15),
-              Divider(height: 1, color: Colours.secondary),
-            ],
-          ),
-          content: Text(
-            'You are not within the specified location range.',
-            textAlign: TextAlign.center,
-            style: appTextTheme.labelSmall,
-          ),
+                ),
+              ],
+            ),
+            gap(space: 15),
+            Divider(height: 1, color: Colours.secondary),
+          ],
+        ),
+        content: Text(
+          'You are not within the specified location range.',
+          textAlign: TextAlign.center,
+          style: appTextTheme.labelSmall,
         ),
       ),
     );
   }
 
-  void _showPermissionPopup(String message) {
+  Future<void> _showPermissionPopup(
+      String message, Function() onComplete) async {
     showDialog(
-      barrierDismissible: false,
       context: Get.context!,
-      builder: (context) => PopScope(
-        canPop: false,
-        child: AlertDialog(
-          title: Text('Permission Required'),
-          content: Text(message),
-          actions: [
-            TextButton(
-              onPressed: () {
-                // Optionally open settings if needed
-                Geolocator.openLocationSettings();
-              },
-              child: Text('Open Settings'),
-            ),
-          ],
-        ),
+      builder: (context) => AlertDialog(
+        title: Text('Permission Required'),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () async {
+              // Optionally open settings if needed
+              var done = await Geolocator.openLocationSettings();
+              if (done == true) {
+                Get.back();
+                // onComplete();
+              }
+            },
+            child: Text('Open Settings'),
+          ),
+        ],
       ),
     );
   }
 }
 
 var appLocation = _AppLocation();
+
+class LocationModel extends BaseModel {
+  @override
+  String get endPoint => "/api/location";
+
+  int? id;
+  double? poLat;
+  double? poLong;
+  int? status;
+  double? range;
+
+  @override
+  DateTime? updatedAt;
+  @override
+  Duration get expiry => Duration(minutes: 5);
+
+  LocationModel(
+      {this.id, this.poLat, this.poLong, this.status, this.updatedAt, this.range});
+
+  factory LocationModel.fromJson(Map<dynamic, dynamic> json) {
+    return LocationModel(
+      id: ParseData.toInt(json['id']),
+      poLat: ParseData.toDouble(json['po_lat']),
+      poLong: ParseData.toDouble(json['po_long']),
+      status: ParseData.toInt(json['status']),
+      range: ParseData.toDouble(json['pos_rang']),
+      updatedAt:
+          ParseData.toDateTime(json['updated_at'] ?? DateTime.now().toString()),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'po_lat': poLat,
+      'po_long': poLong,
+      'status': status,
+      'pos_rang': range,
+      'updated_at': DateTime.now().toString(),
+    };
+  }
+
+  /// gets te location where the user can access the app
+  static Future<List<LocationModel>> getLocations() async {
+    List<LocationModel> locations = [];
+
+    /// cached data
+    // var locationMap =
+    //     storage.configBox.get(appKeys.locations, defaultValue: []);
+    // if ((locationMap as List).length > 0) {
+    //   locations = (locationMap as List)
+    //       .map((json) => LocationModel.fromJson(json))
+    //       .toList();
+    //   if (locations.firstOrNull?.updatedAt != null &&
+    //       !isExpired(locations.first.updatedAt!,
+    //           duration: LocationModel().expiry)) {
+    //     return locations;
+    //   }
+    // }
+
+    // making request
+    var resp = await LocationModel().create(data: {});
+    locations = (resp.data['data'] as List)
+        .map((json) => LocationModel.fromJson(json))
+        .toList();
+    List<Map> data = locations.map((item) => item.toJson()).toList();
+    storage.configBox.put(appKeys.locations, data);
+    return locations;
+  }
+}
