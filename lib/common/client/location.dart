@@ -1,18 +1,17 @@
 import 'package:geolocator/geolocator.dart';
 import 'package:jog_inventory/common/base_model/base_model.dart';
-import 'package:location/location.dart';
+import 'package:jog_inventory/common/permissson/permission.dart';
 import 'dart:math';
 import '../exports/main_export.dart';
 
 class _AppLocation {
   bool _serviceEnabled = false;
   LocationPermission _permissionGranted = LocationPermission.denied;
-  Location location = Location();
 
   /// jog location
   // final double targetLatitude = 30.3445048;
   // final double targetLongitude = 78.0584126;
-  final double radiusInMeters = 150.0;
+  final double radiusInMeters = 500.0;
 
   Future<void> init({Function()? onDone}) async {
     // location.onLocationChanged.listen((LocationData currentLocation) {
@@ -65,8 +64,8 @@ class _AppLocation {
       do {
         var data = locations[i];
         isInRange = _checkIfInRange(
-          currentLat: 30.3652408,
-          currentLong:  78.0764289,
+          currentLat: position.latitude,
+          currentLong:  position.longitude,
           posLat: data.poLat!,
           posLong: data.poLong!,
         );
@@ -96,6 +95,7 @@ class _AppLocation {
   }) {
     double distance =
         _calculateDistance(currentLat, currentLong, posLat, posLong);
+    print(("="*50)+ " Distance : ${distance} meter " + ("="*50));
     return distance <= (radius??radiusInMeters);
   }
 
@@ -159,26 +159,10 @@ class _AppLocation {
 
   Future<void> _showPermissionPopup(
       String message, Function() onComplete) async {
-    showDialog(
-      context: Get.context!,
-      builder: (context) => AlertDialog(
-        title: Text('Permission Required'),
-        content: Text(message),
-        actions: [
-          TextButton(
-            onPressed: () async {
-              // Optionally open settings if needed
-              var done = await Geolocator.openLocationSettings();
-              if (done == true) {
-                Get.back();
-                // onComplete();
-              }
-            },
-            child: Text('Open Settings'),
-          ),
-        ],
-      ),
-    );
+    permission.showPermissionPopup(message, ()async{
+      onComplete();
+      await Geolocator.openLocationSettings();
+    });
   }
 }
 

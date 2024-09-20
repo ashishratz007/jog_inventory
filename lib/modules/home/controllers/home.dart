@@ -1,7 +1,10 @@
 import 'package:barcode_scan2/platform_wrapper.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:jog_inventory/common/globals/global.dart';
+import 'package:jog_inventory/common/permissson/permission.dart';
 import 'package:jog_inventory/common/utils/error_message.dart';
 import 'package:jog_inventory/modules/material/models/material_request.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../../../common/client/app_version.dart';
 import '../../../common/client/location.dart';
@@ -96,6 +99,13 @@ class HomeController extends GetxController {
   }
 
   _homeScanQrCode() async {
+    PermissionStatus status = await Permission.camera.status;
+    if(PermissionStatus.permanentlyDenied == status ||  status ==PermissionStatus.denied){
+      permission.showPermissionPopup("Camera permission required to perform this operation.", (){
+         Geolocator.openAppSettings();
+      });
+      return;
+    }
     isGettingLocation.value = false;
     var result = await BarcodeScanner.scan();
 

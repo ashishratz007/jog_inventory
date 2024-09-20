@@ -58,12 +58,12 @@
     	<true/>
     	<key>NSPhotoLibraryUsageDescription</key>
     	<string>App need access to include design files</string>
-<key>ITSAppUsesNonExemptEncryption</key>
-<false/>
-<key>NSLocationWhenInUseUsageDescription</key>
-<string>We need access to your location to provide location-based services when the app is in use.</string>
-<key>NSLocationAlwaysUsageDescription</key>
-<string>We need access to your location to provide location-based services even when the app is not in use.</string>
+        <key>ITSAppUsesNonExemptEncryption</key><false/>
 
+        <key>NSLocationWhenInUseUsageDescription</key>
+        <string>We need your location to make Material requests within the range of the Jog premises while using the app.</string>
+
+        <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+        <string>We need your location to ensure the app works properly within the Jog premises.</string>
 </dict>
 </plist>

@@ -1,4 +1,5 @@
 import 'package:jog_inventory/common/constant/enums.dart';
+import 'package:jog_inventory/common/exports/main_export.dart';
 
 class _Permission {
   /// check the permission for the user
@@ -42,6 +43,27 @@ class _Permission {
   bool _hasStockInPerm() {
     // TODO
     return false;
+  }
+
+  Future<void> showPermissionPopup(
+      String message, Function() onComplete) async {
+    showDialog(
+      context: Get.context!,
+      builder: (context) => AlertDialog(
+        title: Text('Permission Required',style: appTextTheme.titleSmall?.copyWith(color: Colours.black)),
+        content: Text(message,style: appTextTheme.labelMedium?.copyWith(color: Colours.greyLight,fontWeight: FontWeight.w500)),
+        actions: [
+          TextButton(
+            onPressed: () async {
+              // Optionally open settings if needed
+                onComplete();
+                Get.back();
+            },
+            child: Text('Open Settings',style: appTextTheme.titleSmall?.copyWith(color: Colours.blueDark),),
+          ),
+        ],
+      ),
+    );
   }
 }
 
