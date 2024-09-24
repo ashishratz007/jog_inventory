@@ -99,13 +99,13 @@ class HomeController extends GetxController {
   }
 
   _homeScanQrCode() async {
-    PermissionStatus status = await Permission.camera.status;
-    if(PermissionStatus.permanentlyDenied == status ||  status ==PermissionStatus.denied){
-      permission.showPermissionPopup("Camera permission required to perform this operation.", (){
-         Geolocator.openAppSettings();
-      });
-      return;
-    }
+    // PermissionStatus status = await Permission.camera.status;
+    // if(PermissionStatus.permanentlyDenied == status ||  status == PermissionStatus.denied){
+    //   permission.showPermissionPopup("Camera permission required to perform this operation.", (){
+    //      Geolocator.openAppSettings();
+    //   });
+    //   return;
+    // }
     isGettingLocation.value = false;
     var result = await BarcodeScanner.scan();
 
