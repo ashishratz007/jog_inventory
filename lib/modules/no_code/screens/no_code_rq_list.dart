@@ -19,10 +19,10 @@ class _NoCodeRqListScreenState extends State<NoCodeRqListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return CustomAppBar(title: Strings.noCodeRqList, body: body());
+    return CustomAppBar(title: Strings.noCodeRqList, body: body);
   }
 
-  Widget body() {
+  Widget body(BuildContext context) {
     return SingleChildScrollView(
         padding: AppPadding.pagePadding,
         child: Column(

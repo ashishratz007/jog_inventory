@@ -15,10 +15,10 @@ class NoCodeRequestFormScreen extends GetView<NoCodeRequestController> {
   @override
   Widget build(BuildContext context) {
     return CustomAppBar(
-        title: Strings.noCodeRQ, body: body(), bottomNavBar: viewWidget());
+        title: Strings.noCodeRQ, body: body, bottomNavBar: viewWidget());
   }
 
-  Widget body() {
+  Widget body(BuildContext context) {
     controller.getItems();
     return SingleChildScrollView(
       padding: AppPadding.pagePadding,

@@ -18,12 +18,12 @@ class MaterialRequestFormScreen extends GetView<MaterialRequestFormController> {
   Widget build(BuildContext context) {
     return CustomAppBar(
       title: "Material requisition form",
-      body: bodyWidget(),
+      body: body,
       bottomNavBar: bottomNavBarButtons(),
     );
   }
 
-  Widget bodyWidget() {
+  Widget body(BuildContext context) {
     return Column(
       children: [
         Expanded(

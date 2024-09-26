@@ -153,14 +153,14 @@ class YourClassName extends GetxController {
     super.onReady();
   }
 /// functions
-  /// get and register controller
-  static RegisterController getController() {
-    var isRegistered = Get.isRegistered<RegisterController>();
-    if(isRegistered){
-      return Get.find<RegisterController>();
-    }
-    return Get.put<RegisterController>(RegisterController());
-  }
+/// get and register controller
+static RegisterController getController() {
+var isRegistered = Get.isRegistered<RegisterController>();
+if(isRegistered){
+return Get.find<RegisterController>();
+}
+return Get.put<RegisterController>(RegisterController());
+}
 
 /// api calls
 

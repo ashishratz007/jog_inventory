@@ -8,7 +8,7 @@ import '../exports/main_export.dart';
 class CustomAppBar extends StatelessWidget {
   final String title;
   final Widget? titleWidget;
-  final Widget body;
+  final Function(BuildContext context) body;
   final Widget? trailingButton;
   final bool hasDrawer;
   final bool hasNotification;
@@ -54,7 +54,7 @@ class CustomAppBar extends StatelessWidget {
             backgroundColor: Colours.bgColor,
             drawer: hasDrawer ? HomeDrawerWidget() : null,
             appBar: appbar(),
-            body: SafeArea(child: body),
+            body: SafeArea(child: body(context)),
             bottomNavigationBar: bottomNavBar == null
                 ? null
                 : Visibility(
@@ -98,7 +98,7 @@ class CustomAppBar extends StatelessWidget {
       preferredSize: Size(Get.width, 70),
       child: Container(
         padding: EdgeInsets.only(left: 10, right: 10, top: top - 10),
-        height: config.isIOS? 100 : 80, // safe area
+        height: config.isIOS ? 100 : 80, // safe area
         decoration: BoxDecoration(
             color: Colours.secondary,
             // borderRadius: BorderRadius.only(

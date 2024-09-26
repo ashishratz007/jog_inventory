@@ -466,9 +466,9 @@ List<BoxShadow> containerShadow({
   ];
 }
 
-Widget divider({double height = 2, Color? color}) {
+Widget divider({double height = 2,double thickness = 0.5, Color? color ,}) {
   return Divider(
-      height: height, color: color ?? Colours.border, thickness: 0.5);
+      height: height, color: color ?? Colours.border, thickness: thickness);
 }
 
 Widget verticalDivider({double height = 40, Color? color}) {
@@ -506,10 +506,10 @@ Widget chipWidget(
       ));
 }
 
-Widget dottedDivider({Color? color}) {
+Widget dottedDivider({Color? color,double dotSpace = 3, double width = 1, }) {
   return DottedLineDivider(
-    dotSpace: 3,
-    width: 1,
+    dotSpace: dotSpace,
+    width: width,
     color: color ?? Colours.greyLight,
   );
 }

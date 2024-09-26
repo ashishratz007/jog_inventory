@@ -73,10 +73,10 @@ class _FinishedMaterialDetailScreenState
 
   @override
   Widget build(BuildContext context) {
-    return CustomAppBar(title: "Finished Detail", body: body());
+    return CustomAppBar(title: "Finished Detail", body: body);
   }
 
-  Widget body() {
+  Widget body(BuildContext context) {
     return SingleChildScrollView(
         padding: AppPadding.pagePadding,
         child: Obx(

@@ -9,7 +9,7 @@ class AppPadding {
   static const leftRight =
       EdgeInsets.only(left: 10, right: 10, top: 0, bottom: 0);
   static const textFieldPadding =
-      EdgeInsets.only(left: 15, right: 15, top: 7, bottom: 7);
+      EdgeInsets.only(left: 15, right: 15, top: 0, bottom: 0);
   static const chip =
       EdgeInsets.only(left: 10, right: 10, top: 7, bottom: 7);
 }

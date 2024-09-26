@@ -23,22 +23,22 @@ class _MaterialRequestDetailScreenState
         builder: (context) {
           return CustomAppBar(
               title: "Material requisition",
-              body: SingleChildScrollView(
-                padding: AppPadding.pagePadding,
-                child: bodyWidget(),
-              ));
+              body:body);
         });
   }
 
-  Widget bodyWidget() {
-    return Column(
-      children: [
-        displayMaterialDetails(),
-        gap(),
-        displaySearchWidget(),
-        gap(),
-        safeAreaBottom(Get.context!)
-      ],
+  Widget body(BuildContext context) {
+    return SingleChildScrollView(
+      padding: AppPadding.pagePadding,
+      child: Column(
+        children: [
+          displayMaterialDetails(),
+          gap(),
+          displaySearchWidget(),
+          gap(),
+          safeAreaBottom(Get.context!)
+        ],
+      ),
     );
   }
 

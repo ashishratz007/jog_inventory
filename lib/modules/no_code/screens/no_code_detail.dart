@@ -16,10 +16,10 @@ class _NoCodeDetailScreenState extends State<NoCodeDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return CustomAppBar(title: "No Code Detail", body: body());
+    return CustomAppBar(title: "No Code Detail", body: body);
   }
 
-  Widget body() {
+  Widget body(BuildContext context){
     return SingleChildScrollView(
       padding: AppPadding.pagePadding,
       child: Column(

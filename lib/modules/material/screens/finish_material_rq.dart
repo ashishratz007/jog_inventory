@@ -76,12 +76,12 @@ class _FinishMaterialRQScreenState extends State<FinishMaterialRQScreen> {
   Widget build(BuildContext context) {
     return CustomAppBar(
       title: "Finish material request",
-      body: body(),
+      body: body,
       bottomNavBar: bottomNavBarButtons(),
     );
   }
 
-  Widget body() {
+  Widget body(BuildContext context) {
     return Form(
       key: _formKey,
       child: SingleChildScrollView(

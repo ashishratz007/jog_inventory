@@ -15,7 +15,7 @@ class _AddForecastScreenState extends State<AddForecastScreen> {
   Widget build(BuildContext context) {
     return CustomAppBar(
       title: "Forecast form",
-      body: body(),
+      body: body,
       trailingButton: SizedBox(
           child: TextBorderButton(
         title: 'Reset',
@@ -32,7 +32,7 @@ class _AddForecastScreenState extends State<AddForecastScreen> {
     );
   }
 
-  Widget body() {
+  Widget body(BuildContext context) {
     return SingleChildScrollView(
       padding: AppPadding.pagePadding,
       child: Column(

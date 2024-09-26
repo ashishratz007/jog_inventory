@@ -11,11 +11,11 @@ class HomeScreen extends GetView<HomeController> {
     return CustomAppBar(
       hasDrawer: true,
       title: "Home",
-      body: bodyWidget(),
+      body: body,
     );
   }
 
-  Widget bodyWidget() {
+  Widget body(BuildContext context) {
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -218,8 +218,9 @@ class HomeScreen extends GetView<HomeController> {
           Row(
             children: [
               Expanded(
-                  child: actionTileWidget(
-                      onTap: () {},
+                  child: actionTileWidget(onTap: () {
+                Get.toNamed(AppRoutesString.stockInform);
+              },
                       "Stock In",
                       displayAssetsWidget(AppIcons.boxes_white,
                           borderRadius: BorderRadius.circular(10),

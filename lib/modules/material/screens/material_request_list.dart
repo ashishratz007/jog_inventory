@@ -18,10 +18,10 @@ class MaterialRequestListScreen extends GetView<MaterialRequestListController> {
 
   @override
   Widget build(BuildContext context) {
-    return CustomAppBar(title: Strings.materialRequestList, body: body());
+    return CustomAppBar(title: Strings.materialRequestList, body: body);
   }
 
-  Widget body() {
+  Widget body(BuildContext context) {
     return SingleChildScrollView(
         padding: AppPadding.pagePadding,
         child: Column(
