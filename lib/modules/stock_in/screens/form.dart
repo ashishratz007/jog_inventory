@@ -1,3 +1,6 @@
+import 'dart:ffi';
+
+import 'package:jog_inventory/common/utils/date_formater.dart';
 import 'package:jog_inventory/common/utils/dotted_border.dart';
 import 'package:jog_inventory/modules/stock_in/controllers/form.dart';
 import 'package:jog_inventory/modules/stock_in/models/po_order.dart';
@@ -36,9 +39,18 @@ class _StockInFromScreenState extends State<StockInFromScreen> {
           tabsWidget(),
           divider(),
 
-          addedItemTileWidget(),
-          gap(),
-          receivedItemTileWidget(),
+          Obx(
+            () => Visibility(
+              visible: controller.isAddStock.value,
+              child: displayAddedItem(),
+            ),
+          ),
+          Obx(
+            () => Visibility(
+              visible: !controller.isAddStock.value,
+              child: displayReceivedItem(),
+            ),
+          ),
 
           /// bottom
           gap(),
@@ -62,19 +74,47 @@ class _StockInFromScreenState extends State<StockInFromScreen> {
                 child: bottomSheetMenuWithLabel<PoOrderModel>(
                   labelText: "PO No.",
                   items: [],
-                  fromApi: ()async{
+                  selectedItems: [
+                    if (controller.selectedPo != null)
+                      DropDownItem<PoOrderModel>(
+                        id: controller.selectedPo!.forId!,
+                        title: controller.selectedPo!.poNumber ?? "_",
+                        key: "${controller.selectedPo!.forId!}",
+                        value: controller.selectedPo,
+                      ),
+                  ],
+                  fromApi: () async {
                     List<DropDownItem<PoOrderModel>> items = [];
-                   var data = await PoOrderModel.fetchAll();
-                    data.forEach((item){
-                      items.add(DropDownItem<PoOrderModel>(id: item.forId!,title:item.poNumber??"_" ,key:"${item.forId!}" ,value:item ));
+                    var data = await PoOrderModel.fetchAll();
+                    data.forEach((item) {
+                      items.add(DropDownItem<PoOrderModel>(
+                          id: item.forId!,
+                          title: item.poNumber ?? "_",
+                          key: "${item.forId!}",
+                          value: item));
                     });
-                   return items;
+                    return items;
                   },
-                  onChanged: (item) {},
+                  onChanged: (List<DropDownItem<PoOrderModel>>? items) {
+                    controller.selectedPo = items?.firstOrNull?.value;
+                    setState(() {});
+                    controller.getItems();
+                  },
                 ),
               ),
               gap(space: 10),
-              Expanded(child: TextFieldWithLabel(labelText: "PO date"))
+              Expanded(
+                  child: TextFieldWithLabel(
+                    key: Key(DateTime.now().microsecond.toString()),
+                initialValue: controller.selectedPo == null
+                    ? null
+                    : appDateTimeFormat.toYYMMDDHHMMSS(
+                        date: controller.selectedPo!.poDate,
+                        removeTime: true,
+                        useNextLine: false),
+                labelText: "PO date",
+                enabled: false,
+              ))
             ],
           ),
           gap(),
@@ -82,7 +122,10 @@ class _StockInFromScreenState extends State<StockInFromScreen> {
             children: [
               Expanded(
                 child: TextFieldWithLabel(
+                  key: Key(DateTime.now().microsecond.toString()),
+                  initialValue: controller.selectedPo?.supplier,
                   labelText: "Supplier",
+                  enabled: false,
                   onChanged: (item) {},
                 ),
               ),
@@ -105,12 +148,20 @@ class _StockInFromScreenState extends State<StockInFromScreen> {
           children: [
             Column(
               children: [
-                Text("Add Stock",
-                    style: appTextTheme.titleSmall
-                        ?.copyWith(color: Colours.greyLight)),
-                gap(space: 10),
+                gap(space: 4),
+                InkWell(
+                  onTap: () {
+                    controller.isAddStock.value = true;
+                  },
+                  child: Text("Add Stock",
+                      style: appTextTheme.titleSmall?.copyWith(
+                          color: controller.isAddStock.value
+                              ? Colours.secondary
+                              : Colours.black)),
+                ),
+                gap(space: 14),
                 SizedBox(
-                    width: 80,
+                    width: 120,
                     child: divider(
                         thickness: 2.5,
                         color: controller.isAddStock.value
@@ -119,27 +170,77 @@ class _StockInFromScreenState extends State<StockInFromScreen> {
               ],
             ),
             gap(),
-            Column(
-              children: [
-                Text("Receive",
-                    style: appTextTheme.titleSmall?.copyWith(
-                        color: !controller.isAddStock.value
-                            ? Colours.secondary
-                            : Colours.greyLight)),
-                gap(space: 10),
-                SizedBox(
-                    width: 80,
-                    child: divider(
-                        thickness: 2.5,
-                        color: !controller.isAddStock.value
-                            ? Colours.secondary
-                            : Colours.white)),
-              ],
+            IgnorePointer(
+              ignoring: !controller.hasItems,
+              child: Column(
+                children: [
+                  InkWell(
+                    onTap: () {
+                      controller.isAddStock.value = false;
+                    },
+                    child: Row(
+                      children: [
+                        Text("Receive",
+                            style: appTextTheme.titleSmall?.copyWith(
+                                color: !controller.isAddStock.value
+                                    ? Colours.secondary
+                                    :controller.hasItems?Colours.black: Colours.greyLight)),
+                        Visibility(
+                          visible: controller.hasItems,
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 15),
+                            child: Stack(
+                              children: [
+                                Icon(Icons.circle,
+                                    color: Colours.green.withOpacity(0.8), size: 27),
+                                Positioned(
+                                    top: 0,
+                                    left: 0,
+                                    bottom: 0,
+                                    right: 0,
+                                    child: Center(
+                                        child: Text(
+                                          controller.receivedCount.toString(),
+                                          style: appTextTheme.labelSmall?.copyWith(
+                                              color: Colours.white, fontSize: 12),
+                                        )))
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  gap(space: 10),
+                  SizedBox(
+                      width: 150,
+                      child: divider(
+                          thickness: 2.5,
+                          color: !controller.isAddStock.value
+                              ? Colours.secondary
+                              : Colours.white)),
+                ],
+              ),
             ),
           ],
         ),
       ),
     );
+  }
+
+  Widget displayAddedItem() {
+    return displayListBuilder(
+      items: [1],
+      showGap: true,
+      builder: (item, index) => addedItemTileWidget(),
+    );
+  }
+
+  Widget displayReceivedItem() {
+    return displayListBuilder<ForecastReceivedModel>(
+        items: controller.receivedItems,
+        showGap: true,
+        builder: receivedItemTileWidget);
   }
 
   Widget addedItemTileWidget() {
@@ -157,31 +258,32 @@ class _StockInFromScreenState extends State<StockInFromScreen> {
                   children: [
                     Expanded(
                         child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text("Material", style: appTextTheme.titleSmall),
-                            gap(space: 5),
-                            Text("VI-SUPERPLUS",
-                                style: appTextTheme.labelMedium
-                                    ?.copyWith(color: Colours.primaryText)),
-                          ],
-                        )),
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("Material", style: appTextTheme.titleSmall),
+                        gap(space: 5),
+                        Text("VI-SUPERPLUS",
+                            style: appTextTheme.labelMedium
+                                ?.copyWith(color: Colours.primaryText)),
+                      ],
+                    )),
                     gap(space: 10),
                     Expanded(
                         child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text("Color", style: appTextTheme.titleSmall),
-                            gap(space: 5),
-                            Text("Dust Gold",
-                                style: appTextTheme.labelMedium?.copyWith()),
-                          ],
-                        )),
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("Color", style: appTextTheme.titleSmall),
+                        gap(space: 5),
+                        Text("Dust Gold",
+                            style: appTextTheme.labelMedium?.copyWith()),
+                      ],
+                    )),
                   ],
                 ),
                 Align(
                     alignment: Alignment.topRight,
-                    child: Icon(Icons.delete_outlined,size: 25, color: Colours.red)),
+                    child: Icon(Icons.delete_outlined,
+                        size: 25, color: Colours.red)),
               ],
             ),
           ),
@@ -199,9 +301,7 @@ class _StockInFromScreenState extends State<StockInFromScreen> {
                         ),
                       ),
                       gap(space: 10),
-                      Expanded(
-                          child:
-                              TextFieldWithLabel(labelText: "No."))
+                      Expanded(child: TextFieldWithLabel(labelText: "No."))
                     ],
                   ),
                   gap(space: 10),
@@ -216,31 +316,23 @@ class _StockInFromScreenState extends State<StockInFromScreen> {
                       gap(space: 10),
                       Expanded(
                           child:
-                          TextFieldWithLabel(labelText: "Unit Price (THB)"))
+                              TextFieldWithLabel(labelText: "Unit Price (THB)"))
                     ],
                   ),
                   gap(space: 10),
                   TextFieldWithLabel(labelText: "Total Price (THB)")
                 ],
               )),
-          dottedDivider(dotSpace: 2),
-          gap(space: 10),
-          Padding(
-            padding: EdgeInsets.only(left: 10, right: 10),
-            child: PrimaryButton(
-              title: "Receive",
-              onTap: () {},
-              isEnable: false,
-            ),
-          ),
           // bottom
-          gap(space: 20)
+          gap(space: 10)
         ],
       ),
     );
   }
 
-  Widget receivedItemTileWidget() {
+  Widget receivedItemTileWidget(ForecastReceivedModel item, index) {
+    ///[hasValue] is tot check that the user has entered any value to [item.receiveKg] or not
+    RxBool hasValue = ((item.receiveKg ?? "").trim().length > 0).obs;
     return Container(
       margin: AppPadding.pagePaddingAll,
       decoration: containerDecoration(),
@@ -257,7 +349,8 @@ class _StockInFromScreenState extends State<StockInFromScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text("Fabric", style: appTextTheme.titleSmall),
-                          Text("VI-SUPERPLUS",
+                          gap(space: 5),
+                          Text(item.catNameEn ?? "_",
                               style: appTextTheme.labelMedium
                                   ?.copyWith(color: Colours.primaryText)),
                         ],
@@ -268,7 +361,8 @@ class _StockInFromScreenState extends State<StockInFromScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text("Color", style: appTextTheme.titleSmall),
-                          Text("Dust Gold",
+                          gap(space: 5),
+                          Text(item.color ?? "_",
                               style: appTextTheme.labelMedium?.copyWith()),
                         ],
                       )),
@@ -280,24 +374,50 @@ class _StockInFromScreenState extends State<StockInFromScreen> {
                       Expanded(
                         child: TextFieldWithLabel(
                           labelText: "Order(kg)",
-                          onChanged: (item) {},
+                          initialValue: "${item.qty ?? "_"} Kg",
+                          enabled: false,
                         ),
                       ),
                       gap(space: 10),
+
+                      /// received kg
                       Expanded(
-                          child:
-                              TextFieldWithLabel(labelText: "Receive (in kgs)"))
+                          child: TextFieldWithLabel(
+                              inputFormatters: [
+                            amountFormatter(),
+                          ],
+                              enabled: !item.isReceive,
+                              disableFillColor: item.isReceive
+                                  ? Colours.green.withOpacity(0.3)
+                                  : null,
+                              labelText: "Receive (in kgs)",
+                              labelColor: item.isReceive ? Colours.green : null,
+                              initialValue: item.isReceive
+                                  ? "${item.qty ?? "_"} Kg"
+                                  : null,
+                              onChanged: (String? value) {
+                                item.receiveKg = value;
+                              }))
                     ],
                   ),
                 ],
               )),
-          dottedDivider(dotSpace: 2),
-          gap(space: 10),
-          PrimaryButton(
-            title: "Receive",
-            onTap: () {},
-            isEnable: false,
-          ),
+          if (!item.isReceive) ...[
+            dottedDivider(dotSpace: 2),
+            gap(space: 10),
+            Obx(
+              () => Padding(
+                padding: EdgeInsets.only(left: 10, right: 10),
+                child: PrimaryButton(
+                    title: "Receive",
+                    onTap: () {
+                      controller.onReceived(item);
+                    },
+                    isEnable: hasValue.value,
+                    isBusy: controller.isBusy.value),
+              ),
+            ),
+          ],
           // bottom
           gap(space: 10)
         ],
@@ -312,7 +432,7 @@ class _StockInFromScreenState extends State<StockInFromScreen> {
         children: [
           Expanded(
             child: InkWell(
-              onTap: (){
+              onTap: () {
                 openAddFabricPopup();
               },
               child: DottedBorderContainer(

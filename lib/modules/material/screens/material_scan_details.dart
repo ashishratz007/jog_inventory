@@ -20,7 +20,7 @@ class _MaterialRequestDetailScreenState
   Widget build(BuildContext context) {
     return GetBuilder<MaterialScanDetailsController>(
         init: controller,
-        builder: (context) {
+        builder: (controller) {
           return CustomAppBar(
               title: "Material requisition",
               body:body);

@@ -29,6 +29,7 @@ Widget PrimaryTextField(
     bool readOnly = false,
     bool autofocus = false,
     Color? fillColor,
+    Color? disableFillColor,
     Color? focusColor,
     TextInputType? keyboardType,
     List<TextInputFormatter>? inputFormatters,
@@ -56,7 +57,7 @@ Widget PrimaryTextField(
         decoration: InputDecoration(
             enabled: enabled,
             counterText: "",
-            fillColor: enabled ? fillColor : Colours.border,
+            fillColor: enabled ? fillColor : disableFillColor ?? Colours.border,
             filled: true,
             hintText: hintText,
             hintStyle: TextStyle(fontSize: fontSize, color: Colors.black54),
@@ -122,6 +123,7 @@ Widget TextFieldWithLabel(
     double? fontSize,
     String? hintText,
     Color? fillColor,
+    Color? disableFillColor,
     int maxLines = 1,
     bool hintToNExtLine = false,
     bool allowShadow = false,
@@ -222,7 +224,9 @@ Widget TextFieldWithLabel(
           onFieldSubmitted: onFieldSubmitted,
           height: height,
           borderColor: borderColor,
-          fillColor: fillColor),
+          fillColor: fillColor,
+        disableFillColor: disableFillColor,
+      ),
     ],
   );
 }

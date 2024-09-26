@@ -5,7 +5,7 @@ import 'package:jog_inventory/modules/home/widgets/home_drawer.dart';
 
 import '../exports/main_export.dart';
 
-class CustomAppBar extends StatelessWidget {
+class CustomAppBar extends StatefulWidget {
   final String title;
   final Widget? titleWidget;
   final Function(BuildContext context) body;
@@ -15,7 +15,7 @@ class CustomAppBar extends StatelessWidget {
   final Widget? bottomNavBar;
   final Function()? onGestureTap;
   final String? selectedValue;
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   CustomAppBar(
       {required this.title,
       required this.body,
@@ -27,6 +27,13 @@ class CustomAppBar extends StatelessWidget {
       this.onGestureTap,
       this.selectedValue,
       super.key});
+
+  @override
+  State<CustomAppBar> createState() => _CustomAppBarState();
+}
+
+class _CustomAppBarState extends State<CustomAppBar> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
@@ -46,19 +53,19 @@ class CustomAppBar extends StatelessWidget {
       },
       child: GestureDetector(
         onTap: () {
-          if (onGestureTap != null) onGestureTap!();
+          if (widget.onGestureTap != null) widget.onGestureTap!();
           hideKeyboard(context);
         },
         child: Scaffold(
             key: _scaffoldKey,
             backgroundColor: Colours.bgColor,
-            drawer: hasDrawer ? HomeDrawerWidget() : null,
+            drawer: widget.hasDrawer ? HomeDrawerWidget() : null,
             appBar: appbar(),
-            body: SafeArea(child: body(context)),
-            bottomNavigationBar: bottomNavBar == null
+            body: SafeArea(child: widget.body(context)),
+            bottomNavigationBar: widget.bottomNavBar == null
                 ? null
                 : Visibility(
-                    visible: bottomNavBar != null,
+                    visible: widget.bottomNavBar != null,
                     child: SafeArea(
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
@@ -81,7 +88,7 @@ class CustomAppBar extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  bottomNavBar!,
+                                  widget.bottomNavBar!,
                                 ],
                               )),
                         ],
@@ -120,7 +127,7 @@ class CustomAppBar extends StatelessWidget {
             /// leading widget
             ...[
               /// drawer icon in case of drawer
-              if (hasDrawer)
+              if (widget.hasDrawer)
                 IconButton(
                   onPressed: () {
                     _scaffoldKey.currentState?.openDrawer();
@@ -134,7 +141,7 @@ class CustomAppBar extends StatelessWidget {
 
               /// back button in case the of navigation or absence of drawer widget
 
-              if (!hasDrawer)
+              if (!widget.hasDrawer)
                 Padding(
                   padding: EdgeInsets.only(right: 15),
                   child: InkWell(
@@ -149,8 +156,8 @@ class CustomAppBar extends StatelessWidget {
             ],
 
             /// title
-            titleWidget ??
-                Text(title,
+            widget.titleWidget ??
+                Text(widget.title,
                     style:
                         appTextTheme.titleLarge?.copyWith(color: Colours.white),
                     maxLines: 1,
@@ -159,14 +166,14 @@ class CustomAppBar extends StatelessWidget {
             /// trailing button .
             /// implemented size box so that we can have title at center everytime
 
-            if (trailingButton != null) trailingButton!,
-            if (hasNotification)
+            if (widget.trailingButton != null) widget.trailingButton!,
+            if (widget.hasNotification)
               Icon(
                 Icons.notifications_outlined,
                 size: 30,
                 color: Colors.white,
               ),
-            if (!hasNotification && (trailingButton == null))
+            if (!widget.hasNotification && (widget.trailingButton == null))
               SizedBox(width: 42),
             // Container(
             //     margin: EdgeInsets.only(left: 15),
