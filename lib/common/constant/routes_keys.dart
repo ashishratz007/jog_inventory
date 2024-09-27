@@ -22,5 +22,6 @@ abstract class AppRoutesString {
 
   /// stock in
   static const stockInform = "${home}/stock_in_form";
+  static const stockInList= "${home}/stock_in_list";
 
 }

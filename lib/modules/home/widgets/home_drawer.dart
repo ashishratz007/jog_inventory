@@ -28,11 +28,11 @@ class HomeDrawerWidget extends Drawer {
                   boxShadow: [
                     BoxShadow(
                       color: Colors.grey.withOpacity(0.5), // Shadow color
-                      spreadRadius:
-                          2, // How far the shadow spreads horizontally
+                      // How far the shadow spreads horizontally
+                      spreadRadius: 2,
                       blurRadius: 3, // The blur effect of the shadow
-                      offset: Offset(0,
-                          2), // Offset of the shadow (x, y) - positive y for bottom shadow
+                      // Offset of the shadow (x, y) - positive y for bottom shadow
+                      offset: Offset(0, 2),
                     ),
                   ],
                 ),
@@ -76,7 +76,20 @@ class HomeDrawerWidget extends Drawer {
               ),
               gap(space: 10),
 
-              /// drawer tile
+              /// Stock in
+              drawerTile(
+                context,
+                leading:
+                    Icon(Icons.file_copy, color: Colours.greyLight, size: 20),
+                title: "Stock In List",
+                textColor: Colours.black,
+                hideTrailing: true,
+                onTap: () {
+                  Get.toNamed(AppRoutesString.stockInList);
+                },
+              ),
+
+              /// Material Rq
               drawerTile(
                 context,
                 leading:
@@ -89,7 +102,7 @@ class HomeDrawerWidget extends Drawer {
                 },
               ),
 
-              /// drawer tile
+              /// No code
               drawerTile(
                 context,
                 leading:
@@ -104,9 +117,7 @@ class HomeDrawerWidget extends Drawer {
 
               // setupTiles(),
               Expanded(child: SizedBox()),
-              Divider(
-                color: Colours.border,
-              ),
+              Divider(color: Colours.border),
 
               /// Log out user
               drawerTile(
@@ -174,7 +185,7 @@ class HomeDrawerWidget extends Drawer {
                   color: Colors.black,
                 ),
           onTap: () {
-            selectedValue = title;
+            // selectedValue = title;
             // setState(() {});
             onTap();
           },

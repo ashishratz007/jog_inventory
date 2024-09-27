@@ -4,6 +4,7 @@ import 'package:jog_inventory/common/utils/date_formater.dart';
 import 'package:jog_inventory/common/utils/dotted_border.dart';
 import 'package:jog_inventory/modules/stock_in/controllers/form.dart';
 import 'package:jog_inventory/modules/stock_in/models/po_order.dart';
+import 'package:jog_inventory/modules/stock_in/models/stock_in.dart';
 import 'package:jog_inventory/modules/stock_in/widgets/add_fabric_form.dart';
 
 import '../../../common/exports/main_export.dart';
@@ -105,7 +106,7 @@ class _StockInFromScreenState extends State<StockInFromScreen> {
               gap(space: 10),
               Expanded(
                   child: TextFieldWithLabel(
-                    key: Key(DateTime.now().microsecond.toString()),
+                key: Key(DateTime.now().microsecond.toString()),
                 initialValue: controller.selectedPo == null
                     ? null
                     : appDateTimeFormat.toYYMMDDHHMMSS(
@@ -184,7 +185,9 @@ class _StockInFromScreenState extends State<StockInFromScreen> {
                             style: appTextTheme.titleSmall?.copyWith(
                                 color: !controller.isAddStock.value
                                     ? Colours.secondary
-                                    :controller.hasItems?Colours.black: Colours.greyLight)),
+                                    : controller.hasItems
+                                        ? Colours.black
+                                        : Colours.greyLight)),
                         Visibility(
                           visible: controller.hasItems,
                           child: Padding(
@@ -192,7 +195,8 @@ class _StockInFromScreenState extends State<StockInFromScreen> {
                             child: Stack(
                               children: [
                                 Icon(Icons.circle,
-                                    color: Colours.green.withOpacity(0.8), size: 27),
+                                    color: Colours.green.withOpacity(0.8),
+                                    size: 27),
                                 Positioned(
                                     top: 0,
                                     left: 0,
@@ -200,10 +204,10 @@ class _StockInFromScreenState extends State<StockInFromScreen> {
                                     right: 0,
                                     child: Center(
                                         child: Text(
-                                          controller.receivedCount.toString(),
-                                          style: appTextTheme.labelSmall?.copyWith(
-                                              color: Colours.white, fontSize: 12),
-                                        )))
+                                      controller.receivedCount.toString(),
+                                      style: appTextTheme.labelSmall?.copyWith(
+                                          color: Colours.white, fontSize: 12),
+                                    )))
                               ],
                             ),
                           ),
@@ -229,10 +233,12 @@ class _StockInFromScreenState extends State<StockInFromScreen> {
   }
 
   Widget displayAddedItem() {
-    return displayListBuilder(
-      items: [1],
-      showGap: true,
-      builder: (item, index) => addedItemTileWidget(),
+    return Obx(
+      () => displayListBuilder<StockInFormItem>(
+        items: controller.items,
+        showGap: true,
+        builder: (item, index) => addedItemTileWidget(item),
+      ),
     );
   }
 
@@ -243,7 +249,7 @@ class _StockInFromScreenState extends State<StockInFromScreen> {
         builder: receivedItemTileWidget);
   }
 
-  Widget addedItemTileWidget() {
+  Widget addedItemTileWidget(StockInFormItem item) {
     return Container(
       margin: AppPadding.pagePadding,
       decoration: containerDecoration(),
@@ -262,7 +268,7 @@ class _StockInFromScreenState extends State<StockInFromScreen> {
                       children: [
                         Text("Material", style: appTextTheme.titleSmall),
                         gap(space: 5),
-                        Text("VI-SUPERPLUS",
+                        Text(item.material.catNameEn ?? "_",
                             style: appTextTheme.labelMedium
                                 ?.copyWith(color: Colours.primaryText)),
                       ],
@@ -274,7 +280,7 @@ class _StockInFromScreenState extends State<StockInFromScreen> {
                       children: [
                         Text("Color", style: appTextTheme.titleSmall),
                         gap(space: 5),
-                        Text("Dust Gold",
+                        Text(item.color.fabricColor ?? "_",
                             style: appTextTheme.labelMedium?.copyWith()),
                       ],
                     )),
@@ -282,8 +288,13 @@ class _StockInFromScreenState extends State<StockInFromScreen> {
                 ),
                 Align(
                     alignment: Alignment.topRight,
-                    child: Icon(Icons.delete_outlined,
-                        size: 25, color: Colours.red)),
+                    child: InkWell(
+                      onTap: (){
+                        controller.items.remove(item);
+                      },
+                      child: Icon(Icons.delete_outlined,
+                          size: 25, color: Colours.red),
+                    )),
               ],
             ),
           ),
@@ -297,11 +308,18 @@ class _StockInFromScreenState extends State<StockInFromScreen> {
                       Expanded(
                         child: TextFieldWithLabel(
                           labelText: "Box",
-                          onChanged: (item) {},
+                          initialValue: "${item.box ?? ""}",
+                          onChanged: (data) {
+                            item.box = int.tryParse(data);
+                          },
                         ),
                       ),
                       gap(space: 10),
-                      Expanded(child: TextFieldWithLabel(labelText: "No."))
+                      Expanded(child: TextFieldWithLabel(labelText: "No.",
+                        initialValue: "${item.no ?? ""}",
+                        onChanged: (data) {
+                          item.no = int.tryParse(data)??0;
+                        },))
                     ],
                   ),
                   gap(space: 10),
@@ -310,17 +328,29 @@ class _StockInFromScreenState extends State<StockInFromScreen> {
                       Expanded(
                         child: TextFieldWithLabel(
                           labelText: "Amount (Kg)",
-                          onChanged: (item) {},
+                          initialValue: "${item.amount ?? ""}",
+                          onChanged: (data) {
+                            item.amount = double.tryParse(data);
+                          },
                         ),
                       ),
                       gap(space: 10),
                       Expanded(
-                          child:
-                              TextFieldWithLabel(labelText: "Unit Price (THB)"))
+                          child: TextFieldWithLabel(
+                        initialValue: "${item.unitPrice ?? ""}",
+                        labelText: "Unit Price (THB)",
+                        onChanged: (data) {
+                          item.unitPrice = double.tryParse(data);
+                        },
+                      ))
                     ],
                   ),
                   gap(space: 10),
-                  TextFieldWithLabel(labelText: "Total Price (THB)")
+                  TextFieldWithLabel(
+                    labelText: "Total Price (THB)",
+                    enabled: false,
+                    initialValue: "${item.total ?? ""}",
+                  )
                 ],
               )),
           // bottom
@@ -433,7 +463,7 @@ class _StockInFromScreenState extends State<StockInFromScreen> {
           Expanded(
             child: InkWell(
               onTap: () {
-                openAddFabricPopup();
+                openAddFabricPopup(controller.addItems);
               },
               child: DottedBorderContainer(
                   borderColor: Colours.green,

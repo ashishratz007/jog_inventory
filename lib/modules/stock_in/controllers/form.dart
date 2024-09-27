@@ -1,5 +1,6 @@
 import 'package:jog_inventory/common/utils/error_message.dart';
 import 'package:jog_inventory/modules/stock_in/models/po_order.dart';
+import 'package:jog_inventory/modules/stock_in/models/stock_in.dart';
 import '../../../common/exports/main_export.dart';
 
 class StockInFormController extends GetxController {
@@ -14,6 +15,8 @@ class StockInFormController extends GetxController {
 
   PoOrderModel? selectedPo;
 
+  RxList<StockInFormItem> items = <StockInFormItem>[].obs;
+
   @override
   void onInit() {
     super.onInit();
@@ -25,6 +28,11 @@ class StockInFormController extends GetxController {
   }
 
   /// functions
+
+  addItems(List<StockInFormItem> list){
+    items.addAll(list);
+    items.refresh();
+  }
 
   /// api calls
   getItems() async {
