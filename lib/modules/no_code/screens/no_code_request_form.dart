@@ -82,7 +82,7 @@ class NoCodeRequestFormScreen extends GetView<NoCodeRequestController> {
     return TextFieldWithLabel(
         labelText: Strings.date,
         enabled: false,
-        hintText: appDateTimeFormat.toYYMMDDHHMMSS());
+        hintText: dateTimeFormat.toYYMMDDHHMMSS());
   }
 
   Widget noteWidget() {
@@ -91,7 +91,7 @@ class NoCodeRequestFormScreen extends GetView<NoCodeRequestController> {
           labelText: Strings.note,
           enabled: !controller.isCodeGenerated.value,
           hintText: Strings.enterComments,
-          validator: appValidation.validateEmptyField,
+          validator: validation.validateEmptyField,
           controller: controller.noteController,
           maxLines: controller.isCodeGenerated.value ? 1 : 2),
     );
@@ -248,7 +248,7 @@ class NoCodeRequestFormScreen extends GetView<NoCodeRequestController> {
                 // ),
                 // gap(),
                 Expanded(
-                  child: bottomSheetMenuWithLabel<FabricTypeModel>(
+                  child: PrimaryFieldMenuWithLabel<FabricTypeModel>(
                     controller: controller.selectMaterialController,
                     items: [],
                     fromApi: () async {

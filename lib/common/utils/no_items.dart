@@ -11,7 +11,7 @@ class NoItems extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Icon(
-            Icons.list_alt_sharp,
+            Icons.hourglass_empty,
             size: 100,
             color: Colours.border,
           ),

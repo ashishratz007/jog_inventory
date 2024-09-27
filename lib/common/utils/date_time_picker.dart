@@ -32,7 +32,7 @@ Widget DateTimePickerField(
   TextAlign textAlign = TextAlign.start,
   String? Function(DateTime?)? formatDate,
 }) {
-  if (formatDate == null) formatDate = appDateTimeFormat.yyMMDDFormat;
+  if (formatDate == null) formatDate = dateTimeFormat.yyMMDDFormat;
   // widget
   if (controller == null) controller = TextEditingController();
   return StatefulBuilder(builder: (context, setState) {

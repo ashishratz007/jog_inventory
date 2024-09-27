@@ -181,7 +181,7 @@ class _StockInListPageState extends State<StockInListPage> {
                     ),
                     // Expanded(child: SizedBox()),
                     chipWidget(
-                      appDateTimeFormat.toYYMMDDHHMMSS(date: item.usedDate),
+                      dateTimeFormat.toYYMMDDHHMMSS(date: item.usedDate),
                     )
                   ],
                 ),

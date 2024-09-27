@@ -72,7 +72,7 @@ class _StockInFromScreenState extends State<StockInFromScreen> {
           Row(
             children: [
               Expanded(
-                child: bottomSheetMenuWithLabel<PoOrderModel>(
+                child: PrimaryFieldMenuWithLabel<PoOrderModel>(
                   labelText: "PO No.",
                   items: [],
                   selectedItems: [
@@ -109,7 +109,7 @@ class _StockInFromScreenState extends State<StockInFromScreen> {
                 key: Key(DateTime.now().microsecond.toString()),
                 initialValue: controller.selectedPo == null
                     ? null
-                    : appDateTimeFormat.toYYMMDDHHMMSS(
+                    : dateTimeFormat.toYYMMDDHHMMSS(
                         date: controller.selectedPo!.poDate,
                         removeTime: true,
                         useNextLine: false),

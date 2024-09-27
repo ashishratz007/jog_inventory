@@ -1,4 +1,4 @@
-import 'package:jog_inventory/common/utils/bottom_sheet.dart';
+import 'package:jog_inventory/common/utils/bottom_seet.dart';
 import 'package:jog_inventory/modules/material/models/fabric.dart';
 import 'package:jog_inventory/modules/material/models/search.dart';
 import '../../../common/exports/main_export.dart';

@@ -23,12 +23,12 @@ class MaterialRequestFormController extends GetxController {
   FabricColorModel? selectedFabColor;
   ColorBoxesModel? selectedFabColorBoxes;
 
-  BottomSheetItemMenuController fabricController =
-      BottomSheetItemMenuController();
-  BottomSheetItemMenuController fabricColorController =
-      BottomSheetItemMenuController();
-  BottomSheetItemMenuController colorBoxController =
-      BottomSheetItemMenuController();
+  MenuItemsController fabricController =
+      MenuItemsController();
+  MenuItemsController fabricColorController =
+      MenuItemsController();
+  MenuItemsController colorBoxController =
+      MenuItemsController();
 
   @override
   void onInit() {

@@ -1,5 +1,5 @@
 import 'package:jog_inventory/common/exports/main_export.dart';
-import 'package:jog_inventory/common/utils/bottom_sheet.dart';
+import 'package:jog_inventory/common/utils/bottom_seet.dart';
 import 'package:jog_inventory/common/utils/date_formater.dart';
 import 'package:jog_inventory/common/utils/error_message.dart';
 import 'package:jog_inventory/modules/material/models/fabric.dart';
@@ -150,7 +150,7 @@ class _FabricDetailsScreenState extends State<_FabricDetailsScreen> {
               Expanded(
                   flex: 3,
                   child: titleSubtitleWidget(Strings.date,
-                      "${appDateTimeFormat.toYYMMDDHHMMSS(date: item.fabricDateCreate, removeTime: true)}")),
+                      "${dateTimeFormat.toYYMMDDHHMMSS(date: item.fabricDateCreate, removeTime: true)}")),
               Expanded(
                   flex: 2,
                   child: titleSubtitleWidget(

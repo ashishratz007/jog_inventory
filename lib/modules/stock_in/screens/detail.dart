@@ -88,7 +88,7 @@ class _StockInDetailState extends State<StockInDetailScreen> {
                   style:
                       appTextTheme.labelMedium?.copyWith(color: Colours.white)),
               gap(),
-              Text(appDateTimeFormat.toYYMMDDHHMMSS(),
+              Text(dateTimeFormat.toYYMMDDHHMMSS(),
                   style:
                       appTextTheme.labelSmall?.copyWith(color: Colours.white)),
             ],

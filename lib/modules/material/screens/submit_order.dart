@@ -214,7 +214,7 @@ class _SubmitOrderScreenState extends State<SubmitOrderScreen> {
                 Text(Strings.checkOutDate,
                     style: appTextTheme.titleMedium
                         ?.copyWith(color: Colours.greyLight)),
-                Text(appDateTimeFormat.toYYMMDDHHMMSS(),
+                Text(dateTimeFormat.toYYMMDDHHMMSS(),
                     style: appTextTheme.titleMedium),
               ],
             ),
@@ -257,7 +257,7 @@ class _SubmitOrderScreenState extends State<SubmitOrderScreen> {
                       // autovalidateMode: AutovalidateMode.always,
                       validator: (String? val) {
                         if (val == null || ((val ?? "").trim() == ""))
-                          return appValidation.validateEmptyField(val);
+                          return validation.validateEmptyField(val);
                         if (!compareBalance(
                             val,
                             controller.scanDetailsModal.data?.fabric
@@ -338,7 +338,7 @@ class _SubmitOrderScreenState extends State<SubmitOrderScreen> {
                     style: appTextTheme.titleMedium
                         ?.copyWith(color: Colours.greyLight)),
                 Text(
-                    appDateTimeFormat.toYYMMDDHHMMSS(
+                    dateTimeFormat.toYYMMDDHHMMSS(
                         removeTime: true,
                         date: controller.materialRqDetail.updatedAt),
                     style: appTextTheme.titleMedium),
@@ -412,7 +412,7 @@ class _SubmitOrderScreenState extends State<SubmitOrderScreen> {
                       // autovalidateMode: AutovalidateMode.always,
                       validator: (String? val) {
                         if (val == null || ((val ?? "").trim() == ""))
-                          return appValidation.validateEmptyField(val);
+                          return validation.validateEmptyField(val);
                         if (!compareBalance(
                             val,
                             controller.scanDetailsModal.data?.fabric

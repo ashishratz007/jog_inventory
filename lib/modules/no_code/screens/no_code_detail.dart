@@ -89,7 +89,7 @@ class _NoCodeDetailScreenState extends State<NoCodeDetailScreen> {
                       appTextTheme.labelMedium?.copyWith(color: Colours.white)),
               gap(),
               Text(
-                  appDateTimeFormat.toYYMMDDHHMMSS(
+                  dateTimeFormat.toYYMMDDHHMMSS(
                       date: controller.usedCode.usedDate),
                   style:
                       appTextTheme.labelSmall?.copyWith(color: Colours.white)),

@@ -49,4 +49,4 @@ class _AppDateTimeFormat {
   }
 }
 
-var appDateTimeFormat = _AppDateTimeFormat();
+var dateTimeFormat = _AppDateTimeFormat();

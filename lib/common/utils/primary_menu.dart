@@ -1,16 +1,18 @@
 import '../../../common/exports/main_export.dart';
 
-class BottomSheetItemMenuController<T> {
+class MenuItemsController<T> {
   void Function()? clearItems;
   void Function()? resetItems;
   Function({String? query})? getItems;
 }
 
-class BottomSheetMenu<T> extends FormField<List<DropDownItem<T>>> {
+/// [PrimaryFieldMenu] is a form menu open with help of bottom sheet.
+
+class PrimaryFieldMenu<T> extends FormField<List<DropDownItem<T>>> {
   final Future<List<DropDownItem<T>>> Function()? fromApi;
   final Future<List<DropDownItem<T>>> Function(String)? searchApi;
   final List<DropDownItem<T>>? initialItems;
-  final BottomSheetItemMenuController? controller;
+  final MenuItemsController? controller;
 
   /// controller to change states like reset clear items and all
   final double? borderRadius;
@@ -36,7 +38,7 @@ class BottomSheetMenu<T> extends FormField<List<DropDownItem<T>>> {
   final String? Function(List<DropDownItem<T>>?)? validate;
   final FocusNode? focusNode;
 
-  BottomSheetMenu({
+  PrimaryFieldMenu({
     required List<DropDownItem<T>> items,
     this.initialItems,
     this.fromApi,
@@ -112,7 +114,7 @@ class _SelectItemMenuWidget<T> extends StatefulWidget {
   final List<DropDownItem<T>> items;
   final Future<List<DropDownItem<T>>> Function()? fromApi;
   final Future<List<DropDownItem<T>>> Function(String)? searchApi;
-  final BottomSheetItemMenuController? controller;
+  final MenuItemsController? controller;
 
   /// controller to change states like reset clear items and all
   final double? borderRadius;
@@ -721,7 +723,9 @@ class _SelectItemMenuWidgetState<T> extends State<_SelectItemMenuWidget<T>>
   }
 }
 
-Widget bottomSheetMenuWithLabel<T>({
+/// [PrimaryFieldMenuWithLabel] menu with label field which will open[PrimaryFieldMenu] itself.
+
+Widget PrimaryFieldMenuWithLabel<T>({
   Key? key,
   List<DropDownItem<T>>? selectedItems,
   required List<DropDownItem<T>> items,
@@ -730,7 +734,7 @@ Widget bottomSheetMenuWithLabel<T>({
   String? Function(List<DropDownItem<T>>?)? validate,
   final Future<List<DropDownItem<T>>> Function()? fromApi,
   final Future<List<DropDownItem<T>>> Function(String)? searchApi,
-  final BottomSheetItemMenuController? controller,
+  final MenuItemsController? controller,
 
   /// controller to change states like reset clear items and all
   double? borderRadius,
@@ -781,7 +785,7 @@ Widget bottomSheetMenuWithLabel<T>({
         ),
       ),
       SizedBox(height: 10),
-      BottomSheetMenu<T>(
+      PrimaryFieldMenu<T>(
         key: key,
         items: items,
         onChanged: onChanged,

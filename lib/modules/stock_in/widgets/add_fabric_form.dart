@@ -1,4 +1,4 @@
-import 'package:jog_inventory/common/utils/bottom_sheet.dart';
+import 'package:jog_inventory/common/utils/bottom_seet.dart';
 import 'package:jog_inventory/modules/material/models/fabric.dart';
 import 'package:jog_inventory/modules/stock_in/models/stock_in.dart';
 
@@ -22,10 +22,10 @@ class _addFabric extends StatefulWidget {
 }
 
 class _addFabricState extends State<_addFabric> {
-  BottomSheetItemMenuController fabricController =
-      BottomSheetItemMenuController();
-  BottomSheetItemMenuController fabricColorController =
-      BottomSheetItemMenuController();
+  MenuItemsController fabricController =
+      MenuItemsController();
+  MenuItemsController fabricColorController =
+      MenuItemsController();
 
   FabricCategoryModel? selectedFabCate;
   FabricColorModel? selectedFabColor;
@@ -44,7 +44,7 @@ class _addFabricState extends State<_addFabric> {
             children: [
               /// Fabric
               Expanded(
-                  child: bottomSheetMenuWithLabel<FabricCategoryModel>(
+                  child: PrimaryFieldMenuWithLabel<FabricCategoryModel>(
                       controller: fabricController,
                       items: [],
                       allowSearch: true,
@@ -69,7 +69,7 @@ class _addFabricState extends State<_addFabric> {
 
               /// Color
               Expanded(
-                  child: bottomSheetMenuWithLabel<FabricColorModel>(
+                  child: PrimaryFieldMenuWithLabel<FabricColorModel>(
                 controller: fabricColorController,
                 items: [],
                 allowSearch: true,

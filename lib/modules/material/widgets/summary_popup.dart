@@ -74,7 +74,7 @@ class _ViewSummaryBodyScreenState extends State<ViewSummaryBodyScreen> {
                 ),
                 SizedBox(
                   width: 100,
-                  child: CustomDropdown<String>(
+                  child: SecondaryFieldMenu<String>(
                     items: [
                       ...List.generate(
                           20,

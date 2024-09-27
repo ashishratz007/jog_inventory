@@ -97,7 +97,7 @@ class MaterialRequestFormScreen extends GetView<MaterialRequestFormController> {
                 children: [
                   Text("Date",
                       style: appTextTheme.labelSmall?.copyWith(fontSize: 13)),
-                  Text("  ${appDateTimeFormat.toYYMMDDHHMMSS()}",
+                  Text("  ${dateTimeFormat.toYYMMDDHHMMSS()}",
                       style: appTextTheme.labelSmall?.copyWith(fontSize: 14)),
                 ],
               ),
@@ -126,7 +126,7 @@ class MaterialRequestFormScreen extends GetView<MaterialRequestFormController> {
                 Row(
                   children: [
                     Expanded(
-                      child: bottomSheetMenuWithLabel<OrderCodeData>(
+                      child: PrimaryFieldMenuWithLabel<OrderCodeData>(
                           items: [],
                           allowSearch: true,
                           allowMultiSelect: false,
@@ -146,7 +146,7 @@ class MaterialRequestFormScreen extends GetView<MaterialRequestFormController> {
                       () => Visibility(
                         visible: controller.isAddonYear.value,
                         child: Expanded(
-                          child: bottomSheetMenuWithLabel(
+                          child: PrimaryFieldMenuWithLabel(
                               items: [],
                               searchApi: searchCodesMenuItems,
                               fromApi: () async {
@@ -226,7 +226,7 @@ class MaterialRequestFormScreen extends GetView<MaterialRequestFormController> {
                       ?.copyWith(color: Colours.white, fontSize: 13)),
               gap(space: 5),
               Text(
-                  appDateTimeFormat.toYYMMDDHHMMSS(
+                  dateTimeFormat.toYYMMDDHHMMSS(
                       removeTime: true,
                       date: controller.materialRqDetail?.rqDate),
                   style: appTextTheme.labelSmall
@@ -386,7 +386,7 @@ class MaterialRequestFormScreen extends GetView<MaterialRequestFormController> {
                 children: [
                   /// Fabric
                   Expanded(
-                      child: bottomSheetMenuWithLabel<FabricCategoryModel>(
+                      child: PrimaryFieldMenuWithLabel<FabricCategoryModel>(
                           controller: controller.fabricController,
                           items: [],
                           allowSearch: true,
@@ -412,7 +412,7 @@ class MaterialRequestFormScreen extends GetView<MaterialRequestFormController> {
 
                   /// Color
                   Expanded(
-                      child: bottomSheetMenuWithLabel<FabricColorModel>(
+                      child: PrimaryFieldMenuWithLabel<FabricColorModel>(
                     controller: controller.fabricColorController,
                     items: [],
                     allowSearch: true,
@@ -446,7 +446,7 @@ class MaterialRequestFormScreen extends GetView<MaterialRequestFormController> {
               Row(
                 children: [
                   Expanded(
-                      child: bottomSheetMenuWithLabel<ColorBoxesModel>(
+                      child: PrimaryFieldMenuWithLabel<ColorBoxesModel>(
                           items: [],
                           allowSearch: true,
                           controller: controller.colorBoxController,

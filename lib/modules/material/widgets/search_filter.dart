@@ -62,7 +62,7 @@ class _FilterMaterialListState extends State<FilterMaterialList> {
       margin: AppPadding.pagePadding,
       child: Column(
         children: [
-          CustomDropDownWithLabel(
+          SecondaryFieldMenuWithLabel(
               hintText: "Search for the fabric",
               items: [],
               onChanged: (value) {},
@@ -71,7 +71,7 @@ class _FilterMaterialListState extends State<FilterMaterialList> {
           Row(
             children: [
               Expanded(
-                child: CustomDropDownWithLabel(
+                child: SecondaryFieldMenuWithLabel(
                     hintText: Strings.color,
                     items: [],
                     onChanged: (value) {},
@@ -79,7 +79,7 @@ class _FilterMaterialListState extends State<FilterMaterialList> {
               ),
               gap(space: 15),
               Expanded(
-                child: CustomDropDownWithLabel(
+                child: SecondaryFieldMenuWithLabel(
                     hintText: Strings.box,
                     items: [],
                     onChanged: (value) {},

@@ -101,5 +101,5 @@ class _AppValidation {
   }
 }
 
-var appValidation = _AppValidation();
+var validation = _AppValidation();
 

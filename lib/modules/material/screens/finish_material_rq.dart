@@ -158,7 +158,7 @@ class _FinishMaterialRQScreenState extends State<FinishMaterialRQScreen> {
                       ?.copyWith(color: Colours.white, fontSize: 13)),
               gap(space: 10),
               Text(
-                  appDateTimeFormat.toYYMMDDHHMMSS(
+                  dateTimeFormat.toYYMMDDHHMMSS(
                       removeTime: true, date: materialRqDetail.rqDate),
                   style: appTextTheme.labelSmall
                       ?.copyWith(color: Colours.white, fontSize: 13)),
@@ -242,7 +242,7 @@ class _FinishMaterialRQScreenState extends State<FinishMaterialRQScreen> {
                     labelText: "Balance after",
                     hintText: "in kgs",
                     validator: (String? val){
-                      if(val == null || ((val??"").trim() == "")) return appValidation.validateEmptyField(val);
+                      if(val == null || ((val??"").trim() == "")) return validation.validateEmptyField(val);
                       if(!compareBalance(val, item.fabricBalance)){
                         var message = "Value must be less than or equal to balance.";
                         errorSnackBar(message: message);

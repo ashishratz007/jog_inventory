@@ -1,7 +1,9 @@
 import '../exports/main_export.dart';
 
-class CustomDropdown<T> extends FormField<DropDownItem<T>> {
-  CustomDropdown({
+
+/// [SecondaryFieldMenu] is basically a popup menu with its items
+class SecondaryFieldMenu<T> extends FormField<DropDownItem<T>> {
+  SecondaryFieldMenu({
     DropDownItem<T>? selectedItem,
     required List<DropDownItem<T>> items,
     double? borderRadius,
@@ -266,7 +268,9 @@ class _CustomDropdownWidgetState<T> extends State<_CustomDropdownWidget<T>>
   }
 }
 
-Widget CustomDropDownWithLabel<T>({
+
+/// [SecondaryFieldMenuWithLabel] is basically a popup menu with label
+Widget SecondaryFieldMenuWithLabel<T>({
   Key? key,
   DropDownItem<T>? selectedItem,
   required List<DropDownItem<T>> items,
@@ -320,7 +324,7 @@ Widget CustomDropDownWithLabel<T>({
         ),
       ),
       SizedBox(height: 10),
-      CustomDropdown<T>(
+      SecondaryFieldMenu<T>(
         items: items,
         onChanged: onChanged,
         borderRadius: borderRadius,

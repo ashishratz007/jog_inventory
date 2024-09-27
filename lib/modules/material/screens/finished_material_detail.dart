@@ -168,7 +168,7 @@ class _FinishedMaterialDetailScreenState
                       appTextTheme.labelMedium?.copyWith(color: Colours.white)),
               gap(),
               Text(
-                  appDateTimeFormat.toYYMMDDHHMMSS(
+                  dateTimeFormat.toYYMMDDHHMMSS(
                       date: materialRqDetail.rqDate),
                   style:
                       appTextTheme.labelSmall?.copyWith(color: Colours.white)),
@@ -182,7 +182,7 @@ class _FinishedMaterialDetailScreenState
                       appTextTheme.labelMedium?.copyWith(color: Colours.white)),
               gap(),
               Text(
-                  appDateTimeFormat.toYYMMDDHHMMSS(
+                  dateTimeFormat.toYYMMDDHHMMSS(
                       date: materialRqDetail.finishDate),
                   style:
                       appTextTheme.labelSmall?.copyWith(color: Colours.white)),

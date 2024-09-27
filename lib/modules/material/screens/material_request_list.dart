@@ -1,6 +1,6 @@
 import 'package:jog_inventory/common/animations/sliding%20container.dart';
 import 'package:jog_inventory/common/constant/images.dart';
-import 'package:jog_inventory/common/utils/bottom_sheet.dart';
+import 'package:jog_inventory/common/utils/bottom_seet.dart';
 import 'package:jog_inventory/common/utils/menu.dart';
 import 'package:jog_inventory/common/widgets/imageview.dart';
 import 'package:jog_inventory/modules/material/controllers/material_request_list.dart';
@@ -252,7 +252,7 @@ class MaterialRequestListScreen extends GetView<MaterialRequestListController> {
                       style: appTextTheme.titleSmall?.copyWith()),
                   Expanded(child: SizedBox()),
                   chipWidget(
-                    appDateTimeFormat.toYYMMDDHHMMSS(date: item.rqDate),
+                    dateTimeFormat.toYYMMDDHHMMSS(date: item.rqDate),
                   )
                 ],
               ),
@@ -407,7 +407,7 @@ class MaterialRequestListScreen extends GetView<MaterialRequestListController> {
                     Row(
                       children: [
                         chipWidget(
-                            appDateTimeFormat.toYYMMDDHHMMSS(date: item.rqDate),
+                            dateTimeFormat.toYYMMDDHHMMSS(date: item.rqDate),
                             fontSize: 12),
                         gap(space: 5),
                         Icon(
@@ -417,7 +417,7 @@ class MaterialRequestListScreen extends GetView<MaterialRequestListController> {
                         ),
                         gap(space: 5),
                         chipWidget(
-                            appDateTimeFormat.toYYMMDDHHMMSS(
+                            dateTimeFormat.toYYMMDDHHMMSS(
                                 date: item.finishDate),
                             color: Colours.redBg,
                             textColor: Colours.red,

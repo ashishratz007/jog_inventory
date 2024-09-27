@@ -191,7 +191,7 @@ class _NoCodeRqListScreenState extends State<NoCodeRqListScreen> {
                     ),
                     // Expanded(child: SizedBox()),
                     chipWidget(
-                      appDateTimeFormat.toYYMMDDHHMMSS(date: item.usedDate),
+                      dateTimeFormat.toYYMMDDHHMMSS(date: item.usedDate),
                     )
                   ],
                 ),
