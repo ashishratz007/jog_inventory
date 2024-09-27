@@ -19,7 +19,7 @@ class _NoCodeDetailScreenState extends State<NoCodeDetailScreen> {
     return CustomAppBar(title: "No Code Detail", body: body);
   }
 
-  Widget body(BuildContext context){
+  Widget body(BuildContext context) {
     return SingleChildScrollView(
       padding: AppPadding.pagePadding,
       child: Column(
@@ -50,8 +50,6 @@ class _NoCodeDetailScreenState extends State<NoCodeDetailScreen> {
     );
   }
 
-
-
   Widget orderInfo() {
     return Container(
       padding: AppPadding.inner,
@@ -64,24 +62,23 @@ class _NoCodeDetailScreenState extends State<NoCodeDetailScreen> {
             children: [
               Text("Code",
                   style:
-                  appTextTheme.labelMedium?.copyWith(color: Colours.white)),
+                      appTextTheme.labelMedium?.copyWith(color: Colours.white)),
               gap(),
               Text(controller.usedCode.usedCode ?? "_",
                   style:
-                  appTextTheme.labelSmall?.copyWith(color: Colours.white)),
+                      appTextTheme.labelSmall?.copyWith(color: Colours.white)),
             ],
           ),
           gap(space: 10),
-
           Row(
             children: [
               Text(Strings.orderCode,
                   style:
-                  appTextTheme.labelMedium?.copyWith(color: Colours.white)),
+                      appTextTheme.labelMedium?.copyWith(color: Colours.white)),
               gap(),
               Text(controller.usedCode.usedOrderCode ?? "_",
                   style:
-                  appTextTheme.labelSmall?.copyWith(color: Colours.white)),
+                      appTextTheme.labelSmall?.copyWith(color: Colours.white)),
             ],
           ),
           gap(space: 10),
@@ -89,13 +86,13 @@ class _NoCodeDetailScreenState extends State<NoCodeDetailScreen> {
             children: [
               Text(Strings.date,
                   style:
-                  appTextTheme.labelMedium?.copyWith(color: Colours.white)),
+                      appTextTheme.labelMedium?.copyWith(color: Colours.white)),
               gap(),
               Text(
                   appDateTimeFormat.toYYMMDDHHMMSS(
                       date: controller.usedCode.usedDate),
                   style:
-                  appTextTheme.labelSmall?.copyWith(color: Colours.white)),
+                      appTextTheme.labelSmall?.copyWith(color: Colours.white)),
             ],
           ),
         ],
@@ -134,7 +131,7 @@ class _NoCodeDetailScreenState extends State<NoCodeDetailScreen> {
                 Expanded(
                     flex: 2,
                     child: displayTitleSubtitle(
-                        "Used", "${item.usedDetailUsed??0} kg")),
+                        "Used", "${item.usedDetailUsed ?? 0} kg")),
               ],
             ),
             gap(space: 5),
@@ -142,8 +139,7 @@ class _NoCodeDetailScreenState extends State<NoCodeDetailScreen> {
               children: [
                 Expanded(
                     flex: 3,
-                    child:
-                        displayTitleSubtitle("NO", "${item.usedDetailNo}")),
+                    child: displayTitleSubtitle("NO", "${item.usedDetailNo}")),
                 Expanded(
                     flex: 2,
                     child: displayTitleSubtitle(
@@ -156,11 +152,11 @@ class _NoCodeDetailScreenState extends State<NoCodeDetailScreen> {
                 Expanded(
                     flex: 3,
                     child: displayTitleSubtitle(
-                        "Balance", "${item.balance??0.0} kg")),
+                        "Balance", "${item.balance ?? 0.0} kg")),
                 Expanded(
                     flex: 2,
-                    child: displayTitleSubtitle(
-                        "Total", "${formatDecimal("${(item.usedDetailUsed??0.0) * (item.usedDetailPrice??0)}") }")),
+                    child: displayTitleSubtitle("Total",
+                        "${formatDecimal("${(item.usedDetailUsed ?? 0.0) * (item.usedDetailPrice ?? 0)}")}")),
               ],
             ),
           ],
