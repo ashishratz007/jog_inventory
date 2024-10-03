@@ -55,9 +55,9 @@ class JogInventory extends StatelessWidget {
           focusColor: Colours.primary,
           datePickerTheme: datePickerTheme(),
           colorScheme: ColorScheme.fromSeed(
-            seedColor: Colors.white,
-            primary: Colours.primary,
-            onSurface: Colours.primary,
+            seedColor: Colours.primary,
+            primary: Colours.black,
+            onSurface: Colours.black,
           ),
           useMaterial3: true,
         ),
@@ -81,30 +81,36 @@ class JogInventory extends StatelessWidget {
 
 DatePickerThemeData datePickerTheme() {
   return DatePickerThemeData(
-      todayBorder: BorderSide(color: Colours.primary),
-      backgroundColor: Colours.primaryLite,
-      dayBackgroundColor: WidgetStateProperty.all(Colors.white),
-      surfaceTintColor: Colors.white,
+
+    todayBackgroundColor: WidgetStateProperty.all(Colours.secondary.withOpacity(0.8)),
+       dayStyle: appTextTheme.titleMedium,
+      todayBorder: BorderSide(color: Colours.white),
+      backgroundColor: Colours.white,
+      dayBackgroundColor: WidgetStateProperty.all(Colours.primary.withOpacity(0.2)),
+      surfaceTintColor: Colours.white,
       rangePickerHeaderForegroundColor: Colors.white,
       // dayForegroundColor: MaterialStateProperty.all(Colors.white),
-      headerBackgroundColor: Colours.primaryLite,
+      headerBackgroundColor: Colours.secondary,
+      headerHeadlineStyle: appTextTheme.titleMedium?.copyWith(color: Colours.white),
+      headerHelpStyle: appTextTheme.titleLarge?.copyWith(color: Colours.white),
+      headerForegroundColor: Colours.white,
       shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10.0),
-          side: BorderSide(color: Colours.primary)),
+          borderRadius: BorderRadius.circular(5.0),
+          side: BorderSide(color: Colours.secondary)),
       cancelButtonStyle: ButtonStyle(
           shape: WidgetStateProperty.all<RoundedRectangleBorder>(
             RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
-                side: BorderSide(color: Colours.primary)),
+                borderRadius: BorderRadius.circular(5.0),
+                side: BorderSide(color: Colours.white)),
           ),
           backgroundColor: WidgetStateProperty.all(Colors.white)),
       confirmButtonStyle: ButtonStyle(
           shape: WidgetStateProperty.all<RoundedRectangleBorder>(
             RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
-                side: BorderSide(color: Colours.primary)),
+                borderRadius: BorderRadius.circular(5.0),
+                side: BorderSide(color: Colours.white)),
           ),
-          backgroundColor: WidgetStateProperty.all(Colors.white)));
+          backgroundColor: WidgetStateProperty.all(Colours.white)));
 }
 
 DropdownMenuThemeData dropDownMenuTheme() {

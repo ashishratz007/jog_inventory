@@ -36,10 +36,7 @@ dependencies:
   dio: ^5.5.0+1
   pretty_dio_logger: ^1.4.0
   shimmer: ^3.0.0
-  barcode_scan2: ^4.3.3
   lottie: ^3.1.2
-  firebase_core: ^3.0.0
-  firebase_crashlytics: ^4.1.1
   device_info_plus: ^10.1.2
 
 #  location: ^6.0.0
@@ -48,6 +45,13 @@ dependencies:
 
 #  app_version_update: ^5.0.3
   package_info_plus: ^8.0.2
+
+# scanner
+  barcode_scan2: ^4.3.3
+
+# device
+  firebase_core: ^3.0.0
+  firebase_crashlytics: ^4.1.1
 
 dev_dependencies:
   flutter_test:

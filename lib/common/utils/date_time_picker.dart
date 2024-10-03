@@ -13,36 +13,68 @@ Future<DateTime?> SelectDateTime(BuildContext context) async {
   return picked;
 }
 
-Widget DateTimePickerField(
-  BuildContext context, {
-  required String labelText,
-  String? hintText,
-  TextEditingController? controller,
-  EdgeInsets padding =
-      const EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
-  TextStyle? style,
-  AutovalidateMode? autovalidateMode,
-  DateTime? DateTime,
-  bool canRequestFocus = true,
-  bool enabled = true,
-  FocusNode? focusNode,
-  void Function(String?)? onSaved,
-  String? Function(String?)? validation,
-  void Function(String?)? onChanged,
-  TextAlign textAlign = TextAlign.start,
-  String? Function(DateTime?)? formatDate,
-}) {
-  if (formatDate == null) formatDate = dateTimeFormat.yyMMDDFormat;
-  // widget
-  if (controller == null) controller = TextEditingController();
-  return StatefulBuilder(builder: (context, setState) {
+class DateTimePickerField extends StatefulWidget {
+  final String labelText;
+  final String? hintText;
+  final TextEditingController? controller;
+  final EdgeInsets padding;
+  final TextStyle? style;
+  final AutovalidateMode? autovalidateMode;
+  final DateTime? initialDateTime;
+  final bool canRequestFocus;
+  final bool enabled;
+  final FocusNode? focusNode;
+  final void Function(String?)? onSaved;
+  final String? Function(String?)? validation;
+  final void Function(String?)? onChanged;
+  final TextAlign textAlign;
+  final String? Function(DateTime?)? formatDate;
+
+  DateTimePickerField({
+    required this.labelText,
+    this.hintText,
+    this.controller,
+    this.padding = const EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
+    this.style,
+    this.autovalidateMode,
+    this.initialDateTime,
+    this.canRequestFocus = true,
+    this.enabled = true,
+    this.focusNode,
+    this.onSaved,
+    this.validation,
+    this.onChanged,
+    this.textAlign = TextAlign.start,
+    this.formatDate,
+  });
+
+  @override
+  _DateTimePickerFieldState createState() => _DateTimePickerFieldState();
+}
+
+class _DateTimePickerFieldState extends State<DateTimePickerField> {
+  late TextEditingController _controller;
+  late String? Function(DateTime?) formatDate;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = widget.controller ?? TextEditingController();
+    formatDate = widget.formatDate ?? dateTimeFormat.yyMMDDFormat;
+    if (widget.initialDateTime != null) {
+      _controller.text = formatDate(widget.initialDateTime) ?? "";
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return IgnorePointer(
-      ignoring: !enabled,
+      ignoring: !widget.enabled,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            labelText,
+            widget.labelText,
             textAlign: TextAlign.start,
             style: appTextTheme.bodyMedium,
           ),
@@ -50,44 +82,57 @@ Widget DateTimePickerField(
           Container(
             color: Colors.white,
             child: TextFormField(
-              // enabled: false,
-              controller: controller,
-              autovalidateMode: autovalidateMode,
-              style: style,
-              onChanged: onChanged,
-              onSaved: onSaved,
+              controller: _controller,
+              autovalidateMode: widget.autovalidateMode,
+              style: widget.style,
+              onChanged: widget.onChanged,
+              onSaved: (value) {
+                if (widget.onSaved != null) widget.onSaved!(_controller.text);
+              },
               readOnly: true,
               decoration: InputDecoration(
-                  hintText: hintText,
-                  hintStyle: TextStyle(),
-                  contentPadding: padding,
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide(
-                        color: Colors.grey.withOpacity(0.3), width: 1.0),
-                  ),
-                  suffixIcon: Icon(
-                    Icons.date_range,
-                    size: 25,
-                    color: Colors.black54,
-                  )),
-              validator: validation,
-              focusNode: focusNode,
-              textAlign: textAlign,
-              canRequestFocus: canRequestFocus,
+                hintText: widget.hintText,
+                contentPadding: widget.padding,
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(
+                      color: Colors.grey.withOpacity(0.3), width: 1.0),
+                ),
+                suffixIcon: Icon(
+                  Icons.date_range,
+                  size: 25,
+                  color: Colors.black54,
+                ),
+              ),
+              validator: widget.validation,
+              focusNode: widget.focusNode,
+              textAlign: widget.textAlign,
+              canRequestFocus: widget.canRequestFocus,
               onTap: () async {
                 var selectedDate = await SelectDateTime(context);
-                controller!.text = formatDate!(selectedDate) ?? "";
-                if (onChanged != null) onChanged(controller.text);
+                if (selectedDate != null) {
+                  _controller.text = formatDate(selectedDate) ?? "";
+                  if (widget.onChanged != null) {
+                    widget.onChanged!(_controller.text);
+                  }
+                }
                 FocusScope.of(context).unfocus();
-                setState(() {});
               },
             ),
           ),
         ],
       ),
     );
-  });
+  }
+
+  @override
+  void dispose() {
+    if (widget.controller == null) {
+      _controller.dispose(); // Dispose if internally created
+    }
+    super.dispose();
+  }
 }
+
 
 Widget monthYearPicker(
   BuildContext context, {

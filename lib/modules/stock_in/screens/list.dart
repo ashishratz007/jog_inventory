@@ -1,5 +1,6 @@
 import 'package:jog_inventory/common/utils/date_formater.dart';
 import 'package:jog_inventory/modules/no_code/models/no_code_item.dart';
+import 'package:jog_inventory/modules/no_code/models/stck_in_list.dart';
 import 'package:jog_inventory/modules/stock_in/controllers/list.dart';
 import 'package:jog_inventory/modules/stock_in/widgets/edit_popup.dart';
 
@@ -131,16 +132,16 @@ class _StockInListPageState extends State<StockInListPage> {
   }
 
   List<Widget> displayItems() {
-    return displayList<NoCodeRQItemModel>(
+    return displayList<StockInModel>(
       showGap: true,
-      items: [NoCodeRQItemModel()],
+      items: controller.items,
       builder: (item, index) {
         return itemTileWidget(item, index);
       },
     );
   }
 
-  Widget itemTileWidget(NoCodeRQItemModel item, int index) {
+  Widget itemTileWidget(StockInModel item, int index) {
     return InkWell(
       onTap: () {
         Get.toNamed(AppRoutesString.noCodeRequestDetail, arguments: {
@@ -174,14 +175,14 @@ class _StockInListPageState extends State<StockInListPage> {
                               style: appTextTheme.titleSmall
                                   ?.copyWith(color: Colours.greyLight)),
                           gap(space: 10),
-                          Text("G2W-F239485939-TW",
+                          Text(item.poNo??"_",
                               style: appTextTheme.titleSmall?.copyWith()),
                         ],
                       ),
                     ),
                     // Expanded(child: SizedBox()),
                     chipWidget(
-                      dateTimeFormat.toYYMMDDHHMMSS(date: item.usedDate),
+                      dateTimeFormat.toYYMMDDHHMMSS(date: item.receiptDate),
                     )
                   ],
                 ),
@@ -205,7 +206,7 @@ class _StockInListPageState extends State<StockInListPage> {
                                 style: appTextTheme.titleSmall
                                     ?.copyWith(color: Colours.greyLight)),
                             gap(space: 10),
-                            Text("PAC-0028849",
+                            Text(item.packNo??"_",
                                 style: appTextTheme.titleSmall?.copyWith(),
                                 textAlign: TextAlign.center),
                           ],
@@ -218,7 +219,7 @@ class _StockInListPageState extends State<StockInListPage> {
                                 style: appTextTheme.titleSmall
                                     ?.copyWith(color: Colours.greyLight)),
                             gap(space: 10),
-                            Text("Men Chuen",
+                            Text(item.supplierName??"_",
                                 style: appTextTheme.titleSmall?.copyWith(),
                                 textAlign: TextAlign.center),
                           ],
@@ -231,7 +232,7 @@ class _StockInListPageState extends State<StockInListPage> {
                                 style: appTextTheme.titleSmall
                                     ?.copyWith(color: Colours.greyLight)),
                             gap(space: 10),
-                            Text("300.00",
+                            Text("${item.sumPo??0}",
                                 style: appTextTheme.titleSmall?.copyWith(),
                                 textAlign: TextAlign.center),
                           ],

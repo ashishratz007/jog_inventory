@@ -22,10 +22,8 @@ class _addFabric extends StatefulWidget {
 }
 
 class _addFabricState extends State<_addFabric> {
-  MenuItemsController fabricController =
-      MenuItemsController();
-  MenuItemsController fabricColorController =
-      MenuItemsController();
+  MenuItemsController fabricController = MenuItemsController();
+  MenuItemsController fabricColorController = MenuItemsController();
 
   FabricCategoryModel? selectedFabCate;
   FabricColorModel? selectedFabColor;
@@ -140,9 +138,15 @@ class _addFabricState extends State<_addFabric> {
               int count = int.tryParse(rolls ?? "") ?? 0;
               int startCount = int.tryParse(startNo ?? "") ?? 0;
               double? unitPriceDouble = double.tryParse(unitPrice ?? "");
-
+              if (count == 0) {
+                items.add(StockInFormItem(
+                    material: selectedFabCate!,
+                    color: selectedFabColor!,
+                    no: startCount,
+                    unitPrice: unitPriceDouble));
+              }
               for (var i = 0; i < count; i++) {
-                items.add( StockInFormItem(
+                items.add(StockInFormItem(
                     material: selectedFabCate!,
                     color: selectedFabColor!,
                     no: startCount,

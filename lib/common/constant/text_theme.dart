@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 var appTextTheme = TextTheme(
 
   bodyLarge: TextStyle(
-      fontSize: 24, fontWeight: FontWeight.bold, fontFamily: "Montserrat", color: Colors.black),
+      fontSize: 16, fontWeight: FontWeight.bold, fontFamily: "Montserrat", color: Colors.black),
   bodyMedium: TextStyle(
       fontSize: 16, fontWeight: FontWeight.w500, fontFamily: "Montserrat", color: Colors.black),
   bodySmall: TextStyle(

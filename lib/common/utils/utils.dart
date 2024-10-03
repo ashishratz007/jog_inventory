@@ -102,14 +102,14 @@ abstract final class ParseData {
     if (value is String && value.trim().isNotEmpty) {
       return value.trim();
     }
-    if(value != null)return "${value}";
+    if (value != null) return "${value}";
     return null;
   }
 
   /// parse double
   static double? toDouble(value) {
     if (value == null) return null;
-    if(value is String && value.contains(",")){
+    if (value is String && value.contains(",")) {
       value = value.split(",").join("");
     }
     return double.tryParse("$value");
@@ -400,7 +400,7 @@ String getOrdinalSuffix(int number) {
   }
 }
 
-List<int> getPast20Years({int count =20}) {
+List<int> getPast20Years({int count = 20}) {
   int currentYear = DateTime.now().year;
   return List<int>.generate(count, (index) => currentYear - index);
 }
@@ -466,7 +466,11 @@ List<BoxShadow> containerShadow({
   ];
 }
 
-Widget divider({double height = 2,double thickness = 0.5, Color? color ,}) {
+Widget divider({
+  double height = 2,
+  double thickness = 0.5,
+  Color? color,
+}) {
   return Divider(
       height: height, color: color ?? Colours.border, thickness: thickness);
 }
@@ -506,7 +510,11 @@ Widget chipWidget(
       ));
 }
 
-Widget dottedDivider({Color? color,double dotSpace = 3, double width = 1, }) {
+Widget dottedDivider({
+  Color? color,
+  double dotSpace = 3,
+  double width = 1,
+}) {
   return DottedLineDivider(
     dotSpace: dotSpace,
     width: width,
@@ -605,17 +613,27 @@ bool compareBalance(dynamic value, dynamic balance) {
   return parsedValue <= parsedBalance;
 }
 
-FilteringTextInputFormatter amountFormatter(){
-  return FilteringTextInputFormatter.allow(
-      RegExp(r'^\d+\.?\d*$'));
+FilteringTextInputFormatter amountFormatter() {
+  return FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d*$'));
 }
 
-String formatDecimal(String decimalString, {int decimalPlaces = 2, String? suffix}) {
+List<FilteringTextInputFormatter> inputFormatters(
+    {bool allowInt = false, bool textOnly = false, allowDouble = false}) {
+  return [
+    if(allowDouble) amountFormatter(),
+    if(allowInt) FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+    if(textOnly) FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z\s]')),
+  ];
+}
+
+String formatDecimal(String decimalString,
+    {int decimalPlaces = 2, String? suffix}) {
   try {
     double number = double.parse(decimalString);
     return number.toStringAsFixed(decimalPlaces);
   } catch (e) {
-    return decimalString + " $suffix"; // Return original string if parsing fails
+    return decimalString +
+        " $suffix"; // Return original string if parsing fails
   }
 }
 

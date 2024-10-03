@@ -1,7 +1,9 @@
 import 'dart:ffi';
 
 import 'package:jog_inventory/common/utils/date_formater.dart';
+import 'package:jog_inventory/common/utils/date_time_picker.dart';
 import 'package:jog_inventory/common/utils/dotted_border.dart';
+import 'package:jog_inventory/common/utils/validation.dart';
 import 'package:jog_inventory/modules/stock_in/controllers/form.dart';
 import 'package:jog_inventory/modules/stock_in/models/po_order.dart';
 import 'package:jog_inventory/modules/stock_in/models/stock_in.dart';
@@ -22,41 +24,46 @@ class _StockInFromScreenState extends State<StockInFromScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return CustomAppBar(
-      title: "Stock in Form",
-      body: body,
-      bottomNavBar: bottomNavBar(),
+    return Obx(
+      () => CustomAppBar(
+        title: "Stock in Form",
+        body: body,
+        bottomNavBar: controller.isAddStock.value ? bottomNavBar() : null,
+      ),
     );
   }
 
   Widget body(BuildContext context) {
     return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          selectPoNumber(),
-          gap(),
-          divider(),
-          tabsWidget(),
-          divider(),
+      child: Form(
+        key: controller.formKey,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            selectPoNumber(),
+            gap(),
+            divider(),
+            tabsWidget(),
+            divider(),
 
-          Obx(
-            () => Visibility(
-              visible: controller.isAddStock.value,
-              child: displayAddedItem(),
+            Obx(
+              () => Visibility(
+                visible: controller.isAddStock.value,
+                child: displayAddedItem(),
+              ),
             ),
-          ),
-          Obx(
-            () => Visibility(
-              visible: !controller.isAddStock.value,
-              child: displayReceivedItem(),
+            Obx(
+              () => Visibility(
+                visible: !controller.isAddStock.value,
+                child: displayReceivedItem(),
+              ),
             ),
-          ),
 
-          /// bottom
-          gap(),
-          safeAreaBottom(context),
-        ],
+            /// bottom
+            gap(),
+            safeAreaBottom(context),
+          ],
+        ),
       ),
     );
   }
@@ -70,11 +77,19 @@ class _StockInFromScreenState extends State<StockInFromScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
                 child: PrimaryFieldMenuWithLabel<PoOrderModel>(
                   labelText: "PO No.",
                   items: [],
+                  validate: (val) {
+                    if (val == null || !val.isNotEmpty) {
+                      return validation.validateEmptyField(null);
+                    } else {
+                      return null;
+                    }
+                  },
                   selectedItems: [
                     if (controller.selectedPo != null)
                       DropDownItem<PoOrderModel>(
@@ -120,6 +135,7 @@ class _StockInFromScreenState extends State<StockInFromScreen> {
           ),
           gap(),
           Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
                 child: TextFieldWithLabel(
@@ -131,7 +147,17 @@ class _StockInFromScreenState extends State<StockInFromScreen> {
                 ),
               ),
               gap(space: 10),
-              Expanded(child: TextFieldWithLabel(labelText: "Stock Date"))
+              Expanded(
+                child: DateTimePickerField(
+                    labelText: "Stock Date",
+                    validation: validation.validateEmptyField,
+                    onChanged: (value) {
+                      controller.PODate = value;
+                    },
+                    onSaved: (String? value) {
+                      controller.PODate = value;
+                    }),
+              )
             ],
           ),
         ],
@@ -289,7 +315,7 @@ class _StockInFromScreenState extends State<StockInFromScreen> {
                 Align(
                     alignment: Alignment.topRight,
                     child: InkWell(
-                      onTap: (){
+                      onTap: () {
                         controller.items.remove(item);
                       },
                       child: Icon(Icons.delete_outlined,
@@ -302,35 +328,50 @@ class _StockInFromScreenState extends State<StockInFromScreen> {
           Container(
               padding: AppPadding.inner,
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Expanded(
                         child: TextFieldWithLabel(
                           labelText: "Box",
                           initialValue: "${item.box ?? ""}",
+                          validator: validation.validateEmptyField,
+                          inputFormatters: inputFormatters(allowInt: true),
                           onChanged: (data) {
                             item.box = int.tryParse(data);
+                            setState(() {});
                           },
                         ),
                       ),
                       gap(space: 10),
-                      Expanded(child: TextFieldWithLabel(labelText: "No.",
+                      Expanded(
+                          child: TextFieldWithLabel(
+                        labelText: "No.",
+                        inputFormatters: inputFormatters(allowInt: true),
+                        validator: validation.validateEmptyField,
                         initialValue: "${item.no ?? ""}",
                         onChanged: (data) {
-                          item.no = int.tryParse(data)??0;
-                        },))
+                          item.no = int.tryParse(data) ?? 0;
+                          setState(() {});
+                        },
+                      ))
                     ],
                   ),
                   gap(space: 10),
                   Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Expanded(
                         child: TextFieldWithLabel(
                           labelText: "Amount (Kg)",
+                          inputFormatters: inputFormatters(allowDouble: true),
+                          validator: validation.validateEmptyField,
                           initialValue: "${item.amount ?? ""}",
                           onChanged: (data) {
                             item.amount = double.tryParse(data);
+                            setState(() {});
                           },
                         ),
                       ),
@@ -339,14 +380,18 @@ class _StockInFromScreenState extends State<StockInFromScreen> {
                           child: TextFieldWithLabel(
                         initialValue: "${item.unitPrice ?? ""}",
                         labelText: "Unit Price (THB)",
+                        inputFormatters: inputFormatters(allowDouble: true),
+                        validator: validation.validateEmptyField,
                         onChanged: (data) {
                           item.unitPrice = double.tryParse(data);
+                          setState(() {});
                         },
                       ))
                     ],
                   ),
                   gap(space: 10),
                   TextFieldWithLabel(
+                    key: Key("${item.total ?? ""}"),
                     labelText: "Total Price (THB)",
                     enabled: false,
                     initialValue: "${item.total ?? ""}",
@@ -427,6 +472,7 @@ class _StockInFromScreenState extends State<StockInFromScreen> {
                                   : null,
                               onChanged: (String? value) {
                                 item.receiveKg = value;
+                                setState(() {});
                               }))
                     ],
                   ),
@@ -440,11 +486,12 @@ class _StockInFromScreenState extends State<StockInFromScreen> {
                 padding: EdgeInsets.only(left: 10, right: 10),
                 child: PrimaryButton(
                     title: "Receive",
+
                     onTap: () {
                       controller.onReceived(item);
                     },
                     isEnable: hasValue.value,
-                    isBusy: controller.isBusy.value),
+                    isBusy: controller.loadingForCastIds.contains(item.forItemId)),
               ),
             ),
           ],
@@ -456,38 +503,43 @@ class _StockInFromScreenState extends State<StockInFromScreen> {
   }
 
   Widget bottomNavBar() {
-    return Container(
-      color: Colours.white,
-      child: Row(
-        children: [
-          Expanded(
-            child: InkWell(
-              onTap: () {
-                openAddFabricPopup(controller.addItems);
-              },
-              child: DottedBorderContainer(
-                  borderColor: Colours.green,
-                  padding: AppPadding.inner,
-                  gap: 2,
-                  borderWidth: 1.5,
-                  // decoration: BoxDecoration(
-                  //   borderRadius: BorderRadius.circular(10),
-                  // ),
-                  borderRadius: BorderRadius.circular(10),
-                  child: Center(
-                      child: Text("Add Fabric",
-                          style: appTextTheme.titleSmall
-                              ?.copyWith(color: Colours.green)))),
+    return Obx(
+      () => Container(
+        color: Colours.white,
+        child: Row(
+          children: [
+            Expanded(
+              child: InkWell(
+                onTap: () {
+                  openAddFabricPopup(controller.addItems);
+                },
+                child: DottedBorderContainer(
+                    borderColor: Colours.green,
+                    padding: AppPadding.inner,
+                    gap: 2,
+                    borderWidth: 1.5,
+                    // decoration: BoxDecoration(
+                    //   borderRadius: BorderRadius.circular(10),
+                    // ),
+                    borderRadius: BorderRadius.circular(10),
+                    child: Center(
+                        child: Text("Add Fabric",
+                            style: appTextTheme.titleSmall
+                                ?.copyWith(color: Colours.green)))),
+              ),
             ),
-          ),
-          gap(),
-          Expanded(
-              child: PrimaryButton(
-                  title: "Check",
-                  onTap: () {},
-                  radius: 10,
-                  color: Colours.yellow))
-        ],
+            gap(),
+            Expanded(
+                child: PrimaryButton(
+                    title: "Submit",
+                    isBusy: controller.isBusy.value,
+                    onTap: () {
+                      controller.onCheck();
+                    },
+                    radius: 10,
+                    color: Colours.greenLight))
+          ],
+        ),
       ),
     );
   }
