@@ -1,6 +1,6 @@
-import 'package:jog_inventory/common/utils/date_formater.dart';
-import 'package:jog_inventory/modules/no_code/models/no_code_item.dart';
+import 'package:jog_inventory/modules/material/widgets/popup.dart';
 import 'package:jog_inventory/modules/stock_in/controllers/detail.dart';
+import 'package:jog_inventory/modules/stock_in/models/stock_in_list.dart';
 import '../../../common/exports/main_export.dart';
 
 class StockInDetailScreen extends StatefulWidget {
@@ -32,14 +32,14 @@ class _StockInDetailState extends State<StockInDetailScreen> {
               child: listLoadingEffect(height: 100))),
           Obx(
             () => Visibility(
-              visible: 0 > 0,
+              visible: !controller.isLoading.value,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   gap(),
-                  ...displayList<NoCodeRQUsedItemModel>(
+                  ...displayList<StockInFabric>(
                       showGap: true,
-                      items: [],
+                      items: controller.stockInData.fabrics,
                       builder: (item, index) => itemTileWidget(item, index)),
                 ],
               ),
@@ -51,54 +51,88 @@ class _StockInDetailState extends State<StockInDetailScreen> {
   }
 
   Widget orderInfo() {
-    return Container(
-      padding: AppPadding.inner,
-      decoration: BoxDecoration(
-          color: Colours.secondary2, borderRadius: BorderRadius.circular(15)),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
+    return Obx(
+      () => shimmerEffects(
+        isLoading: controller.isLoading.value,
+        child: Container(
+          padding: AppPadding.inner,
+          decoration: BoxDecoration(
+              color: Colours.secondary2,
+              borderRadius: BorderRadius.circular(15)),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("Code",
-                  style:
-                      appTextTheme.labelMedium?.copyWith(color: Colours.white)),
-              gap(),
-              Text("Code",
-                  style:
-                      appTextTheme.labelSmall?.copyWith(color: Colours.white)),
+              titleSubtitle(
+                  "Pack No.", controller.stockInData.packing?.packNo ?? "_"),
+              gap(space: 10),
+              titleSubtitle(
+                  "PO No.", controller.stockInData.packing?.poNo ?? "_"),
+              gap(space: 10),
+              titleSubtitle("Supplier",
+                  controller.stockInData.packing?.supplierName ?? "_"),
+              gap(space: 10),
+              titleSubtitle("Create Date",
+                  controller.stockInData.packing?.addDate ?? "_"),
+              gap(space: 10),
+              titleSubtitle(
+                  "PO Date", controller.stockInData.packing?.poDate ?? "_"),
+              gap(space: 10),
+              titleSubtitle(
+                  "Inv No.", controller.stockInData.packing?.invNo ?? "",
+                  onEdit: () {
+                inputTextPopup(
+                  context,
+                  title: "Edit Inv No.",
+                  onSave: controller.postInvoiceData,
+                  initialValue: controller.stockInData.packing?.invNo,
+                );
+              }),
             ],
           ),
-          gap(space: 10),
-          Row(
-            children: [
-              Text(Strings.orderCode,
-                  style:
-                      appTextTheme.labelMedium?.copyWith(color: Colours.white)),
-              gap(),
-              Text("controller.usedCode.usedOrderCode",
-                  style:
-                      appTextTheme.labelSmall?.copyWith(color: Colours.white)),
-            ],
-          ),
-          gap(space: 10),
-          Row(
-            children: [
-              Text(Strings.date,
-                  style:
-                      appTextTheme.labelMedium?.copyWith(color: Colours.white)),
-              gap(),
-              Text(dateTimeFormat.toYYMMDDHHMMSS(),
-                  style:
-                      appTextTheme.labelSmall?.copyWith(color: Colours.white)),
-            ],
-          ),
-        ],
+        ),
       ),
     );
   }
 
-  Widget itemTileWidget(NoCodeRQUsedItemModel item, int index) {
+  Widget titleSubtitle(String title, String subtitle, {Function()? onEdit}) {
+    return Row(
+      children: [
+        Expanded(
+          flex: 1,
+          child: Text(title,
+              style: appTextTheme.labelMedium?.copyWith(color: Colours.white)),
+        ),
+        gap(),
+        Flexible(
+          flex: 2,
+          child: Row(
+            children: [
+              Flexible(
+                child: Text(subtitle,
+                    style: appTextTheme.labelSmall
+                        ?.copyWith(color: Colours.white)),
+              ),
+              Visibility(
+                visible: onEdit != null,
+                child: Padding(
+                  padding: EdgeInsets.only(left: 10),
+                  child: InkWell(
+                      onTap: onEdit,
+                      child: Icon(
+                        Icons.edit,
+                        size: 20,
+                        color: Colours.white,
+                      )),
+                ),
+              )
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget itemTileWidget(StockInFabric item, int index) {
     return Container(
         padding: AppPadding.inner,
         decoration: BoxDecoration(
@@ -111,57 +145,76 @@ class _StockInDetailState extends State<StockInDetailScreen> {
           children: [
             Row(
               children: [
-                Text("${item.catName ?? ""} , ",
+                Text("${item.catNameEn ?? ""} , ",
                     style: appTextTheme.titleSmall
                         ?.copyWith(color: Colours.primaryText)),
-                Text("${item.usedDetailColor ?? ""}",
+                Text("${item.fabricColor}",
                     style: appTextTheme.titleSmall?.copyWith()),
-                Expanded(child: SizedBox()),
               ],
             ),
             gap(space: 10),
             Row(
               children: [
                 Expanded(
-                    flex: 3,
-                    child: displayTitleSubtitle(
-                        "Type", "${item.typeId == 1 ? "Fabric" : ""}")),
+                    flex: 1,
+                    child: displayTitleSubtitle("Box", "${item.fabricBox}")),
                 Expanded(
                     flex: 2,
                     child: displayTitleSubtitle(
-                        "Used", "${item.usedDetailUsed ?? 0} kg")),
+                        "Unit Price (THB)", "${item.fabricInPrice}")),
               ],
             ),
             gap(space: 5),
             Row(
               children: [
                 Expanded(
-                    flex: 3,
-                    child: displayTitleSubtitle("NO", "${item.usedDetailNo}")),
+                    flex: 1,
+                    child: displayTitleSubtitle("NO", "${item.fabricNo}")),
                 Expanded(
-                    flex: 2,
-                    child: displayTitleSubtitle(
-                        "Price", "${item.usedDetailPrice ?? 0}")),
-              ],
-            ),
-            gap(space: 5),
-            Row(
-              children: [
-                Expanded(
-                    flex: 3,
-                    child: displayTitleSubtitle(
-                        "Balance", "${item.balance ?? 0.0} kg")),
-                Expanded(
-                    flex: 2,
-                    child: displayTitleSubtitle("Total",
-                        "${formatDecimal("${(item.usedDetailUsed ?? 0.0) * (item.usedDetailPrice ?? 0)}")}")),
+                  flex: 2,
+                  child: displayTitleSubtitle("Price", "${item.fabricInTotal}",
+                      onEdit: () {
+                    RxBool isAll = false.obs;
+                    inputTextPopup(
+                      context,
+
+                      title: "New Unit Price :",
+                      buttonText: "Update",
+                      addon: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          gap(space: 10),
+                          Obx(
+                            () => Row(
+                              children: [
+                                Text("Update all", style: appTextTheme.titleMedium,),
+                                checkBox(
+                                    value: isAll.value,
+                                    onchange: (value) {
+                                      isAll.value = value;
+                                    }),
+                              ],
+                            ),
+                          ),
+                          gap(),
+                          divider()
+                        ],
+                      ),
+                      onSave: (String value) {
+                        controller.editPrice(value, isAll.value, item.fabric_id!);
+                      },
+                      initialValue: controller.stockInData.packing?.invNo,
+                    );
+                  }),
+                ),
               ],
             ),
           ],
         ));
   }
 
-  Widget displayTitleSubtitle(String title, String subtitle) {
+  Widget displayTitleSubtitle(String title, String subtitle,
+      {Function()? onEdit}) {
     return Row(
       children: [
         Text(title,
@@ -172,6 +225,19 @@ class _StockInDetailState extends State<StockInDetailScreen> {
           style: appTextTheme.titleSmall?.copyWith(),
           textAlign: TextAlign.center,
         ),
+        Visibility(
+          visible: onEdit != null,
+          child: Padding(
+            padding: EdgeInsets.only(left: 10),
+            child: InkWell(
+                onTap: onEdit,
+                child: Icon(
+                  Icons.edit,
+                  size: 20,
+                  color: Colours.greyLight,
+                )),
+          ),
+        )
       ],
     );
   }

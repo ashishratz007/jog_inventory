@@ -3,6 +3,7 @@ import 'package:jog_inventory/modules/no_code/models/no_code_item.dart';
 import 'package:jog_inventory/modules/no_code/models/stck_in_list.dart';
 import 'package:jog_inventory/modules/stock_in/controllers/list.dart';
 import 'package:jog_inventory/modules/stock_in/widgets/edit_popup.dart';
+import 'package:jog_inventory/modules/stock_in/widgets/summary_popup.dart';
 
 import '../../../common/exports/main_export.dart';
 
@@ -98,8 +99,7 @@ class _StockInListPageState extends State<StockInListPage> {
             TextBorderButton(
                 onTap: () {
                   editStockInItemPopup(Get.context!);
-                  // TODo
-                  // openNoCodeSummaryBottomSheet();
+                  stockInSummaryBottomSheet();
                 },
                 title: Strings.viewSummary,
                 color: Colours.primary,
@@ -144,8 +144,8 @@ class _StockInListPageState extends State<StockInListPage> {
   Widget itemTileWidget(StockInModel item, int index) {
     return InkWell(
       onTap: () {
-        Get.toNamed(AppRoutesString.noCodeRequestDetail, arguments: {
-          appKeys.usedItem: item,
+        Get.toNamed(AppRoutesString.stockInDetail, arguments: {
+          appKeys.pacId: item.pacId,
         });
       },
       child: Container(

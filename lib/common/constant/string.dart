@@ -46,6 +46,7 @@ class _AppString {
   final String box = "Box";
   final String bal = "Bal";
   final String usedTotal = "Used total";
+  final String invTotal = "IVN total";
   final String month = "Month";
   final String used = "Used";
   final String amount = "Amount";
