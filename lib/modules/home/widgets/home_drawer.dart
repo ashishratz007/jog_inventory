@@ -79,8 +79,12 @@ class HomeDrawerWidget extends Drawer {
               /// Stock in
               drawerTile(
                 context,
-                leading:
-                    Icon(Icons.file_copy, color: Colours.greyLight, size: 20),
+                leading: displayAssetsWidget(AppIcons.boxes_white,
+                    width: 15,
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colours.blue,
+                    height: 15,
+                    padding: EdgeInsets.all(5)),
                 title: "Stock In List",
                 textColor: Colours.black,
                 hideTrailing: true,
@@ -92,8 +96,12 @@ class HomeDrawerWidget extends Drawer {
               /// Material Rq
               drawerTile(
                 context,
-                leading:
-                    Icon(Icons.file_copy, color: Colours.greyLight, size: 20),
+                leading: displayAssetsWidget(AppIcons.mat_white,
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colours.secondary,
+                    width: 15,
+                    height: 15,
+                    padding: EdgeInsets.all(5)),
                 title: "Material RQ list",
                 textColor: Colours.black,
                 hideTrailing: true,
@@ -105,8 +113,12 @@ class HomeDrawerWidget extends Drawer {
               /// No code
               drawerTile(
                 context,
-                leading:
-                    Icon(Icons.file_copy, color: Colours.greyLight, size: 20),
+                leading: displayAssetsWidget(AppIcons.no_code,
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colours.green,
+                    width: 15,
+                    height: 15,
+                    padding: EdgeInsets.all(5)),
                 title: "No code RQ list",
                 textColor: Colours.black,
                 hideTrailing: true,

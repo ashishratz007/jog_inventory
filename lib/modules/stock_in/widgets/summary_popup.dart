@@ -30,6 +30,8 @@ class _ViewSummaryBodyScreenState extends State<_ViewSummaryBodyScreen> {
   Map<String, StockInYearlyDataModel> usedDataMap = {};
   String year = timeNow().year.toString();
 
+
+
   @override
   void initState() {
     getSummeryData();
@@ -62,6 +64,10 @@ class _ViewSummaryBodyScreenState extends State<_ViewSummaryBodyScreen> {
         },
       );
     });
+  }
+
+  String getKey(int index){
+    return "${year}-${index < 10 ?"0":""}${index}";
   }
 
   @override
@@ -128,7 +134,7 @@ class _ViewSummaryBodyScreenState extends State<_ViewSummaryBodyScreen> {
                 Expanded(
                   flex: 2,
                   child: Text(
-                    Strings.used + "(KG)",
+                    Strings.received + "(KG)",
                     style: appTextTheme.labelMedium
                         ?.copyWith(color: Colours.white),
                     textAlign: TextAlign.center,
@@ -161,7 +167,7 @@ class _ViewSummaryBodyScreenState extends State<_ViewSummaryBodyScreen> {
               children: [
                 ...List.generate(usesData?.data?.length ?? 0, (index) {
                   var month = getMonthName(index + 1, short: true);
-                  var data = usesData?.data![index];
+                  var data = usesData?.data![getKey(index +1)];
                   return Container(
                     padding: const EdgeInsets.only(bottom: 10, top: 10),
                     decoration: BoxDecoration(
@@ -181,7 +187,7 @@ class _ViewSummaryBodyScreenState extends State<_ViewSummaryBodyScreen> {
                         Expanded(
                             flex: 2,
                             child: Text(
-                              "${data?.sumRecieve}",
+                              formatNumber("${data?.sumRecieve??0.0}"),
                               style: appTextTheme.labelMedium
                                   ?.copyWith(color: Colours.blackLite),
                               textAlign: TextAlign.center,
@@ -213,7 +219,7 @@ class _ViewSummaryBodyScreenState extends State<_ViewSummaryBodyScreen> {
                     Expanded(
                         flex: 2,
                         child: Text(
-                          "${totalKg}",
+                          formatNumber("${totalKg}"),
                           style: appTextTheme.labelMedium
                               ?.copyWith(color: Colours.primaryText),
                           textAlign: TextAlign.center,

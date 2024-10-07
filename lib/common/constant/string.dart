@@ -49,6 +49,7 @@ class _AppString {
   final String invTotal = "IVN total";
   final String month = "Month";
   final String used = "Used";
+  final String received = "Received";
   final String amount = "Amount";
   final String cost = "Cost";
   final String total = "Total";

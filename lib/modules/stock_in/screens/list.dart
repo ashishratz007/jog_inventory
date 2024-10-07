@@ -98,15 +98,11 @@ class _StockInListPageState extends State<StockInListPage> {
           children: [
             TextBorderButton(
                 onTap: () {
-                  editStockInItemPopup(Get.context!);
                   stockInSummaryBottomSheet();
                 },
                 title: Strings.viewSummary,
                 color: Colours.primary,
                 borderColor: Colours.primary),
-
-            /// calender
-            //TODO
           ],
         ),
       ),
