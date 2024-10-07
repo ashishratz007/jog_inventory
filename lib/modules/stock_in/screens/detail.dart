@@ -161,7 +161,39 @@ class _StockInDetailState extends State<StockInDetailScreen> {
                 Expanded(
                     flex: 2,
                     child: displayTitleSubtitle(
-                        "Unit Price (THB)", "${item.fabricInPrice}")),
+                        "Unit Price (THB)", "${item.fabricInPrice}", onEdit: () {
+                      RxBool isAll = false.obs;
+                      inputTextPopup(
+                        context,
+
+                        title: "New Unit Price :",
+                        buttonText: "Update",
+                        addon: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            gap(space: 10),
+                            Obx(
+                                  () => Row(
+                                children: [
+                                  Text("Update all", style: appTextTheme.titleMedium,),
+                                  checkBox(
+                                      value: isAll.value,
+                                      onchange: (value) {
+                                        isAll.value = value;
+                                      }),
+                                ],
+                              ),
+                            ),
+                            gap(),
+                            divider()
+                          ],
+                        ),
+                        onSave: (String value) {
+                          controller.editPrice(value, isAll.value, item.fabric_id!);
+                        },
+                        initialValue: "${item.fabricInPrice}",
+                      );
+                    })),
               ],
             ),
             gap(space: 5),
@@ -172,43 +204,12 @@ class _StockInDetailState extends State<StockInDetailScreen> {
                     child: displayTitleSubtitle("NO", "${item.fabricNo}")),
                 Expanded(
                   flex: 2,
-                  child: displayTitleSubtitle("Price", "${item.fabricInTotal}",
-                      onEdit: () {
-                    RxBool isAll = false.obs;
-                    inputTextPopup(
-                      context,
-
-                      title: "New Unit Price :",
-                      buttonText: "Update",
-                      addon: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          gap(space: 10),
-                          Obx(
-                            () => Row(
-                              children: [
-                                Text("Update all", style: appTextTheme.titleMedium,),
-                                checkBox(
-                                    value: isAll.value,
-                                    onchange: (value) {
-                                      isAll.value = value;
-                                    }),
-                              ],
-                            ),
-                          ),
-                          gap(),
-                          divider()
-                        ],
-                      ),
-                      onSave: (String value) {
-                        controller.editPrice(value, isAll.value, item.fabric_id!);
-                      },
-                      initialValue: controller.stockInData.packing?.invNo,
-                    );
-                  }),
+                  child: displayTitleSubtitle("Amount(Kg)", "${item.fabricInPiece}"),
                 ),
               ],
             ),
+            gap(space: 5),
+            displayTitleSubtitle("Price", "${item.fabricInTotal}"),
           ],
         ));
   }

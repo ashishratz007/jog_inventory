@@ -171,7 +171,7 @@ class _TextFromFieldWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           gap(),
-          TextFieldWithLabel(labelText: title),
+          TextFieldWithLabel(labelText: title,controller:textEditingController),
           Visibility(
               visible: addon != null,
               child: addon??SizedBox()),

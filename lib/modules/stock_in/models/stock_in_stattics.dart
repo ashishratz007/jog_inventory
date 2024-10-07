@@ -85,7 +85,7 @@ class SetAmountModel extends BaseModel{
   @override
   Map<String, dynamic> toJson() {
    return  {
-     "pac_id":new_unit_price,
+     "new_unit_price":new_unit_price,
      "fabric_id_list":fabric_id_list,
     };
   }

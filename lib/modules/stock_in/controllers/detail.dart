@@ -79,9 +79,7 @@ class StockInDetailController extends GetxController {
                 (item) => item.fabricInPrice = double.tryParse(price) ?? 0.0);
           } else {
             var item = stockInData.fabrics
-                ?.where((item) => "${item.fabricInTotal}" == itemId)
-                .toList()
-                .firstOrNull;
+                ?.where((item) => "${item.fabric_id}" == itemId).firstOrNull;
             if (item != null) {
               item.fabricInPrice = double.tryParse(price) ?? 0.0;
             }

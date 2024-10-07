@@ -84,7 +84,7 @@ class _DateTimePickerFieldState extends State<DateTimePickerField> {
             child: TextFormField(
               controller: _controller,
               autovalidateMode: widget.autovalidateMode,
-              style: widget.style,
+              style: widget.style ?? appTextTheme.titleMedium,
               onChanged: widget.onChanged,
               onSaved: (value) {
                 if (widget.onSaved != null) widget.onSaved!(_controller.text);
