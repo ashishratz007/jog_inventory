@@ -1,6 +1,10 @@
-import 'package:flutter/cupertino.dart';
+import 'package:jog_inventory/common/utils/date_time_picker.dart';
 import 'package:jog_inventory/common/utils/dotted_border.dart';
-
+import 'package:jog_inventory/common/utils/validation.dart';
+import 'package:jog_inventory/modules/forecast/controllers/form.dart';
+import 'package:jog_inventory/modules/forecast/models/forecast_item.dart';
+import 'package:jog_inventory/modules/forecast/widgets/add_fabric.dart';
+import 'package:jog_inventory/modules/material/models/search.dart';
 import '../../../common/exports/main_export.dart';
 
 class AddForecastScreen extends StatefulWidget {
@@ -11,6 +15,9 @@ class AddForecastScreen extends StatefulWidget {
 }
 
 class _AddForecastScreenState extends State<AddForecastScreen> {
+  ForecastFormController get controller =>
+      ForecastFormController.getController();
+
   @override
   Widget build(BuildContext context) {
     return CustomAppBar(
@@ -29,30 +36,32 @@ class _AddForecastScreenState extends State<AddForecastScreen> {
           /// Todo
         },
       )),
+      bottomNavBar: bottomNavBar(),
     );
   }
 
   Widget body(BuildContext context) {
     return SingleChildScrollView(
       padding: AppPadding.pagePadding,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          forecastDetailWidget(),
-          gap(),
+      child: Form(
+        key: controller.formKey,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            forecastDetailWidget(),
+            gap(),
 
-          /// date
-          selectDateWidget(),
-          gap(),
+            /// date
+            selectDateWidget(),
+            gap(),
 
-          itemTileWidget(),
-          gap(),
-          addForecastButton(),
+            displayItems(),
 
-          /// safe area bottom
-          gap(),
-          safeAreaBottom(context),
-        ],
+            /// safe area bottom
+            gap(),
+            safeAreaBottom(context),
+          ],
+        ),
       ),
     );
   }
@@ -73,24 +82,61 @@ class _AddForecastScreenState extends State<AddForecastScreen> {
                     style: appTextTheme.labelMedium
                         ?.copyWith(color: Colors.grey.shade700)),
                 gap(space: 10),
-                Text("FC-2408231619", style: appTextTheme.labelMedium),
+                Text(controller.usedCode, style: appTextTheme.labelMedium),
               ],
             ),
-            gap(space: 10),
-            Row(
-              children: [
-                Text("Order code",
-                    style: appTextTheme.labelMedium
-                        ?.copyWith(color: Colors.grey.shade700)),
-                gap(space: 10),
-                Text("EX22-2365_OR", style: appTextTheme.labelMedium),
-              ],
-            ),
+            // gap(space: 10),
+            // Row(
+            //   children: [
+            //     Text("Order code",
+            //         style: appTextTheme.labelMedium
+            //             ?.copyWith(color: Colors.grey.shade700)),
+            //     gap(space: 10),
+            //     Text("EX22-2365_OR", style: appTextTheme.labelMedium),
+            //   ],
+            // ),
           ],
         ));
   }
 
   Widget selectDateWidget() {
+    return Row(
+      children: [
+        Expanded(
+          child: PrimaryFieldMenuWithLabel<OrderCodeData>(
+              items: [],
+              allowSearch: true,
+              allowMultiSelect: false,
+              validate: (val) {
+                if (val == null) {
+                  validation.validateEmptyField(null);
+                } else {
+                  return null;
+                }
+              },
+              searchApi: searchCodesMenuItems,
+              fromApi: () async {
+                return searchCodesMenuItems("");
+              },
+              onChanged: (value) {
+                controller.orderCode = value?.firstOrNull?.value;
+              },
+              labelText: Strings.orderCode,
+              hintText: "Select"),
+        ),
+        gap(space: 10),
+        Expanded(
+          child: DateTimePickerField(
+              labelText: "Date",
+              validation: validation.validateEmptyField,
+              onChanged: (value) {},
+              onSaved: (String? value) {
+                controller.formData.forecastDate = value;
+              }),
+        ),
+      ],
+    );
+
     return Container(
       padding: AppPadding.inner,
       decoration: BoxDecoration(
@@ -103,14 +149,26 @@ class _AddForecastScreenState extends State<AddForecastScreen> {
           gap(space: 10),
           Text("Date", style: appTextTheme.titleMedium),
           gap(),
-          Expanded(child: PrimaryTextField(radius: 10)),
+          Expanded(
+            child: DateTimePickerField(
+                validation: validation.validateEmptyField,
+                onChanged: (value) {},
+                onSaved: (String? value) {}),
+          ),
           gap(space: 10),
         ],
       ),
     );
   }
 
-  Widget itemTileWidget() {
+  Widget displayItems() {
+    return Obx(() => displayListBuilder<ForeCastFormItem>(
+        items: controller.items,
+        builder: (item, index) => itemTileWidget(item),
+        showGap: true));
+  }
+
+  Widget itemTileWidget(ForeCastFormItem item) {
     return Container(
       padding: AppPadding.inner,
       decoration: BoxDecoration(
@@ -123,7 +181,7 @@ class _AddForecastScreenState extends State<AddForecastScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text("Ak PRO MAX LIGHT",
+              Text(item.material.catNameEn ?? "",
                   style: appTextTheme.titleSmall
                       ?.copyWith(color: Colours.primaryText)),
               IconButton(
@@ -135,9 +193,9 @@ class _AddForecastScreenState extends State<AddForecastScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              displayTitleSubtitle("Color", "Dust Gold"),
+              displayTitleSubtitle("Color", item.color.fabricColor ?? "_"),
               displayTitleSubtitle("Type", "Fabrics"),
-              displayTitleSubtitle("Bal", "2.00 kg"),
+              displayTitleSubtitle("Bal", "${item.balance ?? "_"} kg"),
             ],
           ),
           gap(space: 10),
@@ -147,7 +205,15 @@ class _AddForecastScreenState extends State<AddForecastScreen> {
                   style: appTextTheme.titleSmall
                       ?.copyWith(color: Colours.greyLight)),
               gap(),
-              Expanded(child: PrimaryTextField(radius: 10, hintText: "in kgs"))
+              Expanded(
+                  child: PrimaryTextField(
+                      radius: 10,
+                      hintText: "in kgs",
+                      initialValue: item.forecast,
+                      validator: validation.validateEmptyField,
+                      onSaved: (val) {
+                        item.forecast = val;
+                      }))
             ],
           ),
           gap(space: 10),
@@ -174,7 +240,7 @@ class _AddForecastScreenState extends State<AddForecastScreen> {
 
   Widget addForecastButton() {
     return DottedBorderContainer(
-      gap: 2,
+        gap: 2,
         borderWidth: 1,
         borderColor: Colours.green,
         borderRadius: BorderRadius.circular(200),
@@ -182,7 +248,9 @@ class _AddForecastScreenState extends State<AddForecastScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             TextButtonWidget(
-                onTap: () {},
+                onTap: () {
+                  openForeCastAddFabricPopup(controller.addItems);
+                },
                 color: Colours.green,
                 title: "Add forecast",
                 trailing: Icon(
@@ -193,7 +261,46 @@ class _AddForecastScreenState extends State<AddForecastScreen> {
         ));
   }
 
-  Widget bottomNavBar(){
-    return Container();
+  Widget bottomNavBar() {
+    return Obx(
+      () => Container(
+        color: Colours.white,
+        child: Row(
+          children: [
+            Expanded(
+              child: InkWell(
+                onTap: () {
+                  openForeCastAddFabricPopup(controller.addItems);
+                },
+                child: DottedBorderContainer(
+                    borderColor: Colours.green,
+                    padding: AppPadding.inner,
+                    gap: 2,
+                    borderWidth: 1.5,
+                    // decoration: BoxDecoration(
+                    //   borderRadius: BorderRadius.circular(10),
+                    // ),
+                    borderRadius: BorderRadius.circular(10),
+                    child: Center(
+                        child: Text("Add Forecast",
+                            style: appTextTheme.titleSmall
+                                ?.copyWith(color: Colours.green)))),
+              ),
+            ),
+            gap(),
+            Expanded(
+                child: Obx(
+              () => PrimaryButton(
+                  isEnable: controller.items.length > 0,
+                  title: "Submit",
+                  isBusy: controller.isBusy.value,
+                  onTap: controller.submitForm,
+                  radius: 10,
+                  color: Colours.greenLight),
+            ))
+          ],
+        ),
+      ),
+    );
   }
 }
