@@ -1,20 +1,35 @@
-import 'package:jog_inventory/common/globals/global.dart';
-
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:jog_inventory/firebase_options.dart';
 import 'common/client/firebase.dart';
 import 'common/exports/main_export.dart';
+import 'services/notifications/firebase_notification_setup.dart';
 
 void main() async {
   setSafeAreaColor();
-  /// initialize hive
+  /// initialize hive internal storage
   await storage.onInit();
 
   /// setup firebase
   await FirebaseCreds.init();
+
+
+  /// Firebase notification
+  await firebaseApi.initNotifications();
+  FirebaseMessaging.onBackgroundMessage(_backgroundNotification);
+
   /// dio client which will make our api calls
   dioClient.Init();
 
 
   runApp(const JogInventory());
+}
+
+@pragma("vm:entry-point")
+Future<void> _backgroundNotification(RemoteMessage message) async {
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 }
 
 class JogInventory extends StatelessWidget {

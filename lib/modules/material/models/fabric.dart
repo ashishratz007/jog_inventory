@@ -197,12 +197,14 @@ class FabricColorModel extends BaseModel {
   String get endPoint => "/api/get-feb-color";
 
   String? fabricColor;
+  String? color_id;
 
-  FabricColorModel({this.fabricColor});
+  FabricColorModel({this.fabricColor, this.color_id});
 
   factory FabricColorModel.fromJson(Map<String, dynamic> json) {
     return FabricColorModel(
       fabricColor: json['fabric_color'],
+      color_id: "${json['color_id']}",
     );
   }
 

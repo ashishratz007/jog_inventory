@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:jog_inventory/common/globals/global.dart';
+
 import '../exports/common.dart';
 
 /// [_Config] class is to get configuration data or variables
@@ -34,7 +36,7 @@ class _Config {
 
   bool get isTestUser => storage.isTestUser;
 
-  // bool get isUserLoggedIn => globalData.authToken != null;
+  bool get isUserLoggedIn => globalData.authToken != null;
 
   /// checks the application is opened or not
   bool get isAppInitialized => Get.context != null;

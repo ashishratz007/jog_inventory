@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:jog_inventory/common/utils/date_formater.dart';
 import 'package:jog_inventory/common/utils/date_time_picker.dart';
 import 'package:jog_inventory/common/utils/dotted_border.dart';

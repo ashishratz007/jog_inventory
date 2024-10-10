@@ -8,7 +8,7 @@ import '../exports/main_export.dart';
 class CustomAppBar extends StatefulWidget {
   final String title;
   final Widget? titleWidget;
-  final Function(BuildContext context) body;
+  final Widget Function(BuildContext context) body;
   final Widget? trailingButton;
   final bool hasDrawer;
   final bool hasNotification;

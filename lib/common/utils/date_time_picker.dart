@@ -14,7 +14,7 @@ Future<DateTime?> SelectDateTime(BuildContext context) async {
 }
 
 class DateTimePickerField extends StatefulWidget {
-  final String labelText;
+  final String? labelText;
   final String? hintText;
   final TextEditingController? controller;
   final EdgeInsets padding;
@@ -31,7 +31,7 @@ class DateTimePickerField extends StatefulWidget {
   final String? Function(DateTime?)? formatDate;
 
   DateTimePickerField({
-    required this.labelText,
+    this.labelText,
     this.hintText,
     this.controller,
     this.padding = const EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
@@ -73,12 +73,13 @@ class _DateTimePickerFieldState extends State<DateTimePickerField> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            widget.labelText,
+         if( widget.labelText != null)...[
+           Text(
+            widget.labelText!,
             textAlign: TextAlign.start,
             style: appTextTheme.bodyMedium,
           ),
-          SizedBox(height: 10),
+          gap(space: 5)],
           Container(
             color: Colors.white,
             child: TextFormField(
