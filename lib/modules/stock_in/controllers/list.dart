@@ -55,5 +55,4 @@ class StockInListController extends GetxController {
     return Get.put<StockInListController>(StockInListController());
   }
 
-  /// api calls
 }
