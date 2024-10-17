@@ -114,6 +114,7 @@ class _StockInListPageState extends State<StockInListPage> {
         allowShadow: true,
         radius: 10,
         hintText: "Search",
+        controller: controller.editingController,
         prefixIcon: Padding(
           padding: EdgeInsets.only(left: 10, right: 10),
           child: Icon(
@@ -123,7 +124,7 @@ class _StockInListPageState extends State<StockInListPage> {
           ),
         ),
         onChanged: (value) {
-          // TODO
+        controller.search();
         });
   }
 

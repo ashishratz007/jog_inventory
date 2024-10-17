@@ -1,6 +1,4 @@
 import 'package:jog_inventory/common/utils/error_message.dart';
-import 'package:jog_inventory/modules/no_code/models/stock_in_form.dart';
-
 import '../../../common/exports/main_export.dart';
 import '../../no_code/models/stck_in_list.dart';
 
@@ -9,6 +7,10 @@ class StockInListController extends GetxController {
   RxBool isBusy = false.obs;
 
   RxList<StockInModel> items = <StockInModel>[].obs;
+  RxList<StockInModel> _items = <StockInModel>[].obs;
+  TextEditingController editingController = TextEditingController();
+
+
 
   @override
   void onInit() {
@@ -22,11 +24,21 @@ class StockInListController extends GetxController {
     super.onReady();
   }
 
+  search(){
+    if(editingController.text.trim() == ""){
+      items.value = _items;
+    }
+    else
+    items.value = _items.where((item)=> (item.supplierName?.toLowerCase().contains(editingController.text.toLowerCase()))??false).toList();
+  }
+
   /// functions
   getData() {
+    _items.value = [];
     isLoading.value = true;
     StockInModel.fetchAll().then((value) {
-      items.value = value;
+      _items.value = value;
+      items.value = _items;
       isLoading.value = false;
     }).onError((error, trace) {
       isLoading.value = false;
