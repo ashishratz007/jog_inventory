@@ -1,11 +1,10 @@
-
 import 'package:jog_inventory/common/base_model/base_model.dart';
 
 class ForecastFormModel extends BaseModel {
   @override
   String get endPoint => "/api/addForecast";
 
-
+  String? forecast_id;
   String? forecastCode;
   String? forecastOrder;
   String? forecastDate;
@@ -18,6 +17,7 @@ class ForecastFormModel extends BaseModel {
 
   ForecastFormModel({
     this.forecastCode,
+    this.forecast_id,
     this.forecastOrder,
     this.forecastDate,
     this.rowUsed,
@@ -30,9 +30,10 @@ class ForecastFormModel extends BaseModel {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['forecast_code'] = forecastCode;
-    data['forecast_order'] = forecastOrder;
-    data['forecast_date'] = forecastDate;
+    if (forecast_id != null) data['forecast_id'] = forecast_id;
+    if (forecast_id != null) data['forecast_code'] = forecastCode;
+    if (forecastOrder != null) data['forecast_order'] = forecastOrder;
+    if (forecastDate != null) data['forecast_date'] = forecastDate;
     data['row_used'] = rowUsed;
     data['row_type_id'] = rowTypeId;
     data['row_cat_id'] = rowCatId;
@@ -40,5 +41,10 @@ class ForecastFormModel extends BaseModel {
     data['row_select_color'] = rowSelectColor;
     data['row_unit'] = rowUnit;
     return data;
+  }
+
+  Future updateData() async {
+    var url = "/api/update-forecast";
+    return await create(url: url);
   }
 }

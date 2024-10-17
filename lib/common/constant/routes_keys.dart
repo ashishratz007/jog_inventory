@@ -19,6 +19,8 @@ abstract class AppRoutesString {
 
   /// forecast
   static const addForecast = "${home}/add_forecast";
+  static const forecastList = "${home}/list";
+  static const forecastDetail= "${home}/list/detail";
 
   /// stock in
   static const stockInform = "${home}/stock_in_form";

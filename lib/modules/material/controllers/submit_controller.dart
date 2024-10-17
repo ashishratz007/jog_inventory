@@ -71,7 +71,7 @@ class SubmitController extends GetxController {
       }
     }).onError((error, trace) {
       isLoading.value = false;
-      showErrorMessage(Get.context!,
+      displayErrorMessage(Get.context!,
           error: error, trace: trace, onRetry: getData);
     });
   }

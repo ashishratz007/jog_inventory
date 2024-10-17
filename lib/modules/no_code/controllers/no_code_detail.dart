@@ -49,7 +49,7 @@ class NoCodeDetailController extends GetxController {
       addedItems.value = value;
     }).onError((error, trace) {
       isLoading.value = false;
-      showErrorMessage(
+      displayErrorMessage(
         Get.context!,
         error: error,
         trace: trace,

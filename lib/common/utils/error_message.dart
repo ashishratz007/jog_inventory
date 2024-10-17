@@ -64,7 +64,7 @@ class TransparentPopup extends StatelessWidget {
 }
 
 bool isErrorMessageDisplayed = false;
-showErrorMessage(
+displayErrorMessage(
   BuildContext context, {
   required error,
   required StackTrace trace,

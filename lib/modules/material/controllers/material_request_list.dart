@@ -78,7 +78,7 @@ class MaterialRequestListController extends GetxController {
     isProducing.refresh();
     }).onError((e, trace) {
       isLoading.value = false;
-      showErrorMessage(Get.context!, error: e, trace: trace, onRetry: () {
+      displayErrorMessage(Get.context!, error: e, trace: trace, onRetry: () {
         getDataList(isFinished: isFinished,clearData: clearData);
       });
     });

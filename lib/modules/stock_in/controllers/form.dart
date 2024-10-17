@@ -57,7 +57,7 @@ class StockInFormController extends GetxController {
       receivedItems.value = value;
       isAddStock.refresh();
     }).onError((error, trace) {
-      showErrorMessage(Get.context!,
+      displayErrorMessage(Get.context!,
           error: error, trace: trace, onRetry: getItems);
     });
   }

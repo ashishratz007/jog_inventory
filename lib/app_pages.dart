@@ -1,5 +1,8 @@
 import 'package:jog_inventory/modules/auth/bindings/bindings.dart';
+import 'package:jog_inventory/modules/forecast/models/detail.dart';
 import 'package:jog_inventory/modules/forecast/screens/addforecast_screen.dart';
+import 'package:jog_inventory/modules/forecast/screens/detail.dart';
+import 'package:jog_inventory/modules/forecast/screens/list.dart';
 import 'package:jog_inventory/modules/home/screens/home.dart';
 import 'package:jog_inventory/modules/material/models/material_request_detail.dart';
 import 'package:jog_inventory/modules/material/screens/finish_material_rq.dart';
@@ -130,6 +133,22 @@ List<GetPage<dynamic>> getRoutes = [
   GetPage(
     name: AppRoutesString.stockInDetail,
     page: () => StockInDetailScreen(),
+    bindings: [
+      ///
+    ],
+  ),
+
+  /// Forecast
+  GetPage(
+    name: AppRoutesString.forecastList,
+    page: () => ForecastListScreen(),
+    bindings: [
+      ///
+    ],
+  ),
+  GetPage(
+    name: AppRoutesString.forecastDetail,
+    page: () => ForecastDetailScreen(),
     bindings: [
       ///
     ],

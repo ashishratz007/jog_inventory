@@ -40,7 +40,7 @@ class _FabricDetailsScreenState extends State<_FabricDetailsScreen> {
       categoryData = value;
       isLoading.value = false;
     }).onError((error, trace) {
-      showErrorMessage(
+      displayErrorMessage(
         context,
         error: error,
         trace: trace,

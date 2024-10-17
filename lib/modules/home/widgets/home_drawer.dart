@@ -127,6 +127,23 @@ class HomeDrawerWidget extends Drawer {
                 },
               ),
 
+              /// Forecast list
+              drawerTile(
+                context,
+                leading: displayAssetsWidget(  AppIcons.future,
+                    width: 15,
+                    height: 15,
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colours.blackMat,
+                    padding: EdgeInsets.all(5)),
+                title: "Forecast list",
+                textColor: Colours.black,
+                hideTrailing: true,
+                onTap: () {
+                  Get.toNamed(AppRoutesString.forecastList);
+                },
+              ),
+
               // setupTiles(),
               Expanded(child: SizedBox()),
               Divider(color: Colours.border),

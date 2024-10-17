@@ -99,7 +99,7 @@ class MaterialRequestFormController extends GetxController {
       items.value = value.orders ?? [];
     }).onError((e, trace) {
       isLoading.value = false;
-      showErrorMessage(
+      displayErrorMessage(
         Get.context!,
         error: e,
         trace: trace,

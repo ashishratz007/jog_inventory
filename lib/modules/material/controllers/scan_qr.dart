@@ -51,7 +51,7 @@ class MaterialScanDetailsController extends GetxController {
        update();
      } catch (e,trace) {
        isLoading.value = false;
-       showErrorMessage(Get.context!, error: "Error displaying data!", trace: trace, onRetry: (){
+       displayErrorMessage(Get.context!, error: "Error displaying data!", trace: trace, onRetry: (){
          getFabricData();
        });
        print(e);

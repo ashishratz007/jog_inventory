@@ -79,7 +79,7 @@ class NoCodeRequestController extends GetxController {
     NoCodeRQUsedItemModel.fetchAll(usedCode!).then((value) {
       addedItems.value = value;
     }).onError((error, trace) {
-      showErrorMessage(
+      displayErrorMessage(
         Get.context!,
         error: error,
         trace: trace,

@@ -40,7 +40,7 @@ class _ViewSummaryBodyScreenState extends State<ViewSummaryBodyScreen> {
       ///
     }).onError((e, trace) {
       isLoading.value = false;
-      showErrorMessage(
+      displayErrorMessage(
         context,
         error: e,
         trace: trace,

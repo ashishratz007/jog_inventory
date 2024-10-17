@@ -20,49 +20,54 @@ class _AddForecastScreenState extends State<AddForecastScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return CustomAppBar(
-      title: "Forecast form",
-      body: body,
-      trailingButton: SizedBox(
-          child: TextBorderButton(
-        title: 'Reset',
-        trailing: Icon(
-          Icons.refresh,
-          color: Colours.white,
-        ),
-        borderColor: Colours.white,
-        color: Colours.white,
-        onTap: () {
-          /// Todo
-        },
-      )),
-      bottomNavBar: bottomNavBar(),
+    return Obx(
+          () => CustomAppBar(
+        title: "Forecast form",
+        body: body,
+        // trailingButton: SizedBox(
+        //     child: TextBorderButton(
+        //   title: 'Reset',
+        //   trailing: Icon(
+        //     Icons.refresh,
+        //     color: Colours.white,
+        //   ),
+        //   borderColor: Colours.white,
+        //   color: Colours.white,
+        //   onTap: () {
+        //     /// Todo
+        //   },
+        // )),
+        bottomNavBar: !controller.canEdit.value? null : bottomNavBar(),
+      ),
     );
   }
 
   Widget body(BuildContext context) {
-    return SingleChildScrollView(
-      padding: AppPadding.pagePadding,
-      child: Form(
-        key: controller.formKey,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            forecastDetailWidget(),
-            gap(),
+    return shimmerEffects(
+        isLoading: controller.isLoading.value,
+        child: SingleChildScrollView(
+          padding: AppPadding.pagePadding,
+          child: Form(
+            key: controller.formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                forecastDetailWidget(),
+                gap(),
 
-            /// date
-            selectDateWidget(),
-            gap(),
+                /// date
+                selectDateWidget(),
+                gap(),
 
-            displayItems(),
+                displayItems(),
 
-            /// safe area bottom
-            gap(),
-            safeAreaBottom(context),
-          ],
-        ),
-      ),
+                /// safe area bottom
+                gap(),
+                safeAreaBottom(context),
+              ],
+            ),
+          ),
+        )
     );
   }
 
@@ -82,59 +87,78 @@ class _AddForecastScreenState extends State<AddForecastScreen> {
                     style: appTextTheme.labelMedium
                         ?.copyWith(color: Colors.grey.shade700)),
                 gap(space: 10),
-                Text(controller.usedCode, style: appTextTheme.labelMedium),
+                Text(
+                    controller.forecastDetail?.forecastHead.firstOrNull
+                            ?.forecastCode ??
+                        "_",
+                    style: appTextTheme.labelMedium),
               ],
             ),
-            // gap(space: 10),
-            // Row(
-            //   children: [
-            //     Text("Order code",
-            //         style: appTextTheme.labelMedium
-            //             ?.copyWith(color: Colors.grey.shade700)),
-            //     gap(space: 10),
-            //     Text("EX22-2365_OR", style: appTextTheme.labelMedium),
-            //   ],
-            // ),
+            if (controller.isUpdate.value) ...[
+              gap(space: 10),
+              Row(
+                children: [
+                  Text("Order code",
+                      style: appTextTheme.labelMedium
+                          ?.copyWith(color: Colors.grey.shade700)),
+                  gap(space: 10),
+                  Text(controller.forecastDetail?.forecastHead.firstOrNull?.forecastOrder??"_", style: appTextTheme.labelMedium),
+                ],
+              ),
+              gap(space: 10),
+              Row(
+                children: [
+                  Text("Date",
+                      style: appTextTheme.labelMedium
+                          ?.copyWith(color: Colors.grey.shade700)),
+                  gap(space: 10),
+                  Text(controller.forecastDetail?.forecastHead.firstOrNull?.forecastDate??"_", style: appTextTheme.labelMedium),
+                ],
+              ),
+            ]
           ],
         ));
   }
 
   Widget selectDateWidget() {
-    return Row(
-      children: [
-        Expanded(
-          child: PrimaryFieldMenuWithLabel<OrderCodeData>(
-              items: [],
-              allowSearch: true,
-              allowMultiSelect: false,
-              validate: (val) {
-                if (val == null) {
-                  validation.validateEmptyField(null);
-                } else {
-                  return null;
-                }
-              },
-              searchApi: searchCodesMenuItems,
-              fromApi: () async {
-                return searchCodesMenuItems("");
-              },
-              onChanged: (value) {
-                controller.orderCode = value?.firstOrNull?.value;
-              },
-              labelText: Strings.orderCode,
-              hintText: "Select"),
-        ),
-        gap(space: 10),
-        Expanded(
-          child: DateTimePickerField(
-              labelText: "Date",
-              validation: validation.validateEmptyField,
-              onChanged: (value) {},
-              onSaved: (String? value) {
-                controller.formData.forecastDate = value;
-              }),
-        ),
-      ],
+    return Visibility(
+      visible: !controller.isUpdate.value,
+      child: Row(
+        children: [
+          Expanded(
+            child: PrimaryFieldMenuWithLabel<OrderCodeData>(
+                items: [],
+                allowSearch: true,
+                allowMultiSelect: false,
+                validate: (val) {
+                  if (val == null) {
+                    validation.validateEmptyField(null);
+                  } else {
+                    return null;
+                  }
+                },
+                searchApi: searchCodesMenuItems,
+                fromApi: () async {
+                  return searchCodesMenuItems("");
+                },
+                onChanged: (value) {
+                  controller.orderCode = value?.firstOrNull?.value;
+                },
+                labelText: Strings.orderCode,
+                hintText: "Select"),
+          ),
+          gap(space: 10),
+          Expanded(
+            child: DateTimePickerField(
+                labelText: "Date",
+                validation: validation.validateEmptyField,
+                onChanged: (value) {},
+                onSaved: (String? value) {
+                  controller.formData.forecastDate = value;
+                }),
+          ),
+        ],
+      ),
     );
 
     return Container(
@@ -184,10 +208,15 @@ class _AddForecastScreenState extends State<AddForecastScreen> {
               Text(item.material.catNameEn ?? "",
                   style: appTextTheme.titleSmall
                       ?.copyWith(color: Colours.primaryText)),
-              IconButton(
-                  onPressed: () {},
-                  icon:
-                      Icon(Icons.delete_outlined, size: 25, color: Colours.red))
+              Visibility(
+                visible: controller.canEdit.value,
+                child: IconButton(
+                    onPressed: () {
+                      controller.items.remove(item);
+                    },
+                    icon:
+                        Icon(Icons.delete_outlined, size: 25, color: Colours.red)),
+              )
             ],
           ),
           Row(
@@ -195,7 +224,7 @@ class _AddForecastScreenState extends State<AddForecastScreen> {
             children: [
               displayTitleSubtitle("Color", item.color.fabricColor ?? "_"),
               displayTitleSubtitle("Type", "Fabrics"),
-              displayTitleSubtitle("Bal", "${item.balance ?? "_"} kg"),
+              displayTitleSubtitle("Bal", "${ formatDecimal(item.balance??"_")} kg"),
             ],
           ),
           gap(space: 10),
@@ -210,6 +239,7 @@ class _AddForecastScreenState extends State<AddForecastScreen> {
                       radius: 10,
                       hintText: "in kgs",
                       initialValue: item.forecast,
+                      enabled: controller.canEdit.value,
                       validator: validation.validateEmptyField,
                       onSaved: (val) {
                         item.forecast = val;
@@ -289,12 +319,13 @@ class _AddForecastScreenState extends State<AddForecastScreen> {
             ),
             gap(),
             Expanded(
-                child:  PrimaryButton(
+              child: PrimaryButton(
                   isEnable: controller.items.length > 0,
-                  title: "Submit",
+                  title: controller.isUpdate.value? "Update" : "Submit",
                   isBusy: controller.isBusy.value,
                   onTap: controller.submitForm,
-                  radius: 10,color: Colours.greenLight),
+                  radius: 10,
+                  color: Colours.greenLight),
             )
           ],
         ),

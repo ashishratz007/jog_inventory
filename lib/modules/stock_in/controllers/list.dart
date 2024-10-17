@@ -30,7 +30,7 @@ class StockInListController extends GetxController {
       isLoading.value = false;
     }).onError((error, trace) {
       isLoading.value = false;
-      showErrorMessage(
+      displayErrorMessage(
         Get.context!,
         error: error,
         trace: trace,

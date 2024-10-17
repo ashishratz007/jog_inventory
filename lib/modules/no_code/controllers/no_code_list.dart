@@ -42,7 +42,7 @@ class NoCodeListRequestController extends GetxController {
       pagination = value;
     }).onError((error, trace) {
       isLoading.value = false;
-      showErrorMessage(
+      displayErrorMessage(
         Get.context!,
         error: error,
         trace: trace,

@@ -34,7 +34,7 @@ class HomeController extends GetxController {
 
   getAppVersion() async {
     checkAppVersion.checkForVersion().onError((e, trace) async {
-      showErrorMessage(Get.context!,
+      displayErrorMessage(Get.context!,
           error: e,
           trace: trace,
           onRetry: getAppVersion,
@@ -89,7 +89,7 @@ class HomeController extends GetxController {
       isGettingLocation.value = false;
     }).onError((e, trace) async {
       isGettingLocation.value = false;
-      showErrorMessage(
+      displayErrorMessage(
         Get.context!,
         error: "Location error please try again",
         trace: trace,

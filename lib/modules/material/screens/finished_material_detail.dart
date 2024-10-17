@@ -61,7 +61,7 @@ class _FinishedMaterialDetailScreenState
       isLoading.value = false;
     } catch (error, trace) {
       isLoading.value = false;
-      showErrorMessage(context, error: error, trace: trace, onRetry: () {
+      displayErrorMessage(context, error: error, trace: trace, onRetry: () {
         getMaterialData();
       });
     }
