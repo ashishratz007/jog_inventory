@@ -4,7 +4,7 @@ import '../../../common/exports/main_export.dart';
 
 class MaterialScanDetailsController extends GetxController {
   late String fabId;
-  late String pacId;
+  late String? pacId;
 
   RxBool isLoading = false.obs;
   RxBool isBusy = false.obs;

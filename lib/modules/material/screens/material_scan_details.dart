@@ -122,7 +122,7 @@ class _MaterialRequestDetailScreenState
           Get.context!,
           scanDetailsModal: controller.scanDetailsModal!,
           fabricId: controller.fabId,
-          pacId: controller.pacId,
+          // pacId: controller.pacId,
         );
       },
       child: TextFieldWithLabel(

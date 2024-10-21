@@ -11,7 +11,7 @@ class ForecastFormController extends GetxController {
   RxBool isLoading = false.obs;
   RxBool isBusy = false.obs;
   RxBool isUpdate = false.obs;
-  RxBool canEdit= false.obs;
+  RxBool canEdit = true.obs;
   String? forecastId;
   ForecastDetail? forecastDetail;
   String usedCode = 'FC-${DateFormat('ymdHM').format(DateTime.now())}';

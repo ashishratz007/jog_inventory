@@ -90,7 +90,7 @@ class _AddForecastScreenState extends State<AddForecastScreen> {
                 Text(
                     controller.forecastDetail?.forecastHead.firstOrNull
                             ?.forecastCode ??
-                        "_",
+                        controller.usedCode,
                     style: appTextTheme.labelMedium),
               ],
             ),

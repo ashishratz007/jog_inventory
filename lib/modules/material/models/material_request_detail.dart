@@ -7,11 +7,11 @@ class MaterialRequestDetail extends BaseModel {
 
   String fabId; /// fabric id
 
-  String pacId; /// package id
+  String? pacId; /// package id
 
   MaterialRequestDetail(this.fabId, this.pacId);
 
-  static Future<ScanDetailsModal> getDetails(String fabId, String pacId) async {
+  static Future<ScanDetailsModal> getDetails(String fabId, String? pacId) async {
     var resp = await MaterialRequestDetail(fabId, pacId).get();
     if(resp.data is Map)
     return ScanDetailsModal.fromJson(resp.data);

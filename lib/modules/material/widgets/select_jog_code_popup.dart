@@ -4,7 +4,7 @@ import 'package:jog_inventory/modules/material/models/search.dart';
 import '../../../common/exports/main_export.dart';
 
 void showSelectCodeMenu<OrderCodeData>(BuildContext context,
-    {required ScanDetailsModal scanDetailsModal,required String fabricId,required String pacId}) {
+    {required ScanDetailsModal scanDetailsModal,required String fabricId }) {
   Rx<TextEditingController> controller = TextEditingController().obs;
   RxBool isLoading = false.obs;
   RxInt selectedIndex = (-1).obs;
@@ -269,7 +269,7 @@ void showSelectCodeMenu<OrderCodeData>(BuildContext context,
                                             AppRoutesString.submit_order,
                                             arguments: {
                                               appKeys.fabId: fabricId,
-                                              appKeys.pacId: pacId,
+                                              // appKeys.pacId: pacId,
                                               appKeys.materialRQScan: scanDetailsModal,
                                               appKeys.ethCode: items[selectedIndex.value].value,
                                             });

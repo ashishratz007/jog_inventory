@@ -108,19 +108,28 @@ class HomeController extends GetxController {
     // }
     isGettingLocation.value = false;
     var result = await BarcodeScanner.scan();
-
     var ids = result.rawContent.split(" ");
-    if (ids.length != 1) {
+    if (ids.length >= 1) {
       print(ids.length);
-      var pacId = ids[0];
-      var fabId = ids[1];
-
+      var pacId;
+      var fabId;
+      if (ids.length == 1) {
+        fabId = ids.firstOrNull;
+      } else {
+        pacId = ids[0];
+        fabId = ids[1];
+      }
       if (fabId.isNotEmpty) {
         Get.toNamed(AppRoutesString.materialDetailById,
             arguments: {appKeys.fabId: fabId, appKeys.pacId: pacId});
       } else {
         errorSnackBar(message: "Unable to get data from QR");
       }
+    }
+
+    /// only for fabId
+    else {
+      errorSnackBar(message: "Unable to get data from QR");
     }
   }
 
