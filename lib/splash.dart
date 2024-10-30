@@ -30,6 +30,7 @@ class _SplashScreenState extends State<SplashScreen>
   checkApp() {
     // appUpdater.checkForUpdate();
     Future.delayed(Duration(seconds: 2), () {
+      config.phoneWidth = Get.width;
       Get.toNamed(globalData.authToken == null
           ? AppRoutesString.login
           : AppRoutesString.home);

@@ -81,13 +81,49 @@ class JogInventory extends StatelessWidget {
         //     ? AppRoutesString.login
         //     : AppRoutesString.home,
         getPages: getRoutes,
+        onReady: (){
+          config.phoneWidth = Get.width;
+        },
         builder: (context, child) {
-          return MediaQuery(
-            data: MediaQuery.of(context).copyWith(
-                textScaler: TextScaler.linear(
-                    1.0)), // Set your desired text scale factor
-            child: child!,
-          );
+          if(config.isTablet){
+            return Container(
+              decoration: BoxDecoration(
+                color: Colours.bgGrey,
+              ),
+              padding: EdgeInsets.only(bottom: 30),
+              child: MediaQuery(
+                data: MediaQuery.of(context).copyWith(
+                  textScaler: TextScaler.linear(!config.isTablet ?1.0:1.1),
+                ),
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    // Set max width to 350 or use the available width if it's smaller
+                    double maxWidth = !config.isTablet ? constraints.maxWidth : 500;
+                    return ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: Center(
+                        child: Container(
+                          width: maxWidth,
+                          decoration: BoxDecoration(// Frame around each page
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: child,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            );
+          }
+          else{
+            return MediaQuery(
+              data: MediaQuery.of(context).copyWith(
+                  textScaler: TextScaler.linear(
+                      1.0)), // Set your desired text scale factor
+              child: child!,
+            );
+          }
         },
       ),
     );

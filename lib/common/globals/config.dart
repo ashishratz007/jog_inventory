@@ -45,6 +45,14 @@ class _Config {
   bool get isReleaseMode => kReleaseMode;
   // /// currentContext
   // BuildContext get context => Get.context!;
+  double phoneWidth = 0.0;
+  double maxWidth = 0.0;
+
+  bool get isTablet {
+    // Return true if the screen width is greater than 600 pixels, otherwise false
+    return phoneWidth > 600;
+  }
+
 
   /// actions
   setWalkThrough() {
