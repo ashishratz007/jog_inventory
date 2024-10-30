@@ -1,12 +1,5 @@
-import 'package:flutter/material.dart';
-import 'package:jog_inventory/common/animations/sliding%20container.dart';
-import 'package:jog_inventory/common/constant/colors.dart';
-import 'package:jog_inventory/common/constant/images.dart';
 import 'package:jog_inventory/common/exports/common.dart';
 import 'package:jog_inventory/common/globals/global.dart';
-import 'package:jog_inventory/common/utils/utils.dart';
-import 'package:jog_inventory/common/version/check_version.dart';
-import 'package:jog_inventory/common/widgets/imageview.dart';
 import 'package:lottie/lottie.dart';
 
 class SplashScreen extends StatefulWidget {
