@@ -7,20 +7,21 @@ import 'services/notifications/firebase_notification_setup.dart';
 
 void main() async {
   setSafeAreaColor();
+
   /// initialize hive internal storage
   await storage.onInit();
 
   /// setup firebase
   await FirebaseCreds.init();
 
-
   /// Firebase notification
-  await firebaseApi.initNotifications();
-  FirebaseMessaging.onBackgroundMessage(_backgroundNotification);
+  if (!(config.isIOS && !config.isReleaseMode)) {
+    await firebaseApi.initNotifications();
+    FirebaseMessaging.onBackgroundMessage(_backgroundNotification);
+  }
 
   /// dio client which will make our api calls
   dioClient.Init();
-
 
   runApp(const JogInventory());
 }
@@ -81,11 +82,11 @@ class JogInventory extends StatelessWidget {
         //     ? AppRoutesString.login
         //     : AppRoutesString.home,
         getPages: getRoutes,
-        onReady: (){
+        onReady: () {
           config.phoneWidth = Get.width;
         },
         builder: (context, child) {
-          if(config.isTablet){
+          if (config.isTablet) {
             return Container(
               decoration: BoxDecoration(
                 color: Colours.bgGrey,
@@ -93,18 +94,20 @@ class JogInventory extends StatelessWidget {
               padding: EdgeInsets.only(bottom: 30),
               child: MediaQuery(
                 data: MediaQuery.of(context).copyWith(
-                  textScaler: TextScaler.linear(!config.isTablet ?1.0:1.1),
+                  textScaler: TextScaler.linear(!config.isTablet ? 1.0 : 1.2),
                 ),
                 child: LayoutBuilder(
                   builder: (context, constraints) {
                     // Set max width to 350 or use the available width if it's smaller
-                    double maxWidth = !config.isTablet ? constraints.maxWidth : 500;
+                    double maxWidth =
+                        !config.isTablet ? constraints.maxWidth : 500;
                     return ClipRRect(
                       borderRadius: BorderRadius.circular(10),
                       child: Center(
                         child: Container(
                           width: maxWidth,
-                          decoration: BoxDecoration(// Frame around each page
+                          decoration: BoxDecoration(
+                            // Frame around each page
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: child,
@@ -115,8 +118,7 @@ class JogInventory extends StatelessWidget {
                 ),
               ),
             );
-          }
-          else{
+          } else {
             return MediaQuery(
               data: MediaQuery.of(context).copyWith(
                   textScaler: TextScaler.linear(
@@ -132,17 +134,19 @@ class JogInventory extends StatelessWidget {
 
 DatePickerThemeData datePickerTheme() {
   return DatePickerThemeData(
-
-    todayBackgroundColor: WidgetStateProperty.all(Colours.secondary.withOpacity(0.8)),
-       dayStyle: appTextTheme.titleMedium,
+      todayBackgroundColor:
+          WidgetStateProperty.all(Colours.secondary.withOpacity(0.8)),
+      dayStyle: appTextTheme.titleMedium,
       todayBorder: BorderSide(color: Colours.white),
       backgroundColor: Colours.white,
-      dayBackgroundColor: WidgetStateProperty.all(Colours.primary.withOpacity(0.2)),
+      dayBackgroundColor:
+          WidgetStateProperty.all(Colours.primary.withOpacity(0.2)),
       surfaceTintColor: Colours.white,
       rangePickerHeaderForegroundColor: Colors.white,
       // dayForegroundColor: MaterialStateProperty.all(Colors.white),
       headerBackgroundColor: Colours.secondary,
-      headerHeadlineStyle: appTextTheme.titleMedium?.copyWith(color: Colours.white),
+      headerHeadlineStyle:
+          appTextTheme.titleMedium?.copyWith(color: Colours.white),
       headerHelpStyle: appTextTheme.titleLarge?.copyWith(color: Colours.white),
       headerForegroundColor: Colours.white,
       shape: RoundedRectangleBorder(
