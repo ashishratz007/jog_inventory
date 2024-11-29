@@ -3,6 +3,7 @@ import 'package:jog_inventory/common/utils/error_message.dart';
 import 'package:jog_inventory/modules/no_code/models/stock_in_form.dart';
 import 'package:jog_inventory/modules/stock_in/models/po_order.dart';
 import 'package:jog_inventory/modules/stock_in/models/stock_in.dart';
+import 'package:jog_inventory/services/tab_view_navigator.dart';
 import '../../../common/exports/main_export.dart';
 
 class StockInFormController extends GetxController {
@@ -103,7 +104,7 @@ class StockInFormController extends GetxController {
       StockInFormModel.check(detail).then(
         (va) {
           isBusy.value = false;
-          Get.back();
+          mainNavigationService.pop();
           successSnackBar(message: "Item added.");
           Get.to(AppRoutesString.stockInList);
         },

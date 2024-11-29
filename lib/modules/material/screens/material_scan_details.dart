@@ -36,7 +36,7 @@ class _MaterialRequestDetailScreenState
           gap(),
           displaySearchWidget(),
           gap(),
-          safeAreaBottom(Get.context!)
+          SafeAreaBottom(Get.context!)
         ],
       ),
     );

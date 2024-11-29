@@ -3,6 +3,7 @@ import 'package:jog_inventory/modules/material/models/material_request.dart';
 import 'package:jog_inventory/modules/material/models/material_request_detail.dart';
 import 'package:jog_inventory/modules/material/models/material_rq_form.dart';
 import 'package:jog_inventory/modules/material/models/search.dart';
+import 'package:jog_inventory/services/tab_view_navigator.dart';
 import '../../../common/exports/main_export.dart';
 import '../models/material_check.dart';
 
@@ -97,8 +98,8 @@ class SubmitController extends GetxController {
             .toString(),
         item_note: commentController.text,
       ).addForm().then((val) {
-        Get.back();
-        Get.back();
+        mainNavigationService.pop();
+        mainNavigationService.pop();
         successSnackBar(message: "Success");
         isBusy.value = false;
       }).onError((e, trace) {
@@ -117,8 +118,8 @@ class SubmitController extends GetxController {
       MaterialRQDetailModel.updateRequest(
               materialRqDetail.rqId.toString(), codes)
           .then((val) {
-        Get.back();
-        Get.back();
+        mainNavigationService.pop();
+        mainNavigationService.pop();
         successSnackBar(message: "Success");
         isBusy.value = false;
       }).onError((e, trace) {

@@ -2,7 +2,8 @@ import 'dart:ffi';
 
 import 'package:jog_inventory/common/utils/error_message.dart';
 import 'package:jog_inventory/modules/stock_in/models/stock_in_list.dart';
-import 'package:jog_inventory/modules/stock_in/models/stock_in_stattics.dart';
+import 'package:jog_inventory/modules/stock_in/models/stock_in_statics.dart';
+import 'package:jog_inventory/services/tab_view_navigator.dart';
 
 import '../../../common/exports/main_export.dart';
 
@@ -54,7 +55,7 @@ class StockInDetailController extends GetxController {
     data.create().then((value) {
       stockInData.packing?.invNo = val;
       isLoading.refresh();
-      Get.back();
+      mainNavigationService.pop();
       successSnackBar(message: "Invoice Updated.");
     }).onError((error, trace) {
       errorSnackBar(message: "Please try again");
@@ -85,7 +86,7 @@ class StockInDetailController extends GetxController {
             }
           }
           isLoading.refresh();
-          Get.back();
+          mainNavigationService.pop();
           successSnackBar(message: "Price Updated.");
         }).onError((error, trace) {
           errorSnackBar(message: "Please try again");

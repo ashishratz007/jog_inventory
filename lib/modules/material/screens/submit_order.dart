@@ -3,6 +3,7 @@ import 'package:jog_inventory/common/utils/date_formater.dart';
 import 'package:jog_inventory/common/utils/dotted_border.dart';
 import 'package:jog_inventory/common/utils/validation.dart';
 import 'package:jog_inventory/modules/material/controllers/submit_controller.dart';
+import 'package:jog_inventory/services/tab_view_navigator.dart';
 import '../../../common/exports/main_export.dart';
 
 class SubmitOrderScreen extends StatefulWidget {
@@ -68,7 +69,7 @@ class _SubmitOrderScreenState extends State<SubmitOrderScreen> {
               child: InkWell(
                 borderRadius: BorderRadius.circular(100),
                 onTap: () {
-                  Get.back();
+                  mainNavigationService.pop();
                 },
                 child: Icon(Icons.arrow_back, color: Colors.white, size: 28),
               ),
@@ -110,7 +111,7 @@ class _SubmitOrderScreenState extends State<SubmitOrderScreen> {
 
         ///
         gap(),
-        safeAreaBottom(context),
+        SafeAreaBottom(context),
       ],
     ));
   }

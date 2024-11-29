@@ -1,4 +1,4 @@
-import 'package:jog_inventory/common/utils/bottom_seet.dart';
+import 'package:jog_inventory/common/utils/bottom_sheet.dart';
 import 'package:jog_inventory/common/utils/error_message.dart';
 import 'package:jog_inventory/modules/material/models/material_request.dart';
 import 'package:jog_inventory/modules/no_code/models/no_code_item.dart';
@@ -233,7 +233,7 @@ class _ViewSummaryBodyScreenState extends State<_ViewSummaryBodyScreen> {
 
           ///
           gap(),
-          safeAreaBottom(context),
+          SafeAreaBottom(context),
         ],
       ),
     );

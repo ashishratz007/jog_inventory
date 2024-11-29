@@ -1,3 +1,5 @@
+import 'package:jog_inventory/services/tab_view_navigator.dart';
+
 import '../../../common/exports/main_export.dart';
 
 class MenuItemsController<T> {
@@ -590,7 +592,7 @@ class _SelectItemMenuWidgetState<T> extends State<_SelectItemMenuWidget<T>>
                                                     widget.onChanged([item]);
                                                     widget.state
                                                         .didChange([item]);
-                                                    Get.back(result: item);
+                                                   mainNavigationService.pop(result: item);
                                                   }
                                                 },
                                                 child: Container(
@@ -660,7 +662,7 @@ class _SelectItemMenuWidgetState<T> extends State<_SelectItemMenuWidget<T>>
                                   child: SecondaryButton(
                                       title: "cancel",
                                       onTap: () {
-                                        Get.back();
+                                        mainNavigationService.pop();
                                       })),
                               gap(),
                               Expanded(
@@ -669,12 +671,12 @@ class _SelectItemMenuWidgetState<T> extends State<_SelectItemMenuWidget<T>>
                                       onTap: () {
                                         widget.onChanged(_selectedItems);
                                         widget.state.didChange(_selectedItems);
-                                        Get.back(result: _selectedItems);
+                                       mainNavigationService.pop(result: _selectedItems);
                                       })),
                             ],
                           ),
                         ),
-                        safeAreaBottom(context)
+                        SafeAreaBottom(context)
                       ],
                     ),
                   );

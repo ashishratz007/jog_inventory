@@ -147,7 +147,7 @@ class CustomSlider extends StatelessWidget {
           }),
         )),
         gap(),
-        safeAreaBottom(context),
+        SafeAreaBottom(context),
       ],
     );
   }

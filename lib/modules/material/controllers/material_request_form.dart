@@ -3,6 +3,7 @@ import 'package:jog_inventory/modules/material/models/material_request.dart';
 import 'package:jog_inventory/modules/material/models/material_rq_form.dart';
 import 'package:jog_inventory/modules/material/models/fabric.dart';
 import 'package:jog_inventory/modules/material/models/search.dart';
+import 'package:jog_inventory/services/tab_view_navigator.dart';
 import '../../../common/exports/main_export.dart';
 
 class MaterialRequestFormController extends GetxController {
@@ -136,7 +137,7 @@ class MaterialRequestFormController extends GetxController {
     isBusy.value = true;
     requestData.addForm().then((value) {
       isBusy.value = false;
-      Get.back();
+      mainNavigationService.pop();
       Get.toNamed(AppRoutesString.materialRequestList);
       successSnackBar(message: "Material RQ added successfully");
 
@@ -157,7 +158,7 @@ class MaterialRequestFormController extends GetxController {
         errorSnackBar(message: "Error removing data!");
       }
     }, onComplete: () {
-      Get.back(result: true);
+     mainNavigationService.pop(result: true);
       successSnackBar(message: "Item removed successfully");
     });
   }
@@ -168,7 +169,7 @@ class MaterialRequestFormController extends GetxController {
             items.map((f) => f.fabricId!.toString()).toList())
         .then((va) {
       isBusy.value = false;
-      Get.back();
+      mainNavigationService.pop();
       successSnackBar(message: "Request updated");
     }).onError((error, trace) {
       isBusy.value = false;

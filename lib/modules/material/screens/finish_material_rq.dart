@@ -2,6 +2,7 @@ import 'package:jog_inventory/common/utils/error_message.dart';
 import 'package:jog_inventory/common/utils/validation.dart';
 import 'package:jog_inventory/modules/material/models/material_request.dart';
 import 'package:jog_inventory/modules/material/models/material_rq_form.dart';
+import 'package:jog_inventory/services/tab_view_navigator.dart';
 import '../../../common/exports/main_export.dart';
 import '../../../common/utils/date_formater.dart';
 
@@ -60,7 +61,7 @@ class _FinishMaterialRQScreenState extends State<FinishMaterialRQScreen> {
         itemNote: items.map((f) => f.itemNote.toString()).toList(),
       ).create().then((value) {
         isBusy.value = false;
-        Get.back(result: true);
+       mainNavigationService.pop(result: true);
         successSnackBar(message: "Material RQ Finished");
 
         ///
@@ -113,7 +114,7 @@ class _FinishMaterialRQScreenState extends State<FinishMaterialRQScreen> {
 
             ///
             gap(),
-            safeAreaBottom(Get.context!),
+            SafeAreaBottom(Get.context!),
           ],
         ),
       ),

@@ -1,5 +1,6 @@
 
 import 'package:jog_inventory/common/constant/enums.dart';
+import 'package:jog_inventory/services/tab_view_navigator.dart';
 import '../exports/main_export.dart';
 
 
@@ -131,7 +132,7 @@ class _DeleteItemBody extends StatelessWidget {
                         bgColor: Colours.bgColor,
                           title: Strings.cancel,
                           onTap: () {
-                            Get.back();
+                            mainNavigationService.pop();
                           },
                           isFullWidth: false),
                     ),
@@ -146,7 +147,7 @@ class _DeleteItemBody extends StatelessWidget {
                             isBusy.value = true;
                             try {
                               await onDelete(context);
-                              Get.back();
+                              mainNavigationService.pop();
                               if (onComplete != null) onComplete!();
                             } catch (e) {}
                             isBusy.value = false;

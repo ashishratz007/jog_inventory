@@ -1,4 +1,5 @@
 import 'package:jog_inventory/common/globals/global.dart';
+import 'package:jog_inventory/services/tab_view_navigator.dart';
 
 import '../exports/main_export.dart';
 
@@ -51,7 +52,7 @@ class TransparentPopup extends StatelessWidget {
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () {
-                Get.back();
+                mainNavigationService.pop();
                 onRetry();
               },
               child: const Text('Retry'),

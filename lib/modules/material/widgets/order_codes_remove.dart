@@ -1,6 +1,7 @@
-import 'package:jog_inventory/common/utils/bottom_seet.dart';
+import 'package:jog_inventory/common/utils/bottom_sheet.dart';
 import 'package:jog_inventory/modules/material/models/fabric.dart';
 import 'package:jog_inventory/modules/material/models/search.dart';
+import 'package:jog_inventory/services/tab_view_navigator.dart';
 import '../../../common/exports/main_export.dart';
 
 void openOrderCodeRemovePopup(BuildContext context) {
@@ -130,7 +131,7 @@ class _OrderCodesRemoveScreenState extends State<_OrderCodesRemoveScreen> {
                       await RemoveCodeModel(selectedCodeIds.toList())
                           .removeCodes();
                       isBusy.value = false;
-                      Get.back();
+                      mainNavigationService.pop();
                     } catch (e, trace) {
                       isBusy.value = false;
                       errorSnackBar(message: e.toString());
@@ -141,7 +142,7 @@ class _OrderCodesRemoveScreenState extends State<_OrderCodesRemoveScreen> {
                   isEnable: selectedCodeIds.length > 0),
             ),
           ),
-          safeAreaBottom(context)
+          SafeAreaBottom(context)
         ],
       ),
     );

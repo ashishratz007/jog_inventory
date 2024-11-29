@@ -32,7 +32,14 @@ List<GetPage<dynamic>> getRoutes = [
       bindings: [AuthBindings()]),
 
   GetPage(
-    name: AppRoutesString.home,
+    name: AppRoutesString.dashboard,
+    page: () => DashBoardScreen(),
+    bindings: [
+      ///
+    ],
+  ),  GetPage(
+
+    name: AppRoutesString.tabHome,
     page: () => HomeScreen(),
     bindings: [
       ///
@@ -154,3 +161,21 @@ List<GetPage<dynamic>> getRoutes = [
     ],
   ),
 ];
+
+
+Map<String, WidgetBuilder> get routeBuilders {
+  Map<String, WidgetBuilder> routeData = {};
+  getRoutes.forEach((page) {
+    routeData.addAll(
+      AppPage(
+        name: page.name,
+        page: page.page,
+        bindings: [
+          ...page.bindings,
+          if (page.binding != null) page.binding!,
+        ],
+      ),
+    );
+  });
+  return routeData;
+}

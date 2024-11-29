@@ -243,11 +243,11 @@ Widget displayListBuilder<T>({
   );
 }
 
-Widget safeAreaBottom(BuildContext context) {
+Widget SafeAreaBottom(BuildContext context) {
   return gap(space: SafeAreaBottomValue(context) + keyboardHeight(context));
 }
 
-Widget safeAreaTop(BuildContext context) {
+Widget SafeAreaTop(BuildContext context) {
   return gap(space: SafeAreaTopValue(context));
 }
 
@@ -620,9 +620,9 @@ FilteringTextInputFormatter amountFormatter() {
 List<FilteringTextInputFormatter> inputFormatters(
     {bool allowInt = false, bool textOnly = false, allowDouble = false}) {
   return [
-    if(allowDouble) amountFormatter(),
-    if(allowInt) FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-    if(textOnly) FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z\s]')),
+    if (allowDouble) amountFormatter(),
+    if (allowInt) FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+    if (textOnly) FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z\s]')),
   ];
 }
 
@@ -642,3 +642,24 @@ bool isExpired(DateTime date, {Duration duration = const Duration(hours: 12)}) {
   DateTime expiryDate = date.add(duration);
   return now.isAfter(expiryDate);
 }
+
+
+/// only if you are using GETx for the state management
+Map<String, WidgetBuilder> AppPage({
+  required String name,
+  required Widget Function() page,
+  List<Bindings> bindings = const [],
+}) {
+  return {
+    name: (context) {
+      bindings.forEach((binding) {
+        // Initialize bindings manually
+        binding.dependencies();
+      });
+      return page();
+    }
+  };
+}
+
+
+ T checkTab<T>(T mobile, T tab)=> config.isTablet? tab:mobile;

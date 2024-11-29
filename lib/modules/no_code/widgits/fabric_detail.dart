@@ -1,10 +1,11 @@
 import 'package:jog_inventory/common/exports/main_export.dart';
-import 'package:jog_inventory/common/utils/bottom_seet.dart';
+import 'package:jog_inventory/common/utils/bottom_sheet.dart';
 import 'package:jog_inventory/common/utils/date_formater.dart';
 import 'package:jog_inventory/common/utils/error_message.dart';
 import 'package:jog_inventory/modules/material/models/fabric.dart';
 import 'package:jog_inventory/modules/no_code/controllers/no_code_request.dart';
 import 'package:jog_inventory/modules/no_code/models/no_code.dart';
+import 'package:jog_inventory/services/tab_view_navigator.dart';
 
 void openFabricDetailsPopup(String categoryId, {required Function() onDone}) {
   showAppBottomSheet(Get.context!, _FabricDetailsScreen(categoryId, onDone),
@@ -77,7 +78,7 @@ class _FabricDetailsScreenState extends State<_FabricDetailsScreen> {
 
                         ///
                         gap(),
-                        safeAreaBottom(context),
+                        SafeAreaBottom(context),
                       ],
                     )),
               ),
@@ -96,7 +97,7 @@ class _FabricDetailsScreenState extends State<_FabricDetailsScreen> {
                           controller.usedCode!, widget.categoryId)
                       .then((value) {
                     isBusy.value = false;
-                    Get.back();
+                    mainNavigationService.pop();
                     widget.onDone();
                   }).onError((error, trace) {
                     isBusy.value = false;
@@ -105,7 +106,7 @@ class _FabricDetailsScreenState extends State<_FabricDetailsScreen> {
                 leading: Icon(Icons.add, size: 18, color: Colors.white),
               ),
             ),
-            safeAreaBottom(context),
+            SafeAreaBottom(context),
           ],
         ),
       ),

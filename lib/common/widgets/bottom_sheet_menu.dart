@@ -1,3 +1,5 @@
+import 'package:jog_inventory/services/tab_view_navigator.dart';
+
 import '../exports/main_export.dart';
 
 Future<MenuItem?> showActionMenu(
@@ -53,7 +55,7 @@ class _MenuSheetWidgetState extends State<_MenuSheetWidget> {
  Widget menuItemTile(MenuItem item, int index){
     return InkWell(
       onTap: (){
-        Get.back(result: item);
+       mainNavigationService.pop(result: item);
         if(item.onTap != null){
           item.onTap!(item.value);
         }

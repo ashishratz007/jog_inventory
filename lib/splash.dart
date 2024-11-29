@@ -26,7 +26,7 @@ class _SplashScreenState extends State<SplashScreen>
       config.phoneWidth = Get.width;
       Get.toNamed(globalData.authToken == null
           ? AppRoutesString.login
-          : AppRoutesString.home);
+          : AppRoutesString.dashboard);
     });
   }
 

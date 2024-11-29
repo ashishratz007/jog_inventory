@@ -5,6 +5,7 @@ import 'package:jog_inventory/modules/forecast/models/forecast_form.dart';
 import 'package:jog_inventory/modules/forecast/models/forecast_item.dart';
 import 'package:jog_inventory/modules/forecast/models/forecast_list.dart';
 import 'package:jog_inventory/modules/material/models/search.dart';
+import 'package:jog_inventory/services/tab_view_navigator.dart';
 import '../../../common/exports/main_export.dart';
 
 class ForecastFormController extends GetxController {
@@ -81,7 +82,7 @@ class ForecastFormController extends GetxController {
         formData.create().then((val) {
           isBusy.value = false;
 
-          Get.back();
+          mainNavigationService.pop();
           successSnackBar(message: "Forecast added successfully");
         }).onError((error, trace) {
           isBusy.value = false;
@@ -93,7 +94,7 @@ class ForecastFormController extends GetxController {
         formData.updateData().then((val) {
           isBusy.value = false;
 
-          Get.back();
+          mainNavigationService.pop();
           successSnackBar(message: "Forecast Updated successfully");
         }).onError((error, trace) {
           isBusy.value = false;

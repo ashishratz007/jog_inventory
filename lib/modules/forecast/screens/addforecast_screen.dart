@@ -63,7 +63,7 @@ class _AddForecastScreenState extends State<AddForecastScreen> {
 
                 /// safe area bottom
                 gap(),
-                safeAreaBottom(context),
+                SafeAreaBottom(context),
               ],
             ),
           ),

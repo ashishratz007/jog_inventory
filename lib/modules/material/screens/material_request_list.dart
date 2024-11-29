@@ -1,6 +1,6 @@
 import 'package:jog_inventory/common/animations/sliding%20container.dart';
 import 'package:jog_inventory/common/constant/images.dart';
-import 'package:jog_inventory/common/utils/bottom_seet.dart';
+import 'package:jog_inventory/common/utils/bottom_sheet.dart';
 import 'package:jog_inventory/common/utils/menu.dart';
 import 'package:jog_inventory/common/widgets/imageview.dart';
 import 'package:jog_inventory/modules/material/controllers/material_request_list.dart';
@@ -63,7 +63,7 @@ class MaterialRequestListScreen extends GetView<MaterialRequestListController> {
 
             ///
             gap(),
-            safeAreaBottom(Get.context!),
+            SafeAreaBottom(Get.context!),
           ],
         ));
   }
@@ -81,7 +81,7 @@ class MaterialRequestListScreen extends GetView<MaterialRequestListController> {
               },
               child: Container(
                 padding: EdgeInsets.only(bottom: 15),
-                width: Get.width / 3,
+                width: Get.width / checkTab(3, 4),
                 decoration: BoxDecoration(
                     border: Border(
                         bottom: BorderSide(
@@ -105,7 +105,7 @@ class MaterialRequestListScreen extends GetView<MaterialRequestListController> {
                 controller.changeTabs(true);
               },
               child: Container(
-                width: Get.width / 3,
+                width: Get.width / checkTab(3, 4),
                 decoration: BoxDecoration(
                     border: Border(
                         bottom: BorderSide(
@@ -466,7 +466,7 @@ class MaterialRequestListScreen extends GetView<MaterialRequestListController> {
                                       ?.copyWith(color: Colours.greyLight)),
                               gap(space: 10),
                               Text(
-                                "${item.gUsed}",
+                                "${item.gUsed??0.0}",
                                 style: appTextTheme.titleSmall?.copyWith(),
                                 textAlign: TextAlign.center,
                               ),
@@ -484,7 +484,7 @@ class MaterialRequestListScreen extends GetView<MaterialRequestListController> {
                                   ?.copyWith(color: Colours.greyLight)),
                           gap(space: 10),
                           Text(
-                            "${formatDecimal(item.gTotal ?? "_")}",
+                            "${formatDecimal(item.gTotal ?? "0.0")}",
                             style: appTextTheme.titleSmall
                                 ?.copyWith(color: Colours.greenLight),
                             textAlign: TextAlign.center,

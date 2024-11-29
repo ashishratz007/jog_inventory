@@ -51,7 +51,7 @@ class _FilterMaterialListState extends State<FilterMaterialList> {
 
         ///
         gap(),
-        safeAreaBottom(context),
+        SafeAreaBottom(context),
       ],
     ));
   }

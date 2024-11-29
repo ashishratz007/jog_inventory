@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:jog_inventory/modules/material/models/material_request_detail.dart';
 import 'package:jog_inventory/modules/material/models/search.dart';
+import 'package:jog_inventory/services/tab_view_navigator.dart';
 import '../../../common/exports/main_export.dart';
 
 void showSelectCodeMenu<OrderCodeData>(BuildContext context,
@@ -252,7 +253,7 @@ void showSelectCodeMenu<OrderCodeData>(BuildContext context,
                                             }),
                                       ),
 
-                                      safeAreaBottom(context)
+                                      SafeAreaBottom(context)
                                     ],
                                   ),
                                 ),
@@ -264,7 +265,7 @@ void showSelectCodeMenu<OrderCodeData>(BuildContext context,
                                       isEnable: selectedIndex.value != -1,
                                       title: "Process",
                                       onTap: () {
-                                        Get.back();
+                                        mainNavigationService.pop();
                                         Get.toNamed(
                                             AppRoutesString.submit_order,
                                             arguments: {

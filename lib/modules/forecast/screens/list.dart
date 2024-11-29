@@ -53,7 +53,7 @@ class _ForecastListScreenState extends State<ForecastListScreen> {
 
             ///
             gap(),
-            safeAreaBottom(Get.context!),
+            SafeAreaBottom(Get.context!),
           ],
         ));
   }

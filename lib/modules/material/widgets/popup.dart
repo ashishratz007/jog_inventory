@@ -1,4 +1,5 @@
 import 'package:jog_inventory/common/animations/ease_out_animation.dart';
+import 'package:jog_inventory/services/tab_view_navigator.dart';
 
 import '../../../common/exports/main_export.dart';
 
@@ -44,7 +45,7 @@ class _CustomPopupState extends State<CustomPopup> {
   void initState() {
     super.initState();
     Future.delayed(Duration(seconds: 1), () {
-      Get.back();
+      mainNavigationService.pop();
     });
   }
 

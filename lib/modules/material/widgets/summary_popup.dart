@@ -193,7 +193,7 @@ class _ViewSummaryBodyScreenState extends State<ViewSummaryBodyScreen> {
 
           ///
           gap(),
-          safeAreaBottom(context),
+          SafeAreaBottom(context),
         ],
       ),
     );

@@ -4,6 +4,7 @@ class AppPadding {
   static const formPadding = EdgeInsets.only(left: 16, right: 16, top: 10);
   static const pagePadding = EdgeInsets.only(left: 16, right: 16, top: 20);
   static const pagePaddingAll = EdgeInsets.all(16);
+  static const pagePaddingTabAll = EdgeInsets.only(left: 25,right: 25,top: 16,bottom: 16);
   static const inner =
       EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10);
   static const leftRight =

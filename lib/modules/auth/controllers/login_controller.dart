@@ -57,7 +57,7 @@ class AuthController extends GetxController {
         successSnackBar(message: loginResponse.message ?? "");
 
         /// navigate user to login page
-        Get.offAllNamed(AppRoutesString.home);
+        Get.offAllNamed(AppRoutesString.dashboard);
       } catch (error, trace) {
         showSnackBar(
             title: "Login error", message: "$error", type: SnackBarType.error);

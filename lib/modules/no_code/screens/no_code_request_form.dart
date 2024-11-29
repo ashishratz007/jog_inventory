@@ -64,7 +64,7 @@ class NoCodeRequestFormScreen extends GetView<NoCodeRequestController> {
 
             ///
             gap(),
-            safeAreaBottom(Get.context!),
+            SafeAreaBottom(Get.context!),
           ],
         ),
       ),

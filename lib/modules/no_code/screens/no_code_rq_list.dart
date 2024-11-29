@@ -58,7 +58,7 @@ class _NoCodeRqListScreenState extends State<NoCodeRqListScreen> {
 
             ///
             gap(),
-            safeAreaBottom(Get.context!),
+            SafeAreaBottom(Get.context!),
           ],
         ));
   }

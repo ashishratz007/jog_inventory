@@ -1,12 +1,13 @@
-import 'package:jog_inventory/common/utils/bottom_seet.dart';
+import 'package:jog_inventory/common/utils/bottom_sheet.dart';
 import 'package:jog_inventory/modules/material/models/fabric.dart';
 import 'package:jog_inventory/modules/stock_in/models/stock_in.dart';
+import 'package:jog_inventory/services/tab_view_navigator.dart';
 
 import '../../../common/exports/main_export.dart';
 
-void openAddFabricPopup(Function(List<StockInFormItem> items) onAdd) {
+void openAddFabricPopup(BuildContext context, Function(List<StockInFormItem> items) onAdd) {
   showAppBottomSheet(
-      Get.context!,
+      context,
       _addFabric(
         onAdd: onAdd,
       ),
@@ -154,12 +155,12 @@ class _addFabricState extends State<_addFabric> {
                 startCount++;
               }
               widget.onAdd(items);
-              Get.back();
+              mainNavigationService.pop();
             },
           ),
           // bottom
           gap(),
-          safeAreaBottom(context)
+          SafeAreaBottom(context)
         ],
       ),
     );

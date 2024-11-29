@@ -121,7 +121,7 @@ class _FinishedMaterialDetailScreenState
 
               ///
               gap(),
-              safeAreaBottom(context),
+              SafeAreaBottom(context),
             ],
           ),
         ));

@@ -59,7 +59,7 @@ class _StockInFromScreenState extends State<StockInFromScreen> {
 
             /// bottom
             gap(),
-            safeAreaBottom(context),
+            SafeAreaBottom(context),
           ],
         ),
       ),
@@ -509,7 +509,7 @@ class _StockInFromScreenState extends State<StockInFromScreen> {
             Expanded(
               child: InkWell(
                 onTap: () {
-                  openAddFabricPopup(controller.addItems);
+                  openAddFabricPopup(context, controller.addItems);
                 },
                 child: DottedBorderContainer(
                     borderColor: Colours.green,

@@ -1,5 +1,6 @@
 import 'package:jog_inventory/common/constant/enums.dart';
 import 'package:jog_inventory/common/exports/main_export.dart';
+import 'package:jog_inventory/services/tab_view_navigator.dart';
 
 class _Permission {
   /// check the permission for the user
@@ -57,7 +58,7 @@ class _Permission {
             onPressed: () async {
               // Optionally open settings if needed
                 onComplete();
-                Get.back();
+                mainNavigationService.pop();
             },
             child: Text('Open Settings',style: appTextTheme.titleSmall?.copyWith(color: Colours.blueDark),),
           ),

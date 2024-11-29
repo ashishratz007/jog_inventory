@@ -1,3 +1,5 @@
+import 'package:jog_inventory/services/tab_view_navigator.dart';
+
 import '../exports/main_export.dart';
 
 void showAppBottomSheet(
@@ -39,7 +41,7 @@ void showAppBottomSheet(
                   children: [
                     InkWell(
                       onTap: () {
-                        Get.back();
+                        mainNavigationService.pop();
                       },
                       child: Icon(
                         Icons.close,

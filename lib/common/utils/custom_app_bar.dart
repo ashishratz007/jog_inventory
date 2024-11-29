@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:jog_inventory/modules/home/widgets/home_drawer.dart';
+import 'package:jog_inventory/services/tab_view_navigator.dart';
 
 import '../exports/main_export.dart';
 
@@ -147,7 +148,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
                   child: InkWell(
                     borderRadius: BorderRadius.circular(100),
                     onTap: () {
-                      Get.back();
+                      mainNavigationService.pop();
                     },
                     child:
                         Icon(Icons.arrow_back, color: Colors.white, size: 28),
