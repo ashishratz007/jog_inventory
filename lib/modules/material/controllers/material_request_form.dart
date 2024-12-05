@@ -33,10 +33,10 @@ class MaterialRequestFormController extends GetxController {
 
   @override
   void onInit() {
-    if (Get.arguments != null) {
+    if (mainNavigationService.arguments != null) {
       isUpdate.value = true;
-      materialRqDetail = Get.arguments[appKeys.materialRQDetail];
-      materialRQId = Get.arguments[appKeys.materialRQId];
+      materialRqDetail = mainNavigationService.arguments[appKeys.materialRQDetail];
+      materialRQId = mainNavigationService.arguments[appKeys.materialRQId];
     }
     super.onInit();
   }
@@ -138,7 +138,7 @@ class MaterialRequestFormController extends GetxController {
     requestData.addForm().then((value) {
       isBusy.value = false;
       mainNavigationService.pop();
-      Get.toNamed(AppRoutesString.materialRequestList);
+      mainNavigationService.push(AppRoutesString.materialRequestList);
       successSnackBar(message: "Material RQ added successfully");
 
       ///
@@ -149,16 +149,16 @@ class MaterialRequestFormController extends GetxController {
   }
 
   /// delete RQ
-  deleteMaterialRQRequest() {
-    deleteItemPopup(Get.context!, onDelete: (context) async {
+  deleteMaterialRQRequest(BuildContext context) {
+    deleteItemPopup(context, onDelete: (context) async {
       try {
         await DeleteMaterialRQModel(rq_id: materialRqDetail!.rqId!.toString())
             .create();
+        mainNavigationService.back(context,true);
       } catch (e, trace) {
         errorSnackBar(message: "Error removing data!");
       }
     }, onComplete: () {
-     mainNavigationService.pop(result: true);
       successSnackBar(message: "Item removed successfully");
     });
   }

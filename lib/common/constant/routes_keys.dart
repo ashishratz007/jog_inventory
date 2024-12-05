@@ -4,7 +4,7 @@ abstract class AppRoutesString {
   static const login = "/login";
   static const register = "/register";
   static const dashboard = "/home";
-  static const tabHome = "/tab_home";
+  // static const tabHome = "/tab_home";
 
 
   /// material

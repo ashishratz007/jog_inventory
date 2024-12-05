@@ -5,8 +5,9 @@ import '../../../common/exports/main_export.dart';
 class ForeCastListController extends GetxController {
   RxBool isLoading = false.obs;
   RxBool isBusy = false.obs;
-  int page = 0;
+  RxInt page = 1.obs;
   List<ForecastItem> items = [];
+  TextEditingController searchController = TextEditingController();
 
   @override
   void onInit() {
@@ -22,7 +23,7 @@ class ForeCastListController extends GetxController {
   /// functions
   getForecastList() {
     isLoading.value = true;
-    ForecastListModel.fetchAll(page).then((itm){
+    ForecastListModel.fetchAll(page.value,searchController.text).then((itm){
       isLoading.value = false;
       items = itm.items;
     }).onError((error, trace){

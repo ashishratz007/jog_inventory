@@ -3,11 +3,13 @@ import 'package:jog_inventory/common/exports/common.dart';
 class _NavigationService extends NavigatorObserver {
   // Singleton instance
   static final _NavigationService instance = _NavigationService._internal();
-  // Private constructor
   _NavigationService._internal();
 
-  // GlobalKey for the navigator
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
+  // Public variables to store the current route and arguments
+  String? _currentRoute;
+  Object? _currentArguments;
 
   /// Push a new route onto the navigation stack
   Future<dynamic> push(String routeName, {Object? arguments}) {
@@ -17,8 +19,15 @@ class _NavigationService extends NavigatorObserver {
     );
   }
 
+  BuildContext? get context => navigatorKey.currentState?.context;
+
+  /// Get arguments from the current route
+  Object? get arguments => _currentArguments;
+
+
   /// Pop the top-most route off the navigation stack
   void pop([Object? result]) {
+    if (AppRoutesString.dashboard == _currentRoute) return;
     navigatorKey.currentState!.pop(result);
   }
 
@@ -34,7 +43,7 @@ class _NavigationService extends NavigatorObserver {
   Future<dynamic> pushAndRemoveUntil(String routeName,
       {Object? arguments, bool Function(Route<dynamic>)? predicate}) {
     return navigatorKey.currentState!.pushNamedAndRemoveUntil(
-      routeName,
+        AppRoutesString.dashboard,
       predicate ?? (route) => false,
       arguments: arguments,
     );
@@ -45,30 +54,29 @@ class _NavigationService extends NavigatorObserver {
     navigatorKey.currentState!.popUntil((route) => route.isFirst);
   }
 
-  // Override methods from NavigatorObserver (optional for tracking)
+  // Override methods from NavigatorObserver to track routes
   @override
   void didPush(Route route, Route? previousRoute) {
     super.didPush(route, previousRoute);
-    debugPrint('Pushed route: ${route.settings.name}');
+    _currentRoute = route.settings.name;
+    _currentArguments = route.settings.arguments;
+    debugPrint('Pushed route: $_currentRoute');
   }
 
   @override
   void didPop(Route route, Route? previousRoute) {
     super.didPop(route, previousRoute);
-    debugPrint('Popped route: ${route.settings.name}');
+    _currentRoute = previousRoute?.settings.name;
+    _currentArguments = previousRoute?.settings.arguments;
+    debugPrint('Popped route: $_currentRoute');
   }
 
   @override
   void didReplace({Route? newRoute, Route? oldRoute}) {
     super.didReplace(newRoute: newRoute, oldRoute: oldRoute);
-    debugPrint(
-        'Replaced route: ${oldRoute?.settings.name} with ${newRoute?.settings.name}');
-  }
-
-  @override
-  void didRemove(Route route, Route? previousRoute) {
-    super.didRemove(route, previousRoute);
-    debugPrint('Removed route: ${route.settings.name}');
+    _currentRoute = newRoute?.settings.name;
+    _currentArguments = newRoute?.settings.arguments;
+    debugPrint('Replaced route: $_currentRoute');
   }
 }
 
@@ -80,10 +88,27 @@ class MainNavigationService extends GetObserver {
   // Private constructor
   MainNavigationService._internal();
 
-  /// Push a new route onto the navigation stack
-  Future<dynamic> push(String routeName, {Object? arguments}) {
+  /// read global or tabview argument
+  get arguments {
+    if (config.isTablet)
+      return tabNavigator.arguments;
+    else
+      return Get.arguments;
+  }
+  /// Pop from current context
+  void back(BuildContext context, [Object? result]) {
+    Navigator.pop(context,result);
+  }
+
+  /// Push a new route onto the navigation stack // remove all clear all the behind routes in case of tab
+  Future<dynamic> push(String routeName,
+      {Object? arguments, bool removeAll = false}) {
     if (config.isTablet) {
-      return tabNavigator.push(routeName, arguments: arguments);
+      if (removeAll) {
+         tabNavigator.pushAndRemoveUntil(routeName, arguments: arguments);
+      }{
+        return tabNavigator.push(routeName, arguments: arguments);
+      }
     } else {
       return Get.toNamed(
         routeName,
@@ -97,7 +122,7 @@ class MainNavigationService extends GetObserver {
     if (config.isTablet) {
       tabNavigator.pop();
     } else {
-     Get.back(result:result);
+      Get.back(result: result);
     }
   }
 

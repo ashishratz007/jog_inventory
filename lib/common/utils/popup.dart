@@ -64,13 +64,18 @@ void deleteItemPopup(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15.0),
         ),
-        child: _DeleteItemBody(
-          onDelete,
-          title: title,
-          subTitle: subTitle,
-          buttonText: buttonText,
-          onComplete: onComplete,
-          buttonColor: buttonColor,
+        child: Container(
+          constraints: BoxConstraints(
+            maxWidth: 400
+          ),
+          child: _DeleteItemBody(
+            onDelete,
+            title: title,
+            subTitle: subTitle,
+            buttonText: buttonText,
+            onComplete: onComplete,
+            buttonColor: buttonColor,
+          ),
         ),
       );
     },

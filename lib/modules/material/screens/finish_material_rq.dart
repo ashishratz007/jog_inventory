@@ -2,7 +2,6 @@ import 'package:jog_inventory/common/utils/error_message.dart';
 import 'package:jog_inventory/common/utils/validation.dart';
 import 'package:jog_inventory/modules/material/models/material_request.dart';
 import 'package:jog_inventory/modules/material/models/material_rq_form.dart';
-import 'package:jog_inventory/services/tab_view_navigator.dart';
 import '../../../common/exports/main_export.dart';
 import '../../../common/utils/date_formater.dart';
 
@@ -23,12 +22,18 @@ class _FinishMaterialRQScreenState extends State<FinishMaterialRQScreen> {
 
   @override
   void initState() {
-    if (Get.arguments != null) {
-      materialRqDetail = Get.arguments[appKeys.materialRQDetail];
-      materialRQId = Get.arguments[appKeys.materialRQId];
+    if (mainNavigationService.arguments != null) {
+      materialRqDetail = mainNavigationService.arguments[appKeys.materialRQDetail];
+      materialRQId = mainNavigationService.arguments[appKeys.materialRQId];
       getMaterialDetail();
     }
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
   }
 
   /// get material data

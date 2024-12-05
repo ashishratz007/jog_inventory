@@ -1,3 +1,4 @@
+import 'package:jog_inventory/common/animations/animated_switcher.dart';
 import 'package:jog_inventory/common/globals/global.dart';
 import 'package:jog_inventory/modules/auth/models/user_login.dart';
 import 'package:jog_inventory/modules/home/controllers/home.dart';
@@ -30,26 +31,28 @@ class SideBarWidget extends StatefulWidget {
 }
 
 class _SideBarWidgetState extends State<SideBarWidget> {
-  String? selectedValue;
+  RxString selectedValue = "Dash Board".obs;
   bool isExpanded = true; // Tracks whether the sidebar is expanded
 
   @override
   void initState() {
-    selectedValue = widget.selectedValue;
+    selectedValue.value = widget.selectedValue ?? "Dash Board";
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-        onTap: () {
-          setState(() {
-            isExpanded = !isExpanded; // Toggle expansion state on tap
-          });
-        },
+        onTap: !config.isTablet
+            ? null
+            : () {
+                setState(() {
+                  isExpanded = !isExpanded; // Toggle expansion state on tap
+                });
+              },
         child: AnimatedContainer(
           duration: Duration(milliseconds: 300), // Animation duration
-          width: isExpanded ? 320 : 120,
+          width: isExpanded ? 300 : 120,
           child: Drawer(
             shadowColor: Colors.white,
             child: SafeArea(
@@ -61,7 +64,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      padding: AppPadding.pagePaddingAll,
+                      padding: AppPadding.inner,
                       height: 93,
                       decoration: BoxDecoration(
                         color: Colours.secondary,
@@ -77,64 +80,92 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                         ],
                       ),
                       child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           CircleAvatar(
-                            radius: isExpanded?20:40,
+                            radius: isExpanded ? 20 : 30,
                             child: CircleAvatar(
-                              radius: isExpanded?19:40,
+                              radius: isExpanded ? 19 : 40,
                               backgroundColor: Colours.primary,
                             ),
                           ),
-                          if(isExpanded)...[
-                            // gap(space: 10),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Hi, ${globalData.activeUser?.employeeName ?? "_"}",
-                                  style: appTextTheme.titleSmall
-                                      ?.copyWith(color: Colours.white),
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                gap(space: 5),
-                                Text(
-                                  "${globalData.activeUser?.employeeEmail ?? "_"}",
-                                  style: appTextTheme.labelSmall
-                                      ?.copyWith(color: Colours.white),
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 1,
-                                ),
-                              ],
+                          if (isExpanded) ...[
+                            gap(space: 10),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Hi, ${globalData.activeUser?.employeeName ?? "_"}",
+                                    style: appTextTheme.titleSmall
+                                        ?.copyWith(color: Colours.white),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  gap(space: 5),
+                                  Text(
+                                    "${globalData.activeUser?.employeeEmail ?? "_"}",
+                                    style: appTextTheme.labelSmall
+                                        ?.copyWith(color: Colours.white),
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1,
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                          // gap(space: 5),
+                            // gap(space: 5),
+
                             Icon(
                               Icons.arrow_forward_ios_rounded,
                               color: Colours.white,
-                              size: 15,
-                            )
+                              size: 20,
+                            ),
                           ],
-
                         ],
                       ),
                     ),
                     gap(space: 10),
 
+                    /// dashboard
+                    if (config.isTablet)
+                      drawerTile(
+                        context,
+                        leading: Container(
+                            child: Icon(
+                              Icons.dashboard,
+                              color: Colours.white,
+                              size: isExpanded ? 15 : 25,
+                            ),
+                            width: isExpanded ? 25 : 50,
+                            height: isExpanded ? 25 : 50,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colours.secondary,
+                            ),
+                            padding: EdgeInsets.all(5)),
+                        title: "Dash Board",
+                        textColor: Colours.black,
+                        hideTrailing: true,
+                        onTap: () async {
+                          await mainNavigationService
+                              .push(AppRoutesString.dashboard, removeAll: true);
+                        },
+                      ),
+
                     /// Stock in
                     drawerTile(
                       context,
                       leading: displayAssetsWidget(AppIcons.boxes_white,
-                          width:  isExpanded?15:40,
-                          height:  isExpanded?15:40,
+                          width: isExpanded ? 15 : 40,
+                          height: isExpanded ? 15 : 40,
                           borderRadius: BorderRadius.circular(10),
                           color: Colours.blue,
                           padding: EdgeInsets.all(5)),
                       title: "Stock In List",
                       textColor: Colours.black,
                       hideTrailing: true,
-                      onTap: () {
-                        mainNavigationService.push(AppRoutesString.stockInList);
+                      onTap: () async {
+                        await mainNavigationService
+                            .push(AppRoutesString.stockInList, removeAll: true);
                       },
                     ),
 
@@ -144,15 +175,16 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                       leading: displayAssetsWidget(AppIcons.mat_white,
                           borderRadius: BorderRadius.circular(10),
                           color: Colours.secondary,
-                          width:  isExpanded?15:40,
-                          height:  isExpanded?15:40,
+                          width: isExpanded ? 15 : 40,
+                          height: isExpanded ? 15 : 40,
                           padding: EdgeInsets.all(5)),
                       title: "Material RQ list",
                       textColor: Colours.black,
                       hideTrailing: true,
-                      onTap: () {
-                        mainNavigationService
-                            .push(AppRoutesString.materialRequestList);
+                      onTap: () async {
+                        await mainNavigationService.push(
+                            AppRoutesString.materialRequestList,
+                            removeAll: true);
                       },
                     ),
 
@@ -162,15 +194,16 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                       leading: displayAssetsWidget(AppIcons.no_code,
                           borderRadius: BorderRadius.circular(10),
                           color: Colours.green,
-                          width:  isExpanded?15:40,
-                          height:  isExpanded?15:40,
+                          width: isExpanded ? 15 : 40,
+                          height: isExpanded ? 15 : 40,
                           padding: EdgeInsets.all(5)),
                       title: "No code RQ list",
                       textColor: Colours.black,
                       hideTrailing: true,
-                      onTap: () {
-                        mainNavigationService
-                            .push(AppRoutesString.noCodeRequestList);
+                      onTap: () async {
+                        await mainNavigationService.push(
+                            AppRoutesString.noCodeRequestList,
+                            removeAll: true);
                       },
                     ),
 
@@ -178,17 +211,18 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                     drawerTile(
                       context,
                       leading: displayAssetsWidget(AppIcons.future,
-                          width:  isExpanded?15:40,
-                          height:  isExpanded?15:40,
+                          width: isExpanded ? 15 : 40,
+                          height: isExpanded ? 15 : 40,
                           borderRadius: BorderRadius.circular(10),
                           color: Colours.blackMat,
                           padding: EdgeInsets.all(5)),
                       title: "Forecast list",
                       textColor: Colours.black,
                       hideTrailing: true,
-                      onTap: () {
-                        mainNavigationService
-                            .push(AppRoutesString.forecastList);
+                      onTap: () async {
+                        await mainNavigationService.push(
+                            AppRoutesString.forecastList,
+                            removeAll: true);
                       },
                     ),
 
@@ -202,12 +236,12 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                       leading: Icon(
                         Icons.logout,
                         color: Colors.red,
-                        size: isExpanded?25:50,
+                        size: isExpanded ? 25 : 50,
                       ),
                       title: "Logout",
                       textColor: Colors.red,
                       hideTrailing: true,
-                      onTap: () {
+                      onTap: () async {
                         deleteItemPopup(
                           Get.context!,
                           title: "Logout",
@@ -238,11 +272,10 @@ class _SideBarWidgetState extends State<SideBarWidget> {
       required String title,
       bool hideTrailing = true,
       Color textColor = Colors.black87,
-      required void Function() onTap}) {
-    RxBool isSelected = (selectedValue == title).obs;
+      required Future<void> Function() onTap}) {
     return Obx(
       () => Container(
-        color: isSelected.value ? Colours.primaryBg : null,
+        color: (selectedValue == title) ? Colours.primaryBg : null,
         child: ListTile(
           minLeadingWidth: 10,
           contentPadding: EdgeInsets.only(
@@ -254,7 +287,9 @@ class _SideBarWidgetState extends State<SideBarWidget> {
             visible: isExpanded,
             child: Text(title,
                 style: appTextTheme.titleSmall?.copyWith(
-                    color: isSelected.value ? Colours.primary : textColor,
+                    color: (selectedValue.value == title)
+                        ? Colours.primary
+                        : textColor,
                     fontWeight: FontWeight.w600)),
           ),
           trailing: hideTrailing
@@ -264,55 +299,16 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                   size: 20,
                   color: Colors.black,
                 ),
-          onTap: () {
-            // selectedValue = title;
-            // setState(() {});
-            onTap();
+          onTap: () async {
+            if (selectedValue == title) {
+              return;
+            }
+            selectedValue.value = title;
+            await onTap();
+            selectedValue.value = "Dash Board";
           },
         ),
       ),
-    );
-  }
-
-  Widget setupTiles() {
-    return drawerExpansionWidget(
-      "Setup",
-      Icon(Icons.settings, color: Colours.greyLight, size: 20),
-      children: [
-        DrawerItem(
-          title: "Supplier",
-          count: 0,
-          onTap: () {},
-        ),
-        DrawerItem(
-          title: "Position",
-          count: 0,
-          onTap: () {
-            // Get.offAllNamed(AppRoutesString.underReviewCars);
-          },
-        ),
-        DrawerItem(
-          title: "Category",
-          count: 0,
-          onTap: () {
-            // Get.offAllNamed(AppRoutesString.approvedCars);
-          },
-        ),
-        DrawerItem(
-          title: "Sold",
-          count: 0,
-          onTap: () {
-            // Get.offAllNamed(AppRoutesString.soldCars);
-          },
-        ),
-        DrawerItem(
-          title: "Employee",
-          count: 0,
-          onTap: () {
-            // Get.offAllNamed(AppRoutesString.rejectedCars);
-          },
-        ),
-      ],
     );
   }
 
@@ -370,12 +366,12 @@ class _SideBarWidgetState extends State<SideBarWidget> {
       required void Function() onTap}) {
     print(selectedValue);
     RxBool isSelected =
-        ((selectedValue)?.trim().toLowerCase() == title.trim().toLowerCase())
+        ((selectedValue).trim().toLowerCase() == title.trim().toLowerCase())
             .obs;
     return Obx(
       () => InkWell(
         onTap: () {
-          selectedValue = title;
+          selectedValue.value = title;
           // setState(() {});
           onTap();
         },

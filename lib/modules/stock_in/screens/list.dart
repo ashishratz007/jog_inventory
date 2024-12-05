@@ -141,7 +141,7 @@ class _StockInListPageState extends State<StockInListPage> {
   Widget itemTileWidget(StockInModel item, int index) {
     return InkWell(
       onTap: () {
-        Get.toNamed(AppRoutesString.stockInDetail, arguments: {
+        mainNavigationService.push(AppRoutesString.stockInDetail, arguments: {
           appKeys.pacId: item.pacId,
         });
       },

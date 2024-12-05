@@ -55,28 +55,31 @@ class _StockInDetailState extends State<StockInDetailScreen> {
       () => shimmerEffects(
         isLoading: controller.isLoading.value,
         child: Container(
+          width: Get.width,
           padding: AppPadding.inner,
           decoration: BoxDecoration(
               color: Colours.secondary2,
               borderRadius: BorderRadius.circular(15)),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          child: Wrap(
+            // crossAxisAlignment: CrossAxisAlignment.start,
+            runSpacing: 10,
+            spacing: 5,
             children: [
               titleSubtitle(
                   "Pack No.", controller.stockInData.packing?.packNo ?? "_"),
-              gap(space: 10),
+              // gap(space: 10),
               titleSubtitle(
                   "PO No.", controller.stockInData.packing?.poNo ?? "_"),
-              gap(space: 10),
+              // gap(space: 10),
               titleSubtitle("Supplier",
                   controller.stockInData.packing?.supplierName ?? "_"),
-              gap(space: 10),
+              // gap(space: 10),
               titleSubtitle("Create Date",
                   controller.stockInData.packing?.addDate ?? "_"),
-              gap(space: 10),
+              // gap(space: 10),
               titleSubtitle(
                   "PO Date", controller.stockInData.packing?.poDate ?? "_"),
-              gap(space: 10),
+              // gap(space: 10),
               titleSubtitle(
                   "Inv No.", controller.stockInData.packing?.invNo ?? "",
                   onEdit: () {
@@ -95,40 +98,45 @@ class _StockInDetailState extends State<StockInDetailScreen> {
   }
 
   Widget titleSubtitle(String title, String subtitle, {Function()? onEdit}) {
-    return Row(
-      children: [
-        Expanded(
-          flex: 1,
-          child: Text(title,
-              style: appTextTheme.labelMedium?.copyWith(color: Colours.white)),
-        ),
-        gap(),
-        Flexible(
-          flex: 2,
-          child: Row(
-            children: [
-              Flexible(
-                child: Text(subtitle,
-                    style: appTextTheme.labelSmall
-                        ?.copyWith(color: Colours.white)),
-              ),
-              Visibility(
-                visible: onEdit != null,
-                child: Padding(
-                  padding: EdgeInsets.only(left: 10),
-                  child: InkWell(
-                      onTap: onEdit,
-                      child: Icon(
-                        Icons.edit,
-                        size: 20,
-                        color: Colours.white,
-                      )),
-                ),
-              )
-            ],
+    return Container(
+      constraints: BoxConstraints(
+          maxWidth: 320
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            flex: 1,
+            child: Text(title,
+                style: appTextTheme.labelMedium?.copyWith(color: Colours.white)),
           ),
-        ),
-      ],
+          gap(),
+          Flexible(
+            flex: 2,
+            child: Row(
+              children: [
+                Flexible(
+                  child: Text(subtitle,
+                      style: appTextTheme.labelSmall
+                          ?.copyWith(color: Colours.white)),
+                ),
+                Visibility(
+                  visible: onEdit != null,
+                  child: Padding(
+                    padding: EdgeInsets.only(left: 10),
+                    child: InkWell(
+                        onTap: onEdit,
+                        child: Icon(
+                          Icons.edit,
+                          size: 20,
+                          color: Colours.white,
+                        )),
+                  ),
+                )
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -188,8 +196,8 @@ class _StockInDetailState extends State<StockInDetailScreen> {
                             divider()
                           ],
                         ),
-                        onSave: (String value) {
-                          controller.editPrice(value, isAll.value, item.fabric_id!);
+                        onSave: (BuildContext context, String value) {
+                          controller.editPrice(context,value, isAll.value, item.fabric_id!);
                         },
                         initialValue: "${item.fabricInPrice}",
                       );

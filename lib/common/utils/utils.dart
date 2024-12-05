@@ -524,11 +524,21 @@ Widget dottedDivider({
 
 /// get and register controller
 T getController<T>(T creator, {String? tag}) {
+  // if(tag == null)tag =
+  //     "${timeNow().year}-${timeNow().month}-${timeNow().day}-${timeNow().hour}-${timeNow().minute}";
   var isRegistered = Get.isRegistered<T>(tag: tag);
   if (isRegistered) {
     return Get.find<T>(tag: tag);
   }
   return Get.put<T>(creator, tag: tag);
+}
+
+/// get and register controller
+ removeController<T>(T controller, {String? tag}) {
+  var isRegistered = Get.isRegistered<T>(tag: tag);
+  if (isRegistered) {
+    Get.delete<T>(tag: tag);
+  }
 }
 
 Widget checkBox(
@@ -643,15 +653,16 @@ bool isExpired(DateTime date, {Duration duration = const Duration(hours: 12)}) {
   return now.isAfter(expiryDate);
 }
 
-
 /// only if you are using GETx for the state management
 Map<String, WidgetBuilder> AppPage({
   required String name,
   required Widget Function() page,
   List<Bindings> bindings = const [],
+  Object? argument,
 }) {
   return {
-    name: (context) {
+    name: (BuildContext context) {
+      context.isTablet;
       bindings.forEach((binding) {
         // Initialize bindings manually
         binding.dependencies();
@@ -661,5 +672,4 @@ Map<String, WidgetBuilder> AppPage({
   };
 }
 
-
- T checkTab<T>(T mobile, T tab)=> config.isTablet? tab:mobile;
+T checkTab<T>(T mobile, T tab) => config.isTablet ? tab : mobile;

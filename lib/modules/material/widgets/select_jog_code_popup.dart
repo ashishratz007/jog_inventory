@@ -266,7 +266,7 @@ void showSelectCodeMenu<OrderCodeData>(BuildContext context,
                                       title: "Process",
                                       onTap: () {
                                         mainNavigationService.pop();
-                                        Get.toNamed(
+                                        mainNavigationService.push(
                                             AppRoutesString.submit_order,
                                             arguments: {
                                               appKeys.fabId: fabricId,

@@ -1,6 +1,7 @@
 import 'package:jog_inventory/common/utils/date_formater.dart';
 import 'package:jog_inventory/common/utils/error_message.dart';
 import 'package:jog_inventory/modules/no_code/models/no_code_item.dart';
+import 'package:jog_inventory/services/tab_view_navigator.dart';
 import '../../../common/exports/main_export.dart';
 
 class NoCodeDetailController extends GetxController {
@@ -26,7 +27,7 @@ class NoCodeDetailController extends GetxController {
 
   /// functions
   readArgs(){
-    var args = Get.arguments;
+    var args = mainNavigationService.arguments;
     if(args is Map){
       usedCode = args[appKeys.usedItem];
       getItems();

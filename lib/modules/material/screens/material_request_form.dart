@@ -19,7 +19,7 @@ class MaterialRequestFormScreen extends GetView<MaterialRequestFormController> {
     return CustomAppBar(
       title: "Material requisition form",
       body: body,
-      bottomNavBar: bottomNavBarButtons(),
+      bottomNavBar: bottomNavBarButtons(context),
     );
   }
 
@@ -266,7 +266,7 @@ class MaterialRequestFormScreen extends GetView<MaterialRequestFormController> {
               gap(space: 10),
               Text("${item.fabricColor}",
                   style: appTextTheme.labelSmall
-                      ?.copyWith(color: Colours.greyLight)),
+                      ?.copyWith(color: Colours.blackLite)),
               Expanded(child: SizedBox()),
               IconButton(
                   onPressed: () {
@@ -498,7 +498,7 @@ class MaterialRequestFormScreen extends GetView<MaterialRequestFormController> {
     );
   }
 
-  Widget bottomNavBarButtons() {
+  Widget bottomNavBarButtons(BuildContext context) {
     /// Update material
     if (controller.isUpdate.value)
       return Container(
@@ -513,7 +513,7 @@ class MaterialRequestFormScreen extends GetView<MaterialRequestFormController> {
                   color: Colours.redBg,
                   textColor: Colours.red,
                   onTap: () {
-                    controller.deleteMaterialRQRequest();
+                    controller.deleteMaterialRQRequest(context);
                   },
                   isFullWidth: false,
                   radius: 15,

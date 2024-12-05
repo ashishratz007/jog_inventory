@@ -33,7 +33,7 @@ class ForecastFormController extends GetxController {
   }
 
   readArgs() {
-    var args  = Get.arguments;
+    var args  = mainNavigationService.arguments;
     if(args!= null){
       forecastId = "${args[appKeys.forecastId]}";
       isUpdate.value = true;

@@ -131,7 +131,7 @@ class _OrderCodesRemoveScreenState extends State<_OrderCodesRemoveScreen> {
                       await RemoveCodeModel(selectedCodeIds.toList())
                           .removeCodes();
                       isBusy.value = false;
-                      mainNavigationService.pop();
+                      mainNavigationService.back(context);
                     } catch (e, trace) {
                       isBusy.value = false;
                       errorSnackBar(message: e.toString());

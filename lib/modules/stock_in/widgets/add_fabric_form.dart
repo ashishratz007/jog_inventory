@@ -155,7 +155,7 @@ class _addFabricState extends State<_addFabric> {
                 startCount++;
               }
               widget.onAdd(items);
-              mainNavigationService.pop();
+              mainNavigationService.back(context);
             },
           ),
           // bottom

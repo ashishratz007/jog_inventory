@@ -48,15 +48,23 @@ class _FinishedMaterialDetailScreenState
 
   @override
   void initState() {
-    materialRqDetail = Get.arguments[appKeys.materialRQDetail];
+    print(tabNavigator.arguments);
+    materialRqDetail = mainNavigationService.arguments[appKeys.materialRQDetail];
     getMaterialData();
     super.initState();
+  }
+
+
+  @override
+  void dispose() {
+    // removeController(controller);
+    super.dispose();
   }
 
   getMaterialData() async {
     isLoading.value = true;
     try {
-      var materialRQId = Get.arguments[appKeys.materialRQId];
+      var materialRQId = mainNavigationService.arguments[appKeys.materialRQId];
       materialDetail = await MaterialRequestDetailModel.fetch(materialRQId);
       isLoading.value = false;
     } catch (error, trace) {
@@ -213,7 +221,7 @@ class _FinishedMaterialDetailScreenState
                           ?.copyWith(color: Colours.blackLite)),
                 ),
                 gap(space: 10),
-                Text("${item.catNameEn} , ",
+                Text("${item.catNameEn?? "_"} , ",
                     style: appTextTheme.titleSmall
                         ?.copyWith(color: Colours.primaryText)),
                 Text("${item.fabricColor}",
@@ -227,10 +235,10 @@ class _FinishedMaterialDetailScreenState
               children: [
                 Expanded(
                     flex: 2,
-                    child: displayTitleSubtitle("Box", "${item.fabricBox}")),
+                    child: displayTitleSubtitle("Box", "${item.fabricBox?? "_"}")),
                 Expanded(
                     flex: 2,
-                    child: displayTitleSubtitle("Used", "${item.used} ${showType(item.fabricTypeUnit??0)}")),
+                    child: displayTitleSubtitle("Used", "${item.used?? "0.0"} ${showType(item.fabricTypeUnit??0)}")),
               ],
             ),
             gap(space: 5),
@@ -239,11 +247,11 @@ class _FinishedMaterialDetailScreenState
                 Expanded(
                     flex: 2,
                     child: displayTitleSubtitle(
-                        "Bal before", "${item.balanceBefore} ${showType(item.fabricTypeUnit??0)}")),
+                        "Bal before", "${item.balanceBefore?? "0.0"} ${showType(item.fabricTypeUnit??0)}")),
                 Expanded(
                     flex: 2,
                     child: displayTitleSubtitle(
-                        "Unit price", "${item.fabricInPrice ?? 0}")),
+                        "Unit price", "${item.fabricInPrice ?? 0.0}")),
               ],
             ),
             gap(space: 5),
@@ -252,7 +260,7 @@ class _FinishedMaterialDetailScreenState
                 Expanded(
                     flex: 2,
                     child: displayTitleSubtitle(
-                        "Bal after", "${item.balanceAfter} ${showType(item.fabricTypeUnit??0)}")),
+                        "Bal after", "${item.balanceAfter?? "0.0"} ${showType(item.fabricTypeUnit??0)}")),
                 Expanded(
                     flex: 2,
                     child: displayTitleSubtitle("Total",

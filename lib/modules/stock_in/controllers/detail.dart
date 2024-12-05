@@ -27,7 +27,7 @@ class StockInDetailController extends GetxController {
 
   /// functions
   readArgs() {
-    pacId = Get.arguments[appKeys.pacId];
+    pacId = mainNavigationService.arguments[appKeys.pacId];
     getData();
   }
 
@@ -50,19 +50,19 @@ class StockInDetailController extends GetxController {
   }
 
   /// post Invoice data
-  postInvoiceData(String val) {
+  postInvoiceData(BuildContext context, String val) {
     var data = SetInvoiceModel(invoice: val, pac_id: pacId);
     data.create().then((value) {
       stockInData.packing?.invNo = val;
       isLoading.refresh();
-      mainNavigationService.pop();
+      mainNavigationService.back(context);
       successSnackBar(message: "Invoice Updated.");
     }).onError((error, trace) {
       errorSnackBar(message: "Please try again");
     });
   }
 
-  editPrice(String price, bool isAll, String itemId) {
+  editPrice(BuildContext context, String price, bool isAll, String itemId) {
     if (double.tryParse(price) != null)
     {
       String ids = itemId;
@@ -86,7 +86,7 @@ class StockInDetailController extends GetxController {
             }
           }
           isLoading.refresh();
-          mainNavigationService.pop();
+          mainNavigationService.back(context);
           successSnackBar(message: "Price Updated.");
         }).onError((error, trace) {
           errorSnackBar(message: "Please try again");

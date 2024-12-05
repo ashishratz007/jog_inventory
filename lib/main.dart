@@ -83,17 +83,16 @@ class JogInventory extends StatelessWidget {
         //     ? AppRoutesString.login
         //     : AppRoutesString.home,
         getPages: getRoutes,
-        navigatorObservers: [
-          mainNavigationService
-        ],
+        navigatorObservers: [mainNavigationService],
         onReady: () {
           config.phoneWidth = Get.width;
         },
         builder: (context, child) {
           return MediaQuery(
             data: MediaQuery.of(context).copyWith(
-                textScaler: TextScaler.linear(
-                    1.0)), // Set your desired text scale factor
+                textScaler: TextScaler.linear(config.isTablet
+                    ? 1.2
+                    : 1.0)), // Set your desired text scale factor
             child: child!,
           );
         },

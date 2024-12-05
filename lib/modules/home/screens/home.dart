@@ -37,9 +37,11 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
               child: Navigator(
                 key: tabNavigator.navigatorKey,
                 observers: [tabNavigator],
-                initialRoute: AppRoutesString.tabHome,
+                initialRoute: AppRoutesString.dashboard,
                 onGenerateRoute: (routeSettings) {
                   return MaterialPageRoute(
+                    maintainState: true,
+                    settings: routeSettings,
                       builder: (context) =>
                           routeBuilders[routeSettings.name!]!(context));
                 },
@@ -283,10 +285,7 @@ class HomeScreen extends GetView<HomeController> {
                       height: 20,
                       padding: AppPadding.inner),
                   onTap: () {
-                    if (config.isTablet)
-                      tabNavigator.push(AppRoutesString.stockInform);
-                    else
-                      Get.toNamed(AppRoutesString.stockInform);
+                      mainNavigationService.push(AppRoutesString.stockInform);
                   },
                 )),
                 gap(space: 10),
@@ -299,10 +298,7 @@ class HomeScreen extends GetView<HomeController> {
                         height: 20,
                         padding: AppPadding.inner),
                     onTap: () {
-                      if (config.isTablet)
-                        tabNavigator.push(AppRoutesString.materialRequestForm);
-                      else
-                        Get.toNamed(AppRoutesString.materialRequestForm);
+                        mainNavigationService.push(AppRoutesString.materialRequestForm);
                     },
                   ),
                 ),
@@ -320,10 +316,7 @@ class HomeScreen extends GetView<HomeController> {
                       height: 20,
                       padding: AppPadding.inner),
                   onTap: () {
-                    if (config.isTablet)
-                      tabNavigator.push(AppRoutesString.noCodeRequest);
-                    else
-                      Get.toNamed(AppRoutesString.noCodeRequest);
+                    mainNavigationService.push(AppRoutesString.noCodeRequest);
                   },
                 )),
                 gap(space: 10),
@@ -336,10 +329,7 @@ class HomeScreen extends GetView<HomeController> {
                       height: 20,
                       padding: AppPadding.inner),
                   onTap: () {
-                    if (config.isTablet)
-                      tabNavigator.push(AppRoutesString.addForecast);
-                    else
-                      Get.toNamed(AppRoutesString.addForecast);
+                    mainNavigationService.push(AppRoutesString.addForecast);
                   },
                 )),
               ],

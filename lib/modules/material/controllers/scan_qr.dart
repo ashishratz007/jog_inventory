@@ -24,7 +24,7 @@ class MaterialScanDetailsController extends GetxController {
 
   /// functions
   getArgs() {
-    var args = Get.arguments;
+    var args = mainNavigationService.arguments;
     if (args != null) {
       fabId = args[appKeys.fabId];
       pacId = args[appKeys.pacId];

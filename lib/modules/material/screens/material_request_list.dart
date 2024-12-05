@@ -7,6 +7,7 @@ import 'package:jog_inventory/modules/material/controllers/material_request_list
 import 'package:jog_inventory/modules/material/models/material_request.dart';
 import 'package:jog_inventory/modules/material/widgets/search_filter.dart';
 import 'package:jog_inventory/modules/material/widgets/summary_popup.dart';
+import 'package:jog_inventory/services/tab_view_navigator.dart';
 import '../../../common/exports/main_export.dart';
 import '../../../common/utils/date_formater.dart';
 
@@ -135,7 +136,7 @@ class MaterialRequestListScreen extends GetView<MaterialRequestListController> {
       radius: 10,
       onChanged: (value) {
         controller.getDataList(
-            isFinished: !controller.isProducing.value, clearData: true);
+            isFinished: !controller.isProducing.value, clearData: true,query: value);
       },
       hintText: "Search",
       prefixIcon: Padding(
@@ -332,7 +333,7 @@ class MaterialRequestListScreen extends GetView<MaterialRequestListController> {
                 PrimaryButton(
                     title: "View / Edit",
                     onTap: () {
-                      Get.toNamed(AppRoutesString.materialRequestForm,
+                      mainNavigationService.push(AppRoutesString.materialRequestForm,
                           arguments: {
                             appKeys.materialRQId: item.rqId,
                             appKeys.materialRQDetail: item,
@@ -347,7 +348,7 @@ class MaterialRequestListScreen extends GetView<MaterialRequestListController> {
                     color: Colours.greenLight,
                     title: Strings.finish,
                     onTap: () async {
-                      var data = await Get.toNamed(
+                      var data = await mainNavigationService.push(
                           AppRoutesString.materialRQFinish,
                           arguments: {
                             appKeys.materialRQId: item.rqId,
@@ -373,7 +374,7 @@ class MaterialRequestListScreen extends GetView<MaterialRequestListController> {
   Widget finishedItemTileWidget(MaterialRequestModel item, int index) {
     return InkWell(
       onTap: () {
-        Get.toNamed(AppRoutesString.materialRQFinishDetail, arguments: {
+        mainNavigationService.push(AppRoutesString.materialRQFinishDetail, arguments: {
           appKeys.materialRQId: item.rqId,
           appKeys.materialRQDetail: item,
         });

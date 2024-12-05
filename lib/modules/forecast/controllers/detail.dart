@@ -11,7 +11,7 @@ class ForeCastDetailController extends GetxController {
 
   @override
   void onInit() {
-    id = Get.arguments[appKeys.forecastId];
+    id = mainNavigationService.arguments[appKeys.forecastId];
     getForecastDetail();
     super.onInit();
   }

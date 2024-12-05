@@ -25,6 +25,9 @@ class _StockInFromScreenState extends State<StockInFromScreen> {
     return Obx(
       () => CustomAppBar(
         title: "Stock in Form",
+        onBack: () {
+          removeController<StockInFormController>(controller);
+        },
         body: body,
         bottomNavBar: controller.isAddStock.value ? bottomNavBar() : null,
       ),

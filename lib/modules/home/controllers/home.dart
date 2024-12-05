@@ -31,6 +31,11 @@ class HomeController extends GetxController {
     getAppVersion();
     super.onReady();
   }
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+  }
 
   getAppVersion() async {
     checkAppVersion.checkForVersion().onError((e, trace) async {
@@ -120,7 +125,7 @@ class HomeController extends GetxController {
         fabId = ids[1];
       }
       if (fabId.isNotEmpty) {
-        Get.toNamed(AppRoutesString.materialDetailById,
+        mainNavigationService.push(AppRoutesString.materialDetailById,
             arguments: {appKeys.fabId: fabId, appKeys.pacId: pacId});
       } else {
         errorSnackBar(message: "Unable to get data from QR");

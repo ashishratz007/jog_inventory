@@ -15,6 +15,7 @@ class CustomAppBar extends StatefulWidget {
   final bool hasNotification;
   final Widget? bottomNavBar;
   final Function()? onGestureTap;
+  final Function()? onBack;
   final String? selectedValue;
 
   CustomAppBar(
@@ -26,6 +27,7 @@ class CustomAppBar extends StatefulWidget {
       this.hasNotification = false,
       this.bottomNavBar,
       this.onGestureTap,
+      this.onBack,
       this.selectedValue,
       super.key});
 
@@ -51,6 +53,8 @@ class _CustomAppBarState extends State<CustomAppBar> {
             subTitle: "Are you sure you want to close the app?",
             buttonText: "Close",
           );
+
+        if (widget.onBack != null) widget.onBack!();
       },
       child: GestureDetector(
         onTap: () {
@@ -60,7 +64,9 @@ class _CustomAppBarState extends State<CustomAppBar> {
         child: Scaffold(
             key: _scaffoldKey,
             backgroundColor: Colours.bgColor,
-            drawer: widget.hasDrawer ? HomeDrawerWidget() : null,
+            drawer: (widget.hasDrawer && !config.isTablet)
+                ? HomeDrawerWidget()
+                : null, // hide for tab and deep navigation
             appBar: appbar(),
             body: SafeArea(child: widget.body(context)),
             bottomNavigationBar: widget.bottomNavBar == null
@@ -128,7 +134,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
             /// leading widget
             ...[
               /// drawer icon in case of drawer
-              if (widget.hasDrawer)
+              if (widget.hasDrawer && !config.isTablet)
                 IconButton(
                   onPressed: () {
                     _scaffoldKey.currentState?.openDrawer();
@@ -139,6 +145,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
                     color: Colors.white,
                   ),
                 ),
+
 
               /// back button in case the of navigation or absence of drawer widget
 
@@ -154,6 +161,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
                         Icon(Icons.arrow_back, color: Colors.white, size: 28),
                   ),
                 ),
+              if(config.isTablet) SizedBox()
             ],
 
             /// title

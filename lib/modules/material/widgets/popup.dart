@@ -111,7 +111,7 @@ class _CustomPopupState extends State<CustomPopup> {
   }
 }
 
-void inputTextPopup(BuildContext context, {required String title, String? initialValue,String? buttonText, required Function(String text) onSave, Widget? addon, }) {
+void inputTextPopup(BuildContext context, {required String title, String? initialValue,String? buttonText, required Function(BuildContext context, String text) onSave, Widget? addon, }) {
   showDialog(
     context: context,
     builder: (BuildContext context) {
@@ -120,18 +120,25 @@ void inputTextPopup(BuildContext context, {required String title, String? initia
         backgroundColor: Colors.transparent,
         shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-        child: Material(
-          type: MaterialType.transparency,
-          child: GestureDetector(
-            onTap: (){
-              hideKeyboard(context);
-            },
-            child: _TextFromFieldWidget(
-              title: title,
-              onSave: onSave,
-              initialValue: initialValue,
-              buttonText: buttonText,
-              addon: addon,
+        child: Container(
+          constraints: BoxConstraints(
+            maxWidth: 400
+          ),
+          child: Material(
+            type: MaterialType.transparency,
+            child: GestureDetector(
+              onTap: (){
+                hideKeyboard(context);
+              },
+              child: _TextFromFieldWidget(
+                title: title,
+                onSave: (val){
+                  onSave(context,val);
+                },
+                initialValue: initialValue,
+                buttonText: buttonText,
+                addon: addon,
+              ),
             ),
           ),
         ),

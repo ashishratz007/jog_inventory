@@ -24,6 +24,7 @@ class StockInFormController extends GetxController {
 
   RxList<StockInFormItem> items = <StockInFormItem>[].obs;
 
+
   @override
   void onInit() {
     super.onInit();
@@ -106,7 +107,7 @@ class StockInFormController extends GetxController {
           isBusy.value = false;
           mainNavigationService.pop();
           successSnackBar(message: "Item added.");
-          Get.to(AppRoutesString.stockInList);
+          mainNavigationService.push(AppRoutesString.stockInList);
         },
       ).onError(
         (err, trace) {

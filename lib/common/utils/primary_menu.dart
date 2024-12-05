@@ -339,7 +339,8 @@ class _SelectItemMenuWidgetState<T> extends State<_SelectItemMenuWidget<T>>
                                   .map((item) => Container(
                                         margin: EdgeInsets.only(right: 5),
                                         child: Chip(
-                                          backgroundColor: Colours.primaryBlueBg,
+                                            backgroundColor:
+                                                Colours.primaryBlueBg,
                                             onDeleted: () {
                                               addRemoveItem(item);
                                               setState(() {});
@@ -592,7 +593,8 @@ class _SelectItemMenuWidgetState<T> extends State<_SelectItemMenuWidget<T>>
                                                     widget.onChanged([item]);
                                                     widget.state
                                                         .didChange([item]);
-                                                   mainNavigationService.pop(result: item);
+                                                    Navigator.pop(
+                                                        context, item);
                                                   }
                                                 },
                                                 child: Container(
@@ -662,7 +664,10 @@ class _SelectItemMenuWidgetState<T> extends State<_SelectItemMenuWidget<T>>
                                   child: SecondaryButton(
                                       title: "cancel",
                                       onTap: () {
-                                        mainNavigationService.pop();
+                                        Navigator.pop(context);
+                                        Navigator.pop(
+                                          context,
+                                        );
                                       })),
                               gap(),
                               Expanded(
@@ -671,7 +676,7 @@ class _SelectItemMenuWidgetState<T> extends State<_SelectItemMenuWidget<T>>
                                       onTap: () {
                                         widget.onChanged(_selectedItems);
                                         widget.state.didChange(_selectedItems);
-                                       mainNavigationService.pop(result: _selectedItems);
+                                        Navigator.pop(context, _selectedItems);
                                       })),
                             ],
                           ),

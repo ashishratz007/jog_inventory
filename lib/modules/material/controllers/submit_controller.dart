@@ -48,7 +48,7 @@ class SubmitController extends GetxController {
 
   /// api calls
   readArgs() {
-    var args = Get.arguments;
+    var args = mainNavigationService.arguments;
     if (args is Map) {
       ethCode = args[appKeys.ethCode];
       fabricId = args[appKeys.fabId];

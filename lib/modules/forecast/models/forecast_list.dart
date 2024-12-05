@@ -8,9 +8,13 @@ class ForecastListModel extends BaseModel{
   String get endPoint => "/api/listForecast";
 
 
-  static Future<Pagination<ForecastItem>> fetchAll(int page)async{
+  static Future<Pagination<ForecastItem>> fetchAll(int page,String? search)async{
     Pagination<ForecastItem> pagination;
-    var resp = await ForecastListModel().create(queryParameters: {"page":page});
+    var resp = await ForecastListModel().create(queryParameters: {
+      "page":page,
+      if(!stringActions.isNullOrEmpty(search))"search":page,
+
+    });
     var items = ParseData.toList<ForecastItem>(resp.data['data'], itemBuilder: (json)=>ForecastItem.fromJson(json));
     pagination = Pagination.fromJson(resp.data, itm: items);
     return pagination;

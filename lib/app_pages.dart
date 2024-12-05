@@ -37,14 +37,8 @@ List<GetPage<dynamic>> getRoutes = [
     bindings: [
       ///
     ],
-  ),  GetPage(
-
-    name: AppRoutesString.tabHome,
-    page: () => HomeScreen(),
-    bindings: [
-      ///
-    ],
   ),
+
   GetPage(
     name: AppRoutesString.materialDetailById,
     page: () => MaterialRequestDetailScreen(),
@@ -162,20 +156,41 @@ List<GetPage<dynamic>> getRoutes = [
   ),
 ];
 
-
 Map<String, WidgetBuilder> get routeBuilders {
   Map<String, WidgetBuilder> routeData = {};
   getRoutes.forEach((page) {
-    routeData.addAll(
-      AppPage(
-        name: page.name,
-        page: page.page,
+    if (page.name == AppRoutesString.dashboard) {
+      var data = GetPage(
+        name: AppRoutesString.dashboard,
+        page: () => HomeScreen(),
         bindings: [
-          ...page.bindings,
-          if (page.binding != null) page.binding!,
+          ///
         ],
-      ),
-    );
+      );
+      routeData.addAll(
+        AppPage(
+          name: data.name,
+          page: data.page,
+          argument: data.arguments,
+          bindings: [
+            ...data.bindings,
+            if (data.binding != null) data.binding!,
+          ],
+        ),
+      );
+    } else {
+      routeData.addAll(
+        AppPage(
+          name: page.name,
+          page: page.page,
+          argument: page.arguments,
+          bindings: [
+            ...page.bindings,
+            if (page.binding != null) page.binding!,
+          ],
+        ),
+      );
+    }
   });
   return routeData;
 }

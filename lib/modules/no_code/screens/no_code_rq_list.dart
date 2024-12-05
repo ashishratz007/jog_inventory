@@ -154,7 +154,7 @@ class _NoCodeRqListScreenState extends State<NoCodeRqListScreen> {
   Widget itemTileWidget(NoCodeRQItemModel item, int index) {
     return InkWell(
       onTap: () {
-        Get.toNamed(AppRoutesString.noCodeRequestDetail, arguments: {
+        mainNavigationService.push(AppRoutesString.noCodeRequestDetail, arguments: {
           appKeys.usedItem: item,
         });
       },
