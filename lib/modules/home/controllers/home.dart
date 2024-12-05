@@ -1,6 +1,7 @@
 import 'package:barcode_scan2/platform_wrapper.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:jog_inventory/common/constant/enums.dart';
+import 'package:jog_inventory/common/globals/app_version.dart';
 import 'package:jog_inventory/common/globals/global.dart';
 import 'package:jog_inventory/common/permissson/permission.dart';
 import 'package:jog_inventory/common/utils/error_message.dart';
@@ -32,6 +33,7 @@ class HomeController extends GetxController {
     getAppVersion();
     super.onReady();
   }
+
   @override
   void dispose() {
     // TODO: implement dispose

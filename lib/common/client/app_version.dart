@@ -67,9 +67,10 @@ class _VersionUpdateCheck {
   static Future<void> _redirectToStore() async {
     // get bundle id hen navigate to the play or app store
     String bundleId = await _getPackageName() ?? "";
+    String appId = "6636480918";
     String playStoreUrl =
         'https://play.google.com/store/apps/details?id=${bundleId}';
-    String appStoreUrl = 'https://apps.apple.com/app/$bundleId';
+    String appStoreUrl = 'https://apps.apple.com/app/$appId';
 
     if (config.isAndroid) {
       if (await canLaunchUrl(Uri.parse(playStoreUrl))) {

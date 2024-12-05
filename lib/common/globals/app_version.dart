@@ -42,8 +42,7 @@ class _AppVersion {
     return NewVersionStatus.noChange;
   }
 
-  void checkForUpdate() async {
-    String serverAppVersion = "2.1.0"; // Example server version
+  void checkForUpdate( String serverAppVersion) async {
 
     NewVersionStatus status = await checkAppVersion(serverAppVersion);
 
