@@ -9,6 +9,7 @@ abstract class AppRoutesString {
 
   /// material
   static const materialDetailById = "${dashboard}/material_detail";
+  static const assetsDetailById = "${dashboard}/asset_detail";
   static const submit_order = "${materialDetailById}/submit_order";
   static const materialRequestList = "${dashboard}/material_request_list";
   static const materialRequestForm = "${dashboard}/material_request_form";

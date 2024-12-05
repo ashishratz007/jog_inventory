@@ -74,6 +74,7 @@ var Strings = _AppString();
 class _AppKeys {
   final walkThrough = "walkThrough";
   final fabId = "fabId";
+  final assetId = "assetId";
   final forecastId = "forecastId";
   final pacId = "pacId";
   final ethCode = "ethCode";

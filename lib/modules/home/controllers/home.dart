@@ -1,5 +1,6 @@
 import 'package:barcode_scan2/platform_wrapper.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:jog_inventory/common/constant/enums.dart';
 import 'package:jog_inventory/common/globals/global.dart';
 import 'package:jog_inventory/common/permissson/permission.dart';
 import 'package:jog_inventory/common/utils/error_message.dart';
@@ -113,28 +114,52 @@ class HomeController extends GetxController {
     // }
     isGettingLocation.value = false;
     var result = await BarcodeScanner.scan();
-    var ids = result.rawContent.split(" ");
-    if (ids.length >= 1) {
-      print(ids.length);
-      var pacId;
-      var fabId;
-      if (ids.length == 1) {
-        fabId = ids.firstOrNull;
-      } else {
-        pacId = ids[0];
-        fabId = ids[1];
-      }
-      if (fabId.isNotEmpty) {
-        mainNavigationService.push(AppRoutesString.materialDetailById,
-            arguments: {appKeys.fabId: fabId, appKeys.pacId: pacId});
-      } else {
-        errorSnackBar(message: "Unable to get data from QR");
+    print(result);
+    if(result.rawContent.contains(ScanBarcodeType.assets.key) ){
+      var ids = result.rawContent.split(" ");
+      if (ids.length >= 1) {
+        print(ids.length);
+        var assetId;
+        var type;
+        if (ids.length == 1) {
+          assetId = ids.firstOrNull;
+        } else {
+          assetId = ids[0];
+          type = ids[1];
+        }
+        if (assetId.isNotEmpty) {
+          mainNavigationService.push(AppRoutesString.assetsDetailById,
+              arguments: {appKeys.assetId: assetId});
+        } else {
+          errorSnackBar(message: "Unable to get data from QR");
+        }
       }
     }
-
-    /// only for fabId
+    /// for material
     else {
-      errorSnackBar(message: "Unable to get data from QR");
+      var ids = result.rawContent.split(" ");
+      if (ids.length >= 1) {
+        print(ids.length);
+        var pacId;
+        var fabId;
+        if (ids.length == 1) {
+          fabId = ids.firstOrNull;
+        } else {
+          pacId = ids[0];
+          fabId = ids[1];
+        }
+        if (fabId.isNotEmpty) {
+          mainNavigationService.push(AppRoutesString.materialDetailById,
+              arguments: {appKeys.fabId: fabId, appKeys.pacId: pacId});
+        } else {
+          errorSnackBar(message: "Unable to get data from QR");
+        }
+      }
+
+      /// only for fabId
+      else {
+        errorSnackBar(message: "Unable to get data from QR");
+      }
     }
   }
 

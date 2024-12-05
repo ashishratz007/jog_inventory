@@ -47,6 +47,13 @@ enum VehicleStatusType {
   String get title =>
       ["Under Review", "Approved", "Sold", "Rejected", "Archived"][index];
 }
+enum ScanBarcodeType {
+  assets,
+  material;
+
+  String get key =>
+      ["assets", "material", ][index];
+}
 
 enum FabricMaterialType {
   piece,

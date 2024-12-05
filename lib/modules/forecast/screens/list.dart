@@ -90,40 +90,41 @@ class _ForecastListScreenState extends State<ForecastListScreen> {
             style: appTextTheme.titleSmall?.copyWith(
                 color: Colours.blackLite, fontWeight: FontWeight.w700)),
         Gap(10),
-        popupMenu(Get.context!,
-
-            items: [
-              ...List.generate(20,
-                      (index) => MenuItem(
-                      title: '${index + 1}',
-                      value: index + 1,
-                      onTap: (value) {
-                        controller.page.value = value;
-                        controller.getForecastList();
-                      },
-                      id: index,
-                      key: "$index"))
-            ],
-            menuIcon: Container(
-              height: 40,
-              width: 70,
-              decoration: BoxDecoration(
-                  color: Colours.white,
-                  border: Border.all(color: Colours.border),
-                  borderRadius: BorderRadius.circular(5)),
-              child: Center(
-                  child: Obx(()=> Text(
-                        "${controller.page.value}",
-                        style: appTextTheme.titleSmall?.copyWith(
-                            color: Colours.blackLite,
-                            fontWeight: FontWeight.w700)),
-                  )),
-            )),
+        Obx(()=> popupMenu(Get.context!,
+              items: [
+                ...List.generate(controller.totalPages.value,
+                        (index) => MenuItem(
+                        title: '${index + 1}',
+                        value: index + 1,
+                        onTap: (value) {
+                          controller.page.value = value;
+                          controller.getForecastList();
+                        },
+                        id: index,
+                        key: "$index"))
+              ],
+              menuIcon: Container(
+                height: 40,
+                width: 70,
+                decoration: BoxDecoration(
+                    color: Colours.white,
+                    border: Border.all(color: Colours.border),
+                    borderRadius: BorderRadius.circular(5)),
+                child: Center(
+                    child: Obx(()=> Text(
+                          "${controller.page.value}",
+                          style: appTextTheme.titleSmall?.copyWith(
+                              color: Colours.blackLite,
+                              fontWeight: FontWeight.w700)),
+                    )),
+              )),
+        ),
         Gap(10),
-        Text(
-            "of ${20}",
-            style: appTextTheme.titleSmall?.copyWith(
-                color: Colours.blackLite, fontWeight: FontWeight.w700)),
+        Obx(()=> Text(
+              "of ${controller.totalPages.value}",
+              style: appTextTheme.titleSmall?.copyWith(
+                  color: Colours.blackLite, fontWeight: FontWeight.w700)),
+        ),
       ],
     );
   }

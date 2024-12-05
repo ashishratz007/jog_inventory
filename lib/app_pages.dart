@@ -5,6 +5,7 @@ import 'package:jog_inventory/modules/forecast/screens/detail.dart';
 import 'package:jog_inventory/modules/forecast/screens/list.dart';
 import 'package:jog_inventory/modules/home/screens/home.dart';
 import 'package:jog_inventory/modules/material/models/material_request_detail.dart';
+import 'package:jog_inventory/modules/material/screens/asset_detail.dart';
 import 'package:jog_inventory/modules/material/screens/finish_material_rq.dart';
 import 'package:jog_inventory/modules/material/screens/finished_material_detail.dart';
 import 'package:jog_inventory/modules/material/screens/material_request_form.dart';
@@ -42,6 +43,13 @@ List<GetPage<dynamic>> getRoutes = [
   GetPage(
     name: AppRoutesString.materialDetailById,
     page: () => MaterialRequestDetailScreen(),
+    bindings: [
+      ///
+    ],
+  ),
+  GetPage(
+    name: AppRoutesString.assetsDetailById,
+    page: () => AssetsDetailScreen(),
     bindings: [
       ///
     ],

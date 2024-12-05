@@ -6,6 +6,7 @@ class ForeCastListController extends GetxController {
   RxBool isLoading = false.obs;
   RxBool isBusy = false.obs;
   RxInt page = 1.obs;
+  RxInt totalPages = 20.obs;
   List<ForecastItem> items = [];
   TextEditingController searchController = TextEditingController();
 
@@ -26,6 +27,7 @@ class ForeCastListController extends GetxController {
     ForecastListModel.fetchAll(page.value,searchController.text).then((itm){
       isLoading.value = false;
       items = itm.items;
+      totalPages.value = itm.totalPages;
     }).onError((error, trace){
       isLoading.value = false;
       displayErrorMessage(Get.context!, error: error, trace: trace, onRetry: getForecastList);
