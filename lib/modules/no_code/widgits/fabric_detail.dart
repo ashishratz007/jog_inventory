@@ -54,61 +54,74 @@ class _FabricDetailsScreenState extends State<_FabricDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colours.bgColor,
-      child: Obx(
-        () => Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Visibility(visible: isLoading.value, child: listLoadingEffect()),
-            Visibility(
-              visible: !isLoading.value,
-              child: Flexible(
-                child: SingleChildScrollView(
-                    padding: AppPadding.inner,
-                    child: Column(
-                      children: [
-                        ...displayList<TypeCategoryModel>(
-                            items: categoryData,
-                            builder: (item, index) {
-                              return itemTileWidget(item);
-                            }),
+    return Scaffold(
+      body: Container(
+        color: Colours.bgColor,
+        child: Obx(
+          () => Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Visibility(visible: isLoading.value, child: listLoadingEffect()),
+              Visibility(
+                visible: !isLoading.value,
+                child: Flexible(
+                  child: SingleChildScrollView(
+                      padding: AppPadding.inner,
+                      child: Column(
+                        children: [
+                          ...displayList<TypeCategoryModel>(
+                              items: categoryData,
+                              builder: (item, index) {
+                                return itemTileWidget(item);
+                              }),
 
-                        gap(space: 10),
+                          gap(space: 10),
 
-                        ///
-                        gap(),
-                        SafeAreaBottom(context),
-                      ],
-                    )),
+                          ///
+                          gap(),
+                          SafeAreaBottom(context),
+                        ],
+                      )),
+                ),
               ),
-            ),
-            Padding(
-              padding: AppPadding.leftRight,
-              child: PrimaryButton(
-                color: Colours.greenLight,
-                title: "Add",
-                isBusy: isBusy.value,
-                onTap: () {
-                  var controller = getController<NoCodeRequestController>(
-                      NoCodeRequestController());
-                  isBusy.value = true;
-                  NoCodeRequestModel.addItems(addedItem.toList(),
-                          controller.usedCode!, widget.categoryId)
-                      .then((value) {
-                    isBusy.value = false;
-                    mainNavigationService.pop();
-                    widget.onDone();
-                  }).onError((error, trace) {
-                    isBusy.value = false;
-                  });
-                },
-                leading: Icon(Icons.add, size: 18, color: Colors.white),
-              ),
-            ),
-            SafeAreaBottom(context),
-          ],
+              if (!config.isTablet) ...[
+                gap(),
+                addButton(),
+              ],
+              SafeAreaBottom(context),
+            ],
+          ),
         ),
+      ),
+      floatingActionButton: config.isTablet
+          ? SizedBox(
+              height: 50, child: addButton(padding: EdgeInsets.only(left: 30)))
+          : null,
+    );
+  }
+
+  Widget addButton({EdgeInsets? padding}) {
+    return Padding(
+      padding: padding ?? AppPadding.leftRight,
+      child: PrimaryButton(
+        color: Colours.greenLight,
+        title: "Add",
+        isBusy: isBusy.value,
+        onTap: () {
+          var controller =
+              getController<NoCodeRequestController>(NoCodeRequestController());
+          isBusy.value = true;
+          NoCodeRequestModel.addItems(
+                  addedItem.toList(), controller.usedCode!, widget.categoryId)
+              .then((value) {
+            isBusy.value = false;
+            mainNavigationService.back(context);
+            widget.onDone();
+          }).onError((error, trace) {
+            isBusy.value = false;
+          });
+        },
+        leading: Icon(Icons.add, size: 18, color: Colors.white),
       ),
     );
   }
@@ -149,37 +162,40 @@ class _FabricDetailsScreenState extends State<_FabricDetailsScreen> {
           Row(
             children: [
               Expanded(
-                  flex: 3,
+                  flex: 2,
                   child: titleSubtitleWidget(Strings.date,
                       "${dateTimeFormat.toYYMMDDHHMMSS(date: item.fabricDateCreate, removeTime: true)}")),
               Expanded(
                   flex: 2,
                   child: titleSubtitleWidget(
                       Strings.bal, "${item.fabricBalance} kg")),
+              if(config.isTablet) Expanded(flex: 1,child: SizedBox())
             ],
           ),
           gap(space: 5),
           Row(
             children: [
               Expanded(
-                  flex: 3,
+                  flex: 2,
                   child: titleSubtitleWidget(Strings.box, "${item.fabricBox}")),
               Expanded(
                   flex: 2,
                   child: titleSubtitleWidget(
                       Strings.used, "${item.fabricUsed ?? 0}")),
+              if(config.isTablet) Expanded(flex: 1,child: SizedBox())
             ],
           ),
           gap(space: 5),
           Row(
             children: [
               Expanded(
-                  flex: 3,
+                  flex: 2,
                   child: titleSubtitleWidget("No", "${item.fabricNo}")),
               Expanded(
                   flex: 2,
                   child: titleSubtitleWidget(
                       Strings.amount, "${item.fabricAmount}")),
+              if(config.isTablet) Expanded(flex: 1,child: SizedBox())
             ],
           ),
         ],

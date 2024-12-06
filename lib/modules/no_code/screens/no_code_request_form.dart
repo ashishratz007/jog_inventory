@@ -15,7 +15,12 @@ class NoCodeRequestFormScreen extends GetView<NoCodeRequestController> {
   @override
   Widget build(BuildContext context) {
     return CustomAppBar(
-        title: Strings.noCodeRQ, body: body, bottomNavBar: viewWidget());
+        onBack: () {
+          removeController<NoCodeRequestController>(controller);
+        },
+        title: Strings.noCodeRQ,
+        body: body,
+        bottomNavBar: viewWidget());
   }
 
   Widget body(BuildContext context) {
@@ -127,6 +132,8 @@ class NoCodeRequestFormScreen extends GetView<NoCodeRequestController> {
                     ))
               ],
             ),
+
+            /// we are adding
             // gap(space: 10),
             Row(
               children: [
@@ -147,43 +154,54 @@ class NoCodeRequestFormScreen extends GetView<NoCodeRequestController> {
                               padding: EdgeInsets.only(left: 15, right: 15),
                               height: 35,
                               initialValue: "${item.usedDetailUsed ?? 0.0} kg",
-                              inputFormatters: [
-                                amountFormatter()],
+                              inputFormatters: [amountFormatter()],
                               onChanged: (value) {
-                                if(compareBalance(value, item.balance)){
-                                item.usedDetailUsed =
-                                    double.tryParse(value) ?? 0.0;
-                                controller.isForUpdate.value = true;
-                              }
-                              else{
-                                errorSnackBar(message: "Value should not be grater than balance.");
+                                if (compareBalance(value, item.balance)) {
+                                  item.usedDetailUsed =
+                                      double.tryParse(value) ?? 0.0;
+                                  controller.isForUpdate.value = true;
+                                } else {
+                                  errorSnackBar(
+                                      message:
+                                          "Value should not be grater than balance.");
                                 }
                               })),
                     ],
                   ),
-                )
-              ],
-            ),
-            gap(space: 10),
-            Row(
-              children: [
+                ),
+                if (config.isTablet) ...[gap(space: 10),
                 Expanded(
                     flex: 3,
                     child:
-                        displayTitleSubtitle("NO", "${item.usedDetailNo} kg")),
-                Expanded(
-                    flex: 3,
-                    child: displayTitleSubtitle(
-                        "Price", "${item.usedDetailPrice ?? 0}")),
+                        displayTitleSubtitle("NO", "${item.usedDetailNo} kg"))],
               ],
             ),
-            gap(space: 5),
+            gap(space: 10),
+            if (!config.isTablet) ...[
+              Row(
+                children: [
+                  Expanded(
+                      flex: 3,
+                      child: displayTitleSubtitle(
+                          "NO", "${item.usedDetailNo} kg")),
+                  Expanded(
+                      flex: 3,
+                      child: displayTitleSubtitle(
+                          "Price", "${item.usedDetailPrice ?? 0}")),
+                ],
+              ),
+              gap(space: 5)
+            ],
             Row(
               children: [
                 Expanded(
                     flex: 3,
                     child: displayTitleSubtitle(
                         "Balance", "${item.balance ?? 0.0} kg")),
+                if (config.isTablet) ...[Expanded(
+                    flex: 3,
+                    child: displayTitleSubtitle(
+                        "Price", "${item.usedDetailPrice ?? 0}")),gap(space: 10)],
                 Expanded(
                     flex: 3,
                     child: displayTitleSubtitle(

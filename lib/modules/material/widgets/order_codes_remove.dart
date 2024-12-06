@@ -50,100 +50,103 @@ class _OrderCodesRemoveScreenState extends State<_OrderCodesRemoveScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(
-      () => Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Visibility(visible: isLoading.value, child: listLoadingEffect()),
-          Visibility(
-            visible: !isLoading.value && error == null,
-            child: Flexible(
-              child: SingleChildScrollView(
-                padding: AppPadding.inner,
-                child: Wrap(
-                    spacing: 10,
-                    runSpacing: 10,
-                    children: List.generate(codes.length, (index) {
-                      OrderCodeData orderCode = codes[index];
-                      return Obx(
-                        () => InkWell(
-                          borderRadius: BorderRadius.circular(10),
-                          onTap: () {
-                            if (selectedCodeIds
-                                .contains(orderCode.orderLkrTitleId)) {
-                              selectedCodeIds.remove(orderCode.orderLkrTitleId);
-                            } else {
-                              selectedCodeIds.add(orderCode.orderLkrTitleId!);
-                            }
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: selectedCodeIds
-                                        .contains(orderCode.orderLkrTitleId)
-                                    ? Colours.primaryBlueBg
-                                    : Colours.white,
-                                border: Border.all(
-                                    color: selectedCodeIds
-                                            .contains(orderCode.orderLkrTitleId)
-                                        ? Colours.primary
-                                        : Colours.border)),
-                            padding: EdgeInsets.only(
-                                left: 10, right: 10, top: 5, bottom: 5),
-                            child: Text(orderCode.orderTitle??""),
+    return Material(
+      type: MaterialType.transparency,
+      child: Obx(
+        () => Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Visibility(visible: isLoading.value, child: listLoadingEffect()),
+            Visibility(
+              visible: !isLoading.value && error == null,
+              child: Flexible(
+                child: SingleChildScrollView(
+                  padding: AppPadding.inner,
+                  child: Wrap(
+                      spacing: 10,
+                      runSpacing: 10,
+                      children: List.generate(codes.length, (index) {
+                        OrderCodeData orderCode = codes[index];
+                        return Obx(
+                          () => InkWell(
+                            borderRadius: BorderRadius.circular(10),
+                            onTap: () {
+                              if (selectedCodeIds
+                                  .contains(orderCode.orderLkrTitleId)) {
+                                selectedCodeIds.remove(orderCode.orderLkrTitleId);
+                              } else {
+                                selectedCodeIds.add(orderCode.orderLkrTitleId!);
+                              }
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: selectedCodeIds
+                                          .contains(orderCode.orderLkrTitleId)
+                                      ? Colours.primaryBlueBg
+                                      : Colours.white,
+                                  border: Border.all(
+                                      color: selectedCodeIds
+                                              .contains(orderCode.orderLkrTitleId)
+                                          ? Colours.primary
+                                          : Colours.border)),
+                              padding: EdgeInsets.only(
+                                  left: 10, right: 10, top: 5, bottom: 5),
+                              child: Text(orderCode.orderTitle??""),
+                            ),
                           ),
-                        ),
-                      );
-                    })),
+                        );
+                      })),
+                ),
               ),
             ),
-          ),
-          Visibility(
-              visible: error != null && !isLoading.value,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.error,
+            Visibility(
+                visible: error != null && !isLoading.value,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.error,
+                      color: Colours.red,
+                      size: 50,
+                    ),
+                    gap(space: 10),
+                    Text("${error ?? "Error Loading Data."}\nTry again!",
+                        textAlign: TextAlign.center,
+                        style: appTextTheme.titleMedium),
+                    gap(space: 10),
+                    IconButton(
+                        onPressed: () {
+                          getOrderCodes();
+                        },
+                        icon: Icon(Icons.refresh, size: 40, color: Colours.blue))
+                  ],
+                )),
+            Obx(()=> Padding(
+                padding: EdgeInsets.all(10),
+                child: PrimaryButton(
+                    title: "Remove selected orders",
+                    onTap: () async {
+                      try {
+                        isBusy.value = true;
+                        await RemoveCodeModel(selectedCodeIds.toList())
+                            .removeCodes();
+                        isBusy.value = false;
+                        mainNavigationService.back(context);
+                      } catch (e, trace) {
+                        isBusy.value = false;
+                        errorSnackBar(message: e.toString());
+                      }
+                    },
                     color: Colours.red,
-                    size: 50,
-                  ),
-                  gap(space: 10),
-                  Text("${error ?? "Error Loading Data."}\nTry again!",
-                      textAlign: TextAlign.center,
-                      style: appTextTheme.titleMedium),
-                  gap(space: 10),
-                  IconButton(
-                      onPressed: () {
-                        getOrderCodes();
-                      },
-                      icon: Icon(Icons.refresh, size: 40, color: Colours.blue))
-                ],
-              )),
-          Obx(()=> Padding(
-              padding: EdgeInsets.all(10),
-              child: PrimaryButton(
-                  title: "Remove selected orders",
-                  onTap: () async {
-                    try {
-                      isBusy.value = true;
-                      await RemoveCodeModel(selectedCodeIds.toList())
-                          .removeCodes();
-                      isBusy.value = false;
-                      mainNavigationService.back(context);
-                    } catch (e, trace) {
-                      isBusy.value = false;
-                      errorSnackBar(message: e.toString());
-                    }
-                  },
-                  color: Colours.red,
-                  isBusy:  isBusy.value,
-                  isEnable: selectedCodeIds.length > 0),
+                    isBusy:  isBusy.value,
+                    isEnable: selectedCodeIds.length > 0),
+              ),
             ),
-          ),
-          SafeAreaBottom(context)
-        ],
+            SafeAreaBottom(context)
+          ],
+        ),
       ),
     );
   }

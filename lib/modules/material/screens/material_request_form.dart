@@ -17,6 +17,9 @@ class MaterialRequestFormScreen extends GetView<MaterialRequestFormController> {
   @override
   Widget build(BuildContext context) {
     return CustomAppBar(
+      onBack: () {
+        removeController<MaterialRequestFormController>(controller);
+      },
       title: "Material requisition form",
       body: body,
       bottomNavBar: bottomNavBarButtons(context),
@@ -254,50 +257,126 @@ class MaterialRequestFormScreen extends GetView<MaterialRequestFormController> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Text("${item.fabricNo ?? ""}",
-                  style: appTextTheme.labelSmall
-                      ?.copyWith(color: Colours.greyLight)),
-              gap(space: 10),
-              Text("${item.catNameEn} ,",
-                  style: appTextTheme.labelSmall
-                      ?.copyWith(color: Colours.primaryText)),
-              gap(space: 10),
-              Text("${item.fabricColor}",
-                  style: appTextTheme.labelSmall
-                      ?.copyWith(color: Colours.blackLite)),
-              Expanded(child: SizedBox()),
-              IconButton(
-                  onPressed: () {
-                    controller.items.remove(item);
-                  },
-                  icon:
-                      Icon(Icons.delete_outlined, size: 20, color: Colours.red))
-            ],
-          ),
-          gap(space: 10),
-          Row(
-            children: [
-              gap(space: 25),
-              Text(Strings.box,
-                  style: appTextTheme.labelSmall
-                      ?.copyWith(color: Colours.greyLight)),
-              gap(space: 5),
-              Text("${item.fabricBox ?? 0}",
-                  style: appTextTheme.labelSmall
-                      ?.copyWith(color: Colours.blackLite)),
-              Expanded(child: SizedBox()),
-              Text(Strings.bal,
-                  style: appTextTheme.labelSmall
-                      ?.copyWith(color: Colours.greyLight)),
-              gap(space: 10),
-              Text("${item.fabricBalance ?? 0.0} kg",
-                  style: appTextTheme.labelSmall
-                      ?.copyWith(color: Colours.blackLite)),
-              gap(space: 50),
-            ],
-          ),
+          if (!config.isTablet) ...[
+            Row(
+              children: [
+                Text("${item.fabricNo ?? ""}",
+                    style: appTextTheme.labelSmall
+                        ?.copyWith(color: Colours.greyLight)),
+                gap(space: 10),
+                Text("${item.catNameEn} ,",
+                    style: appTextTheme.labelSmall
+                        ?.copyWith(color: Colours.primaryText)),
+                gap(space: 10),
+                Text("${item.fabricColor}",
+                    style: appTextTheme.labelSmall
+                        ?.copyWith(color: Colours.blackLite)),
+                Expanded(child: SizedBox()),
+                IconButton(
+                    onPressed: () {
+                      controller.items.remove(item);
+                    },
+                    icon: Icon(Icons.delete_outlined,
+                        size: 20, color: Colours.red))
+              ],
+            ),
+            gap(space: 10),
+            Row(
+              children: [
+                gap(space: 25),
+                Text(Strings.box,
+                    style: appTextTheme.labelSmall
+                        ?.copyWith(color: Colours.greyLight)),
+                gap(space: 5),
+                Text("${item.fabricBox ?? 0}",
+                    style: appTextTheme.labelSmall
+                        ?.copyWith(color: Colours.blackLite)),
+                Expanded(child: SizedBox()),
+                Text(Strings.bal,
+                    style: appTextTheme.labelSmall
+                        ?.copyWith(color: Colours.greyLight)),
+                gap(space: 10),
+                Text("${item.fabricBalance ?? 0.0} kg",
+                    style: appTextTheme.labelSmall
+                        ?.copyWith(color: Colours.blackLite)),
+                gap(space: 50),
+              ],
+            )
+          ],
+          if (config.isTablet) ...[
+            Row(
+              children: [
+                Text("Material",
+                    style: appTextTheme.labelSmall
+                        ?.copyWith(color: Colours.blackLite)),
+                gap(space: 10),
+                Text("${item.catNameEn} ",
+                    style: appTextTheme.labelSmall
+                        ?.copyWith(color: Colours.primaryText)),
+                Expanded(child: SizedBox()),
+                IconButton(
+                    onPressed: () {
+                      controller.items.remove(item);
+                    },
+                    icon: Icon(Icons.delete_outlined,
+                        size: 20, color: Colours.red))
+              ],
+            ),
+            gap(space: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    Text("Color",
+                        style: appTextTheme.labelSmall
+                            ?.copyWith(color: Colours.blackLite)),
+                    gap(space: 5),
+                    Text("${item.fabricColor}",
+                        style: appTextTheme.labelSmall
+                            ?.copyWith(color: Colours.blackLite)),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Text("No.",
+                        style: appTextTheme.labelSmall
+                            ?.copyWith(color: Colours.blackLite)),
+                    gap(space: 5),
+                    Text(item.fabricNo??"_",
+                        style: appTextTheme.labelSmall
+                            ?.copyWith(color: Colours.greyLight)),
+                    gap(space: 5),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Text(Strings.box,
+                        style: appTextTheme.labelSmall
+                            ?.copyWith(color: Colours.blackLite)),
+                    gap(space: 5),
+                    Text(item.fabricBox??"_",
+                        style: appTextTheme.labelSmall
+                            ?.copyWith(color: Colours.greyLight)),
+                    gap(space: 5),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Text(Strings.bal,
+                        style: appTextTheme.labelSmall
+                            ?.copyWith(color: Colours.blackLite)),
+                    gap(space: 5),
+                    Text("${item.fabricBalance ?? 0.0} kg",
+                        style: appTextTheme.labelSmall
+                            ?.copyWith(color: Colours.greyLight)),
+                    gap(space: 5),
+                  ],
+                ),
+                gap(space: 0),
+              ],
+            )
+          ],
         ],
       ),
     );

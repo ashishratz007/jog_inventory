@@ -6,6 +6,8 @@ Widget PrimaryButton(
     bool isBusy = false,
     bool isFullWidth = true,
     bool isEnable = true,
+    bool showBorder = false,
+      Color? borderColor,
     Widget? leading,
     Widget? trailing,
     Color? textColor,
@@ -22,7 +24,7 @@ Widget PrimaryButton(
     margin: margin,
     padding: padding,
     decoration: BoxDecoration(
-
+      border: !showBorder? null:Border.all(color: borderColor??color),
         /// enable disable color
         color: !isEnable ? Colors.grey.withOpacity(0.4) : color,
         borderRadius: BorderRadius.circular(radius)),

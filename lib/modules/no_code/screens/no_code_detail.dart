@@ -51,52 +51,87 @@ class _NoCodeDetailScreenState extends State<NoCodeDetailScreen> {
   }
 
   Widget orderInfo() {
-    return Container(
-      padding: AppPadding.inner,
-      decoration: BoxDecoration(
-          color: Colours.secondary2, borderRadius: BorderRadius.circular(15)),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Text("Code",
-                  style:
-                      appTextTheme.labelMedium?.copyWith(color: Colours.white)),
-              gap(),
-              Text(controller.usedCode.usedCode ?? "_",
-                  style:
-                      appTextTheme.labelSmall?.copyWith(color: Colours.white)),
-            ],
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          flex: 2,
+          child: Container(
+            padding: AppPadding.inner,
+            decoration: BoxDecoration(
+                color: Colours.secondary2, borderRadius: BorderRadius.circular(15)),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Text("Code",
+                        style:
+                            appTextTheme.labelMedium?.copyWith(color: Colours.white)),
+                    gap(),
+                    Text(controller.usedCode.usedCode ?? "_",
+                        style:
+                            appTextTheme.labelSmall?.copyWith(color: Colours.white)),
+                  ],
+                ),
+                gap(space: 10),
+                Row(
+                  children: [
+                    Text(Strings.orderCode,
+                        style:
+                            appTextTheme.labelMedium?.copyWith(color: Colours.white)),
+                    gap(),
+                    Text(controller.usedCode.usedOrderCode ?? "_",
+                        style:
+                            appTextTheme.labelSmall?.copyWith(color: Colours.white)),
+                  ],
+                ),
+                gap(space: 10),
+                Row(
+                  children: [
+                    Text(Strings.date,
+                        style:
+                            appTextTheme.labelMedium?.copyWith(color: Colours.white)),
+                    gap(),
+                    Text(
+                        dateTimeFormat.toYYMMDDHHMMSS(
+                            date: controller.usedCode.usedDate),
+                        style:
+                            appTextTheme.labelSmall?.copyWith(color: Colours.white)),
+                  ],
+                ),
+              ],
+            ),
           ),
+        ),
+        if(config.isTablet)...[
           gap(space: 10),
-          Row(
-            children: [
-              Text(Strings.orderCode,
-                  style:
-                      appTextTheme.labelMedium?.copyWith(color: Colours.white)),
-              gap(),
-              Text(controller.usedCode.usedOrderCode ?? "_",
-                  style:
-                      appTextTheme.labelSmall?.copyWith(color: Colours.white)),
-            ],
+        Expanded(
+          flex: 1,
+          child: Container(
+            padding: AppPadding.inner,
+            height: 120,
+            decoration: BoxDecoration(
+              border: Border.all(color: Colours.blackLite),
+                color: Colours.white, borderRadius: BorderRadius.circular(5)),
+            child: SingleChildScrollView(
+              child: Text.rich(
+                TextSpan(
+                  text: "NOTE: ", // Default style
+                  style: TextStyle(fontSize: 16, color: Colours.greyLight),
+                  children: [
+                    TextSpan(
+                      text: (controller.usedCode.noOrderNote??"_"),
+                      style: TextStyle(fontWeight: FontWeight.bold, color: Colours.blackLite),
+                    ),
+                  ],
+                ),
+              
+              ),
+            ),
           ),
-          gap(space: 10),
-          Row(
-            children: [
-              Text(Strings.date,
-                  style:
-                      appTextTheme.labelMedium?.copyWith(color: Colours.white)),
-              gap(),
-              Text(
-                  dateTimeFormat.toYYMMDDHHMMSS(
-                      date: controller.usedCode.usedDate),
-                  style:
-                      appTextTheme.labelSmall?.copyWith(color: Colours.white)),
-            ],
-          ),
-        ],
-      ),
+        )],
+      ],
     );
   }
 
@@ -124,6 +159,9 @@ class _NoCodeDetailScreenState extends State<NoCodeDetailScreen> {
             gap(space: 10),
             Row(
               children: [
+                if(config.isTablet)Expanded(
+                    flex: 2,
+                    child: itemNoWidget(item, index)),
                 Expanded(
                     flex: 3,
                     child: displayTitleSubtitle(
@@ -132,23 +170,26 @@ class _NoCodeDetailScreenState extends State<NoCodeDetailScreen> {
                     flex: 2,
                     child: displayTitleSubtitle(
                         "Used", "${item.usedDetailUsed ?? 0} kg")),
+
               ],
             ),
-            gap(space: 5),
+            if(!config.isTablet)...[gap(space: 5),
             Row(
               children: [
                 Expanded(
                     flex: 3,
-                    child: displayTitleSubtitle("NO", "${item.usedDetailNo}")),
+                    child: itemNoWidget(item, index)),
                 Expanded(
                     flex: 2,
-                    child: displayTitleSubtitle(
-                        "Price", "${item.usedDetailPrice ?? 0}")),
+                    child:itemPriceWidget(item, index) ),
               ],
-            ),
+            )],
             gap(space: 5),
             Row(
               children: [
+                if(config.isTablet)Expanded(
+                    flex: 2,
+                    child:itemPriceWidget(item, index) ),
                 Expanded(
                     flex: 3,
                     child: displayTitleSubtitle(
@@ -162,6 +203,17 @@ class _NoCodeDetailScreenState extends State<NoCodeDetailScreen> {
           ],
         ));
   }
+
+
+ Widget itemNoWidget(NoCodeRQUsedItemModel item, int index){
+   return displayTitleSubtitle("NO", "${item.usedDetailNo}");
+  }
+
+  Widget itemPriceWidget(NoCodeRQUsedItemModel item, int index){
+    return displayTitleSubtitle(
+        "Price", "${item.usedDetailPrice ?? 0}");
+  }
+
 
   Widget displayTitleSubtitle(String title, String subtitle) {
     return Row(

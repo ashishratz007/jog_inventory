@@ -524,7 +524,7 @@ class MaterialRequestListScreen extends GetView<MaterialRequestListController> {
                         verticalDivider(),
                         // gap(space: 10),
                         Expanded(
-                          flex: 4,
+                          flex: 3,
                           child: Padding(
                             padding: const EdgeInsets.only(left: 10),
                             child: Column(
@@ -544,11 +544,27 @@ class MaterialRequestListScreen extends GetView<MaterialRequestListController> {
                             ),
                           ),
                         ),
-                        Expanded(flex: 1, child: SizedBox())
+                        Expanded(flex: 2, child: Padding(
+                          padding: const EdgeInsets.only(right: 10),
+                          child: PrimaryButton(
+                            padding: EdgeInsets.only(right: 8,left: 8,top: 5,bottom: 5),
+                            color: Colours.primaryBlueBg,
+                              textColor: Colours.primary,
+                              showBorder: true,
+                              textSize: 14,
+                              borderColor: Colours.primary,
+                              trailing: Icon(Icons.arrow_forward_ios_rounded,size: 15,color: Colours.primary,),
+                              title: "View", onTap: (){
+                            mainNavigationService.push(AppRoutesString.materialRQFinishDetail, arguments: {
+                              appKeys.materialRQId: item.rqId,
+                              appKeys.materialRQDetail: item,
+                            });
+                          }),
+                        ))
                       ],
                     ),
                   ),
-                  Positioned(
+                if(!config.isTablet)  Positioned(
                     bottom: 0,
                     right: 0,
                     child: Container(

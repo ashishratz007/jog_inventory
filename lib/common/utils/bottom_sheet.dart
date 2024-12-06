@@ -11,31 +11,51 @@ void showAppBottomSheet(
   if (config.isTablet) {
     showDialog(
         context: context,
-        builder: (context) => Material(
-            type: MaterialType.transparency,
-            child: Container(
-                margin: EdgeInsets.only(
-                    left: 100, right: 100, bottom: 150, top: 150),
-                decoration: BoxDecoration(
-                    color: Colours.white,
-                    borderRadius: BorderRadius.circular(10)),
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+        builder: (context) => Container(
+          height: double.infinity,
+          width: double.infinity,
+            margin: EdgeInsets.only(
+                left: 100, right: 100, bottom: 150, top: 150),
+            decoration: BoxDecoration(
+                color: Colours.bgGrey,
+                borderRadius: BorderRadius.circular(10)),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Material(
+                  type: MaterialType.transparency,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      IconButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          icon: Icon(
-                            Icons.close,
-                            size: 30,
-                          )),
-                      gap(),
-                      body,
+                      Container(
+                        margin: EdgeInsets.only(top: 10,left: 10),
+                        decoration: BoxDecoration(
+                            color: Colours.white,
+                            borderRadius: BorderRadius.circular(10)),
+                        child: IconButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            icon: Icon(
+                              Icons.close,
+                              size: 30,
+                            )),
+                      ),
+
+                      if (title != null) ...[
+                        Expanded(
+                            child: Text(title,
+                                style: appTextTheme.titleSmall,
+                                textAlign: TextAlign.center)),
+                        gap(space: 25)
+                      ]
                     ],
                   ),
-                ))));
+                ),
+                gap(),
+                Expanded(child: body),
+              ],
+            )));
   } else
     return showModalBottomSheet(
       context: context,

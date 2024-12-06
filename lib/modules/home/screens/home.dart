@@ -40,8 +40,8 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                 initialRoute: AppRoutesString.dashboard,
                 onGenerateRoute: (routeSettings) {
                   return MaterialPageRoute(
-                    maintainState: true,
-                    settings: routeSettings,
+                      maintainState: true,
+                      settings: routeSettings,
                       builder: (context) =>
                           routeBuilders[routeSettings.name!]!(context));
                 },
@@ -71,7 +71,8 @@ class HomeScreen extends GetView<HomeController> {
     return SingleChildScrollView(
       child: Column(
         children: [
-          if(config.isTablet) gap(space: 50),
+          if (config.isTablet) gap(space: 50),
+
           /// scan barcode
           ScanBarCodeChipWidget(),
           gap(),
@@ -92,9 +93,8 @@ class HomeScreen extends GetView<HomeController> {
   Widget ScanBarCodeChipWidget() {
     var radius = 10.0;
     return Container(
-      constraints: BoxConstraints(
-          maxWidth: config.isTablet? 400 : double.infinity
-      ),
+      constraints:
+          BoxConstraints(maxWidth: config.isTablet ? 400 : double.infinity),
       child: Container(
         padding: AppPadding.pagePaddingAll,
         decoration: BoxDecoration(
@@ -230,7 +230,8 @@ class HomeScreen extends GetView<HomeController> {
                             left: 0,
                             right: 0,
                             child: Padding(
-                              padding: const EdgeInsets.only(left: 30, right: 30),
+                              padding:
+                                  const EdgeInsets.only(left: 30, right: 30),
                               child: SizedBox(
                                 height: 10,
                                 width: 200,
@@ -267,11 +268,12 @@ class HomeScreen extends GetView<HomeController> {
 
   Widget actionsTilesWidget() {
     return Container(
-      constraints: BoxConstraints(
-        maxWidth: config.isTablet? 450 : double.infinity
-      ),
+      constraints:
+          BoxConstraints(maxWidth: config.isTablet ? 450 : double.infinity),
       child: Padding(
-        padding: config.isTablet? AppPadding.pagePaddingTabAll :AppPadding.pagePadding,
+        padding: config.isTablet
+            ? AppPadding.pagePaddingTabAll
+            : AppPadding.pagePadding,
         child: Column(
           children: [
             Row(
@@ -285,7 +287,7 @@ class HomeScreen extends GetView<HomeController> {
                       height: 20,
                       padding: AppPadding.inner),
                   onTap: () {
-                      mainNavigationService.push(AppRoutesString.stockInform);
+                    mainNavigationService.push(AppRoutesString.stockInform);
                   },
                 )),
                 gap(space: 10),
@@ -298,7 +300,8 @@ class HomeScreen extends GetView<HomeController> {
                         height: 20,
                         padding: AppPadding.inner),
                     onTap: () {
-                        mainNavigationService.push(AppRoutesString.materialRequestForm);
+                      mainNavigationService
+                          .push(AppRoutesString.materialRequestForm);
                     },
                   ),
                 ),
