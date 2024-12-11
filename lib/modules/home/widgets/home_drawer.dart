@@ -91,6 +91,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                                 child: SmallToLargeAnimation(
                                   child: displayAssetsWidget(
                                     AppIcons.double_arrow,
+                                    width: 35
                                   ),
                                   duration: Duration(milliseconds: 700),
                                 )),
