@@ -29,12 +29,12 @@ class _addFabricState extends State<_addFabric> {
   FabricColorModel? selectedFabColor;
   String forecast = "";
 
-  String balance  = "";
+  String balance = "";
   RxBool balanceLoading = false.obs;
 
-  getBalance() async{
+  getBalance() async {
     balanceLoading.value = true;
-    try{
+    try {
       /// for color not selected
       if (selectedFabColor?.fabricColor == null) {
         throw "Select Color first to see data here";
@@ -46,7 +46,7 @@ class _addFabricState extends State<_addFabric> {
       balance = bal.toString();
       balance = formatDecimal(balance);
       balanceLoading.value = false;
-    }catch(e,t){
+    } catch (e, t) {
       balanceLoading.value = false;
     }
     balanceLoading.value = false;
@@ -73,7 +73,7 @@ class _addFabricState extends State<_addFabric> {
                           var items = await FabricCategoryModel.fetchAll();
                           return List.generate(
                               items.length,
-                                  (index) => DropDownItem(
+                              (index) => DropDownItem(
                                   id: index,
                                   key: items[index].catCode ?? "_",
                                   title: items[index].catCode ?? "_",
@@ -93,42 +93,42 @@ class _addFabricState extends State<_addFabric> {
                 /// Color
                 Expanded(
                     child: PrimaryFieldMenuWithLabel<FabricColorModel>(
-                      controller: fabricColorController,
-                      items: [],
-                      allowSearch: true,
-                      fromApi: () async {
-
-                        /// for category not selected
-                        if (selectedFabCate?.catId == null) {
-                          throw "Select Fabric first to see data here";
-                        }
-                        var colors =
-                        await FabricColorModel.getColors(selectedFabCate!.catId!);
-                        return List.generate(
-                            colors.length,
-                                (index) => DropDownItem(
-                                id: index,
-                                key: colors[index].fabricColor ?? "_",
-                                title: colors[index].fabricColor ?? "_",
-                                value: colors[index]));
-                      },
-                      onChanged: (item) {
-                        balance = "";
-                        forecast = "";
-                        selectedFabColor = item?.firstOrNull?.value;
-                        getBalance();
-                        setState(() {});
-                      },
-                      labelText: Strings.color,
-                      hintText: Strings.color,
-                    )),
+                  controller: fabricColorController,
+                  items: [],
+                  allowSearch: true,
+                  fromApi: () async {
+                    /// for category not selected
+                    if (selectedFabCate?.catId == null) {
+                      throw "Select Fabric first to see data here";
+                    }
+                    var colors = await FabricColorModel.getColors(
+                        selectedFabCate!.catId!);
+                    return List.generate(
+                        colors.length,
+                        (index) => DropDownItem(
+                            id: index,
+                            key: colors[index].fabricColor ?? "_",
+                            title: colors[index].fabricColor ?? "_",
+                            value: colors[index]));
+                  },
+                  onChanged: (item) {
+                    balance = "";
+                    forecast = "";
+                    selectedFabColor = item?.firstOrNull?.value;
+                    getBalance();
+                    setState(() {});
+                  },
+                  labelText: Strings.color,
+                  hintText: Strings.color,
+                )),
               ],
             ),
             gap(space: 20),
             Row(
               children: [
                 Expanded(
-                  child: Obx(()=> shimmerEffects(
+                  child: Obx(
+                    () => shimmerEffects(
                       isLoading: balanceLoading.value,
                       child: TextFieldWithLabel(
                         key: Key(balance),
@@ -160,14 +160,19 @@ class _addFabricState extends State<_addFabric> {
                 Icons.add,
                 color: Colours.white,
               ),
-              isEnable: selectedFabCate != null && selectedFabColor != null && !forecast.isEmpty,
+              isEnable: selectedFabCate != null &&
+                  selectedFabColor != null &&
+                  !forecast.isEmpty,
               onTap: () {
-                widget.onAdd([ForeCastFormItem(
+                widget.onAdd([
+                  ForeCastFormItem(
                     material: selectedFabCate!,
                     balance: balance,
                     forecast: forecast,
-                    color: selectedFabColor!,)]);
-                mainNavigationService.pop();
+                    color: selectedFabColor!,
+                  )
+                ]);
+                mainNavigationService.back(context);
               },
             ),
             // bottom

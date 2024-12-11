@@ -13,6 +13,17 @@ class _AppIcons {
   String no_code = "${_path}no_code.png";
   String fabric = "${_path}fabric.png";
   String edit = "${_path}edit.png";
+  String double_arrow = "${_path}double_arrow.png";
+
+  /// sidebar icons
+  String forecast_sel = "${_path}forecast_sel.png";
+  String forecast_un = "${_path}forecast_un.png";
+  String material_req_sel = "${_path}material_req_sel.png";
+  String material_req_un = "${_path}material_req_un.png";
+  String no_code_req_un = "${_path}no_code_req_un.png";
+  String no_code_req_sel = "${_path}no_code_req_sel.png";
+  String stock_in_list_sel = "${_path}stock_in_list_sel.png";
+  String stock_in_list_un = "${_path}stock_in_list_un.png";
 }
 
 var AppIcons = _AppIcons();

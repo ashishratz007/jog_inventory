@@ -21,7 +21,10 @@ class _AddForecastScreenState extends State<AddForecastScreen> {
   @override
   Widget build(BuildContext context) {
     return Obx(
-          () => CustomAppBar(
+      () => CustomAppBar(
+        onBack: () {
+          removeController<ForecastFormController>(controller);
+        },
         title: "Forecast form",
         body: body,
         // trailingButton: SizedBox(
@@ -37,7 +40,7 @@ class _AddForecastScreenState extends State<AddForecastScreen> {
         //     /// Todo
         //   },
         // )),
-        bottomNavBar: !controller.canEdit.value? null : bottomNavBar(),
+        bottomNavBar: !controller.canEdit.value ? null : bottomNavBar(),
       ),
     );
   }
@@ -67,8 +70,7 @@ class _AddForecastScreenState extends State<AddForecastScreen> {
               ],
             ),
           ),
-        )
-    );
+        ));
   }
 
   /// forecast code
@@ -102,7 +104,11 @@ class _AddForecastScreenState extends State<AddForecastScreen> {
                       style: appTextTheme.labelMedium
                           ?.copyWith(color: Colors.grey.shade700)),
                   gap(space: 10),
-                  Text(controller.forecastDetail?.forecastHead.firstOrNull?.forecastOrder??"_", style: appTextTheme.labelMedium),
+                  Text(
+                      controller.forecastDetail?.forecastHead.firstOrNull
+                              ?.forecastOrder ??
+                          "_",
+                      style: appTextTheme.labelMedium),
                 ],
               ),
               gap(space: 10),
@@ -112,7 +118,11 @@ class _AddForecastScreenState extends State<AddForecastScreen> {
                       style: appTextTheme.labelMedium
                           ?.copyWith(color: Colors.grey.shade700)),
                   gap(space: 10),
-                  Text(controller.forecastDetail?.forecastHead.firstOrNull?.forecastDate??"_", style: appTextTheme.labelMedium),
+                  Text(
+                      controller.forecastDetail?.forecastHead.firstOrNull
+                              ?.forecastDate ??
+                          "_",
+                      style: appTextTheme.labelMedium),
                 ],
               ),
             ]
@@ -214,8 +224,8 @@ class _AddForecastScreenState extends State<AddForecastScreen> {
                     onPressed: () {
                       controller.items.remove(item);
                     },
-                    icon:
-                        Icon(Icons.delete_outlined, size: 25, color: Colours.red)),
+                    icon: Icon(Icons.delete_outlined,
+                        size: 25, color: Colours.red)),
               )
             ],
           ),
@@ -224,7 +234,8 @@ class _AddForecastScreenState extends State<AddForecastScreen> {
             children: [
               displayTitleSubtitle("Color", item.color.fabricColor ?? "_"),
               displayTitleSubtitle("Type", "Fabrics"),
-              displayTitleSubtitle("Bal", "${ formatDecimal(item.balance??"_")} kg"),
+              displayTitleSubtitle(
+                  "Bal", "${formatDecimal(item.balance ?? "_")} kg"),
             ],
           ),
           gap(space: 10),
@@ -243,7 +254,8 @@ class _AddForecastScreenState extends State<AddForecastScreen> {
                       validator: validation.validateEmptyField,
                       onSaved: (val) {
                         item.forecast = val;
-                      }))
+                      })),
+              if (config.isTablet) Expanded(flex: 2, child: SizedBox())
             ],
           ),
           gap(space: 10),
@@ -321,7 +333,7 @@ class _AddForecastScreenState extends State<AddForecastScreen> {
             Expanded(
               child: PrimaryButton(
                   isEnable: controller.items.length > 0,
-                  title: controller.isUpdate.value? "Update" : "Submit",
+                  title: controller.isUpdate.value ? "Update" : "Submit",
                   isBusy: controller.isBusy.value,
                   onTap: controller.submitForm,
                   radius: 10,
