@@ -24,7 +24,7 @@ class _AppValidation {
   }
 
   // 3: Empty field validation
-  String? validateEmptyField(String? value) {
+  String? validateEmptyField(value) {
     if (value == null || value.isEmpty) {
       return 'Required field';
     }

@@ -1,4 +1,7 @@
+import 'package:flutter/cupertino.dart';
+import 'package:jog_inventory/common/utils/custom_expansion_tile.dart';
 import 'package:jog_inventory/common/utils/dotted_border.dart';
+import 'package:jog_inventory/common/utils/filter_widget.dart';
 import 'package:jog_inventory/modules/home/controllers/home.dart';
 import 'package:jog_inventory/services/tab_view_navigator.dart';
 import '../../../common/exports/main_export.dart';
@@ -55,7 +58,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
 }
 
 class HomeScreen extends GetView<HomeController> {
-  const HomeScreen({super.key});
+   HomeScreen({super.key});
   HomeController get controller => HomeController.getController();
 
   @override
@@ -66,6 +69,7 @@ class HomeScreen extends GetView<HomeController> {
       body: body,
     );
   }
+  var _isSwitched = false;
 
   Widget body(BuildContext context) {
     return SingleChildScrollView(
@@ -361,3 +365,5 @@ class HomeScreen extends GetView<HomeController> {
     );
   }
 }
+
+

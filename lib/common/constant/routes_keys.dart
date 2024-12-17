@@ -29,4 +29,8 @@ abstract class AppRoutesString {
   static const stockInList= "${dashboard}/stock_in_list";
   static const stockInDetail= "${dashboard}/stock_in_list/detail";
 
+  /// stock in
+  static const inkList = "${dashboard}/ink_list";
+  static const digitalPaper = "${dashboard}/digital_paper";
+
 }

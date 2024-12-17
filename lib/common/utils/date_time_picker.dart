@@ -2,13 +2,18 @@ import 'package:jog_inventory/common/animations/overlay_animation.dart';
 import '../exports/main_export.dart';
 import 'date_formater.dart';
 
-Future<DateTime?> SelectDateTime(BuildContext context) async {
+Future<DateTime?> SelectDateTime(
+  BuildContext context, {
+  DateTime? firstDate,
+  DateTime? initialDate,
+  DateTime? lastDate,
+}) async {
   final DateTime? picked = await showDatePicker(
     useRootNavigator: true,
     context: context,
-    initialDate: DateTime.now(),
-    firstDate: DateTime.now(),
-    lastDate: DateTime.now().add(Duration(days: 365)),
+    initialDate: initialDate ?? DateTime.now(),
+    firstDate: firstDate ?? DateTime.now(),
+    lastDate: lastDate ?? DateTime.now().add(Duration(days: 365)),
   );
   return picked;
 }
@@ -29,12 +34,15 @@ class DateTimePickerField extends StatefulWidget {
   final void Function(String?)? onChanged;
   final TextAlign textAlign;
   final String? Function(DateTime?)? formatDate;
+  final DateTime? firstDate;
+  final DateTime? lastDate;
 
   DateTimePickerField({
     this.labelText,
     this.hintText,
     this.controller,
-    this.padding = const EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
+    this.padding =
+        const EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
     this.style,
     this.autovalidateMode,
     this.initialDateTime,
@@ -46,6 +54,8 @@ class DateTimePickerField extends StatefulWidget {
     this.onChanged,
     this.textAlign = TextAlign.start,
     this.formatDate,
+    this.lastDate,
+    this.firstDate,
   });
 
   @override
@@ -55,6 +65,7 @@ class DateTimePickerField extends StatefulWidget {
 class _DateTimePickerFieldState extends State<DateTimePickerField> {
   late TextEditingController _controller;
   late String? Function(DateTime?) formatDate;
+  DateTime? selectedDate;
 
   @override
   void initState() {
@@ -62,6 +73,7 @@ class _DateTimePickerFieldState extends State<DateTimePickerField> {
     _controller = widget.controller ?? TextEditingController();
     formatDate = widget.formatDate ?? dateTimeFormat.yyMMDDFormat;
     if (widget.initialDateTime != null) {
+      selectedDate = widget.initialDateTime;
       _controller.text = formatDate(widget.initialDateTime) ?? "";
     }
   }
@@ -73,13 +85,14 @@ class _DateTimePickerFieldState extends State<DateTimePickerField> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-         if( widget.labelText != null)...[
-           Text(
-            widget.labelText!,
-            textAlign: TextAlign.start,
-            style: appTextTheme.bodyMedium,
-          ),
-          gap(space: 5)],
+          if (widget.labelText != null) ...[
+            Text(
+              widget.labelText!,
+              textAlign: TextAlign.start,
+              style: appTextTheme.bodyMedium,
+            ),
+            gap(space: 5)
+          ],
           Container(
             color: Colors.white,
             child: TextFormField(
@@ -109,13 +122,16 @@ class _DateTimePickerFieldState extends State<DateTimePickerField> {
               textAlign: widget.textAlign,
               canRequestFocus: widget.canRequestFocus,
               onTap: () async {
-                var selectedDate = await SelectDateTime(context);
-                if (selectedDate != null) {
+                selectedDate = await SelectDateTime(
+                  context,
+                  initialDate: selectedDate,
+                  firstDate: widget.firstDate,
+                  lastDate: widget.lastDate,
+                );
                   _controller.text = formatDate(selectedDate) ?? "";
                   if (widget.onChanged != null) {
-                    widget.onChanged!(_controller.text);
+                    widget.onChanged!(selectedDate.toString());
                   }
-                }
                 FocusScope.of(context).unfocus();
               },
             ),
@@ -133,7 +149,6 @@ class _DateTimePickerFieldState extends State<DateTimePickerField> {
     super.dispose();
   }
 }
-
 
 Widget monthYearPicker(
   BuildContext context, {
@@ -182,7 +197,7 @@ Widget monthYearPicker(
         width: 150,
         child: PrimaryTextField(
             prefixIcon: Padding(
-              padding: const EdgeInsets.only(left: 5,right: 5),
+              padding: const EdgeInsets.only(left: 5, right: 5),
               child: Icon(
                 Icons.calendar_today_outlined,
                 size: 15,
@@ -190,7 +205,7 @@ Widget monthYearPicker(
               ),
             ),
             suffixIcon: Padding(
-              padding: const EdgeInsets.only(left: 5,right: 5),
+              padding: const EdgeInsets.only(left: 5, right: 5),
               child: Icon(
                 Icons.expand_more,
                 size: 20,

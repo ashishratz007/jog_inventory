@@ -4,6 +4,8 @@ import 'package:jog_inventory/modules/forecast/screens/addforecast_screen.dart';
 import 'package:jog_inventory/modules/forecast/screens/detail.dart';
 import 'package:jog_inventory/modules/forecast/screens/list.dart';
 import 'package:jog_inventory/modules/home/screens/home.dart';
+import 'package:jog_inventory/modules/in_paper/screens/digital_paper.dart';
+import 'package:jog_inventory/modules/in_paper/screens/ink_list.dart';
 import 'package:jog_inventory/modules/material/models/material_request_detail.dart';
 import 'package:jog_inventory/modules/material/screens/asset_detail.dart';
 import 'package:jog_inventory/modules/material/screens/finish_material_rq.dart';
@@ -158,6 +160,23 @@ List<GetPage<dynamic>> getRoutes = [
   GetPage(
     name: AppRoutesString.forecastDetail,
     page: () => ForecastDetailScreen(),
+    bindings: [
+      ///
+    ],
+  ),
+
+  /// Ink papers
+  GetPage(
+    name: AppRoutesString.inkList,
+    page: () => InkListScreen(),
+    bindings: [
+      ///
+    ],
+  ),
+  /// digital papers
+  GetPage(
+    name: AppRoutesString.digitalPaper,
+    page: () => DigitalPaperScreen(),
     bindings: [
       ///
     ],

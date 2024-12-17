@@ -194,6 +194,13 @@ class YourClassName extends GetxController {
     super.onReady();
   }
 /// functions
+
+/// api calls
+  getInkListData(){
+    isLoading.value = true;
+  }
+
+
 /// get and register controller
 static RegisterController getController() {
 var isRegistered = Get.isRegistered<RegisterController>();
@@ -203,7 +210,6 @@ return Get.find<RegisterController>();
 return Get.put<RegisterController>(RegisterController());
 }
 
-/// api calls
 
 }
 */

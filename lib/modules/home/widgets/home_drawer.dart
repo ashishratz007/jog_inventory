@@ -96,11 +96,14 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                                   duration: Duration(milliseconds: 700),
                                 )),
                           if (isExpanded) ...[
-                            CircleAvatar(
-                              radius: 30,
+                            SmallToLargeAnimation(
+                              duration: Duration(milliseconds: 300),
                               child: CircleAvatar(
-                                radius: 40,
-                                backgroundColor: Colours.primary,
+                                radius: 30,
+                                child: CircleAvatar(
+                                  radius: 40,
+                                  backgroundColor: Colours.primary,
+                                ),
                               ),
                             ),
                             gap(space: 10),
@@ -211,7 +214,6 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                           padding: EdgeInsets.all(5)),
                       selected: displayAssetsWidget(AppIcons.material_req_sel,
                           borderRadius: BorderRadius.circular(10),
-                          color: Colours.secondary,
                           width: isExpanded ? 50 : 50,
                           height: isExpanded ? 50 : 50,
                           padding: EdgeInsets.all(5)),
@@ -221,6 +223,52 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                       onTap: () async {
                         await mainNavigationService.push(
                             AppRoutesString.materialRequestList,
+                            removeAll: true);
+                      },
+                    ),
+                    /// Ink list
+                    drawerTile(
+                      context,
+                      leading: displayAssetsWidget(AppIcons.material_req_un,
+                          borderRadius: BorderRadius.circular(10),
+                          width: isExpanded ? 50 : 50,
+                          height: isExpanded ? 50 : 50,
+                          padding: EdgeInsets.all(5)),
+                      selected: displayAssetsWidget(AppIcons.material_req_sel,
+                          borderRadius: BorderRadius.circular(10),
+                          // color: Colours.secondary,
+                          width: isExpanded ? 50 : 50,
+                          height: isExpanded ? 50 : 50,
+                          padding: EdgeInsets.all(5)),
+                      title: "INK list",
+                      textColor: Colours.black,
+                      hideTrailing: true,
+                      onTap: () async {
+                        await mainNavigationService.push(
+                            AppRoutesString.inkList,
+                            removeAll: true);
+                      },
+                    ),
+                   /// digital paper list
+                    drawerTile(
+                      context,
+                      leading: displayAssetsWidget(AppIcons.material_req_un,
+                          borderRadius: BorderRadius.circular(10),
+                          width: isExpanded ? 50 : 50,
+                          height: isExpanded ? 50 : 50,
+                          padding: EdgeInsets.all(5)),
+                      selected: displayAssetsWidget(AppIcons.material_req_sel,
+                          borderRadius: BorderRadius.circular(10),
+                          // color: Colours.secondary,
+                          width: isExpanded ? 50 : 50,
+                          height: isExpanded ? 50 : 50,
+                          padding: EdgeInsets.all(5)),
+                      title: "Digital Paper list",
+                      textColor: Colours.black,
+                      hideTrailing: true,
+                      onTap: () async {
+                        await mainNavigationService.push(
+                            AppRoutesString.digitalPaper,
                             removeAll: true);
                       },
                     ),

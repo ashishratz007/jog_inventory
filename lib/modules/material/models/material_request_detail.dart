@@ -3,7 +3,7 @@ import 'package:jog_inventory/common/exports/common.dart';
 
 class MaterialRequestDetail extends BaseModel {
   @override
-  String get endPoint => "/api/getbarcode/${fabId}/${pacId}'";
+  String get endPoint => "/api/getbarcode/${fabId}/${pacId}";
 
   String fabId; /// fabric id
 

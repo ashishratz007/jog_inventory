@@ -31,6 +31,7 @@ class _AppString {
   final String cutAll = "Cut all";
   final String search = "Search";
   final String viewSummary = "View Summary";
+  final String stockData = "Stock Data";
   final String materialRequisitionForm = "Material requisition form";
   final String deleteRQ = "Delete RQ";
   final String submit = "Submit";
