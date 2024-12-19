@@ -86,6 +86,7 @@ class JogInventory extends StatelessWidget {
         navigatorObservers: [mainNavigationService],
         onReady: () {
           config.phoneWidth = Get.width;
+          config.isTablet;
         },
         builder: (context, child) {
           return MediaQuery(

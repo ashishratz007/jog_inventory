@@ -2,10 +2,12 @@ import 'package:jog_inventory/common/utils/custom_expansion_tile.dart';
 import 'package:jog_inventory/common/utils/date_formater.dart';
 import 'package:jog_inventory/common/utils/date_time_picker.dart';
 import 'package:jog_inventory/common/utils/filter_widget.dart';
+import 'package:jog_inventory/common/utils/menu.dart';
 import 'package:jog_inventory/common/widgets/dotted_border.dart';
-import 'package:jog_inventory/modules/in_paper/controllers/digital_paper.dart';
+import 'package:jog_inventory/modules/in_paper/controllers/digital_paper_list.dart';
 import 'package:jog_inventory/modules/in_paper/modles/digital_paper.dart';
 import 'package:jog_inventory/modules/in_paper/widgets/add_row_ink.dart';
+import 'package:jog_inventory/modules/in_paper/widgets/filter_popup.dart';
 import 'package:jog_inventory/modules/in_paper/widgets/stock_data.dart';
 import 'package:jog_inventory/modules/in_paper/widgets/upadte_stock.dart';
 import 'package:jog_inventory/modules/in_paper/widgets/update_paper_data.dart';
@@ -173,66 +175,90 @@ class _DigitalPaperScreenState extends State<DigitalPaperScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            SizedBox(
-                width: 180,
-                child: DateTimePickerField(
-                  formatDate: dateTimeFormat.mmYYFormat,
-                  initialDateTime: DateTime.now(),
-                  lastDate: DateTime.now(),
-                  firstDate: DateTime(2000),
-                  onChanged: (String? date) {
-                    var data = ParseData.toDateTime(date);
-                    if (data != null) controller.selectedDate = data;
-                    controller.getInkListData();
-                  },
-                )),
-            Row(
-              children: [
-                Text("Collapse", style: appTextTheme.labelMedium),
-                Obx(
-                  () => Transform.scale(
-                    scale:
-                        0.6, // Adjust the scale to change the size (height and width)
-                    child: Switch(
-                      activeColor: Colours.primary,
-                      value: controller.isCollapsed.value,
-                      onChanged: (value) {
-                        controller.isCollapsed.value = value;
-                        controller.toggleCollapse(controller.isCollapsed.value);
-                      },
-                    ),
-                  ),
+            /// Filter
+            PrimaryButton(
+                title: "Filter",
+                isFullWidth: false,
+                borderColor: Colours.greyLight,
+                showBorder: true,
+                textColor: Colours.blackLite,
+                color: Colours.white,
+                leading: Icon(
+                  Icons.filter_alt_off,
+                  size: 20,
+                  color: Colours.blackLite,
                 ),
-              ],
-            ),
+                onTap: () {
+                  onchangeFilter(
+                      {String? selectedMonth,
+                        String? selectedYear,
+                        FilterItem<String>? colorFilter}) {
+                    /// color filter
+                    if (colorFilter == null) {
+                      controller.colorFilter.value =
+                          FilterItem<String>(id: 0, title: '', key: '');
+                    } else {
+                      controller.colorFilter.value = colorFilter;
+                    }
+
+                    /// date year month
+                    controller.selectedMonth =
+                        selectedMonth ?? timeNow().month.toString();
+                    controller.selectedYear =
+                        selectedYear ?? timeNow().year.toString();
+
+                    controller.getInkListData();
+                  }
+
+                  // open filter popup
+                  openInkPaperFilterPopup(context,
+                      onChanged: onchangeFilter,
+                      selectedMonth: controller.selectedMonth,
+                      selectedYear: controller.selectedYear,
+                      filter: controller.colorFilter.value);
+                }),
+            Obx(()=> Row(
+                children: [
+                  Text("Page",
+                      style: appTextTheme.titleSmall?.copyWith(
+                          color: Colours.blackLite, fontWeight: FontWeight.w700)),
+                  Gap(10),
+                  popupMenu(Get.context!,
+                      items: [
+                        ...List.generate(
+                            controller.totalPages.value,
+                                (index) => MenuItem(
+                                title: '${index + 1}',
+                                onTap: (value) {
+                                  controller.currentPage.value = index+1;
+                                  controller.getInkListData();
+                                },
+                                id: index,
+                                key: "$index"))
+                      ],
+                      menuIcon: Container(
+                        height: 40,
+                        width: 70,
+                        decoration: BoxDecoration(
+                            color: Colours.white,
+                            border: Border.all(color: Colours.border),
+                            borderRadius: BorderRadius.circular(5)),
+                        child: Center(
+                            child: Text(
+                                "${controller.currentPage.value}",
+                                style: appTextTheme.titleSmall?.copyWith(
+                                    color: Colours.blackLite,
+                                    fontWeight: FontWeight.w700))),
+                      )),
+                  Gap(10),
+                  Text(
+                      "of ${controller.totalPages.value}",
+                      style: appTextTheme.titleSmall?.copyWith(
+                          color: Colours.blackLite, fontWeight: FontWeight.w700)),
+                ],
+              ),
+            )
           ],
-        ),
-        gap(),
-        FilterWidget<String>(
-          selectedItem: controller.colorFilter.value,
-          items: [
-            FilterItem(
-                id: 1,
-                title: '100',
-                key: '100',
-                isSelected: false,
-                value: "100"),
-            FilterItem(
-                id: 2,
-                title: '200',
-                key: '200',
-                isSelected: false,
-                value: "200"),
-          ],
-          onChange: (FilterItem<String>? selectedItem) {
-            if (selectedItem == null) {
-              controller.colorFilter.value =
-                  FilterItem<String>(id: 0, title: '', key: '');
-            } else {
-              controller.colorFilter.value = selectedItem;
-            }
-            controller.getInkListData();
-          },
         ),
       ],
     );
@@ -387,7 +413,9 @@ class _DigitalPaperScreenState extends State<DigitalPaperScreen> {
                   PrimaryButton(
                       title: "Update",
                       onTap: () {
-                        openUpdateStockDataBottomSheet();
+                        openUpdatePaperSheet(context,
+                            items: [item]
+                                .toList());
                       },
                       isFullWidth: false,
                       radius: 15)

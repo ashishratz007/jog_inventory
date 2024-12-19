@@ -1,15 +1,19 @@
 import 'package:jog_inventory/common/constant/values.dart';
+import 'package:jog_inventory/common/utils/bottom_sheet.dart';
 import 'package:jog_inventory/common/utils/custom_expansion_tile.dart';
 import 'package:jog_inventory/common/utils/date_formater.dart';
 import 'package:jog_inventory/common/utils/date_time_picker.dart';
 import 'package:jog_inventory/common/utils/dotted_border.dart';
 import 'package:jog_inventory/common/utils/filter_widget.dart';
-import 'package:jog_inventory/modules/in_paper/controllers/ink_controller.dart';
+import 'package:jog_inventory/common/utils/menu.dart';
+import 'package:jog_inventory/modules/in_paper/controllers/ink_List_controller.dart';
 import 'package:jog_inventory/modules/in_paper/modles/ink_model.dart';
 import 'package:jog_inventory/modules/in_paper/widgets/add_row_ink.dart';
+import 'package:jog_inventory/modules/in_paper/widgets/filter_popup.dart';
 import 'package:jog_inventory/modules/in_paper/widgets/stock_data.dart';
 import 'package:jog_inventory/modules/in_paper/widgets/upadte_stock.dart';
 import 'package:jog_inventory/modules/in_paper/widgets/update_ink.dart';
+import 'package:jog_inventory/modules/in_paper/widgets/update_paper_data.dart';
 import '../../../common/exports/main_export.dart';
 
 class InkListScreen extends StatefulWidget {
@@ -25,11 +29,11 @@ class _InkListScreenState extends State<InkListScreen> {
   @override
   Widget build(BuildContext context) {
     return Obx(
-      ()=> CustomAppBar(
+      () => CustomAppBar(
         title: "Ink List",
         body: body,
         trailingButton: selectButton(),
-        bottomNavBar: controller.enableSelect.value? bottomNavBar():null,
+        bottomNavBar: controller.enableSelect.value ? bottomNavBar() : null,
       ),
     );
   }
@@ -40,6 +44,7 @@ class _InkListScreenState extends State<InkListScreen> {
         child: Container(
           padding: AppPadding.pagePadding,
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               /// header with filter
               head(),
@@ -57,40 +62,47 @@ class _InkListScreenState extends State<InkListScreen> {
   }
 
   Widget bottomNavBar() {
-    return  Container(
-            color: Colours.white,
-            child: Row(
-              children: [
-                Expanded(
-                  child: PrimaryButton(
-                      title: "Delete",
-                      leading: Icon(
-                        Icons.delete_outline,
-                        color: Colours.red,
-                      ),
-                      onTap: () {
-                        /// TODO
-                      },
-                      radius: 10,
-                      textColor: Colours.red,
-                      color: Colours.redBg),
+    return Container(
+      color: Colours.white,
+      child: Row(
+        children: [
+          Expanded(
+            child: PrimaryButton(
+                title: "Delete",
+                leading: Icon(
+                  Icons.delete_outline,
+                  color: Colours.red,
                 ),
-                gap(),
-                Expanded(
-                  child: Obx(
-                    ()=> PrimaryButton(
-                      isEnable:controller.selected.length >0 ,
-                      title: "Update",
-                      onTap: () {
-                        openUpdateInkSheet(context , items: controller.items.where((item)=> controller.selected.contains(item.id)).toList());
-                      },
-                      radius: 10,
-                    ),
-                  ),
-                )
-              ],
+                onTap: () {
+                  controller.deleteInkList(context,
+                      remItem: controller.items
+                          .where(
+                              (item) => controller.selected.contains(item.id))
+                          .toList());
+                },
+                radius: 10,
+                textColor: Colours.red,
+                color: Colours.redBg),
+          ),
+          gap(),
+          Expanded(
+            child: Obx(
+              () => PrimaryButton(
+                isEnable: controller.selected.length > 0,
+                title: "Update",
+                onTap: () {
+                  openUpdateInkSheet(context,
+                      items: controller.items
+                          .where(
+                              (item) => controller.selected.contains(item.id))
+                          .toList());
+                },
+                radius: 10,
+              ),
             ),
-
+          )
+        ],
+      ),
     );
   }
 
@@ -129,6 +141,20 @@ class _InkListScreenState extends State<InkListScreen> {
                       child: Text("+ Add Row",
                           style: appTextTheme.titleSmall
                               ?.copyWith(color: Colours.green)))),
+            ),
+            Obx(
+              () => Transform.scale(
+                scale:
+                    0.6, // Adjust the scale to change the size (height and width)
+                child: Switch(
+                  activeColor: Colours.primary,
+                  value: controller.isCollapsed.value,
+                  onChanged: (value) {
+                    controller.isCollapsed.value = value;
+                    controller.toggleCollapse(controller.isCollapsed.value);
+                  },
+                ),
+              ),
             ),
 
             /// select all
@@ -169,57 +195,90 @@ class _InkListScreenState extends State<InkListScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            SizedBox(
-                width: 180,
-                child: DateTimePickerField(
-                  formatDate: dateTimeFormat.mmYYFormat,
-                  initialDateTime: DateTime.now(),
-                  onChanged: (String? date) {
-                    var data = ParseData.toDateTime(date);
-                    if (data != null) controller.selectedDate = data;
-                    controller.getInkListData();
-                  },
-                )),
-            Row(
-              children: [
-                Text("Collapse", style: appTextTheme.labelMedium),
-                Obx(
-                  () => Transform.scale(
-                    scale:
-                        0.6, // Adjust the scale to change the size (height and width)
-                    child: Switch(
-                      activeColor: Colours.primary,
-                      value: controller.isCollapsed.value,
-                      onChanged: (value) {
-                        controller.isCollapsed.value = value;
-                        controller.toggleCollapse(controller.isCollapsed.value);
-                      },
-                    ),
-                  ),
+            PrimaryButton(
+                title: "Filter",
+                isFullWidth: false,
+                borderColor: Colours.greyLight,
+                showBorder: true,
+                textColor: Colours.blackLite,
+                color: Colours.white,
+                leading: Icon(
+                  Icons.filter_alt_off,
+                  size: 20,
+                  color: Colours.blackLite,
                 ),
-              ],
-            ),
+                onTap: () {
+                  onchangeFilter(
+                      {String? selectedMonth,
+                      String? selectedYear,
+                      FilterItem<String>? colorFilter}) {
+                    /// color filter
+                    if (colorFilter == null) {
+                      controller.colorFilter.value =
+                          FilterItem<String>(id: 0, title: '', key: '');
+                    } else {
+                      controller.colorFilter.value = colorFilter;
+                    }
+
+                    /// date year month
+                    controller.selectedMonth =
+                        selectedMonth ?? timeNow().month.toString();
+                    controller.selectedYear =
+                        selectedYear ?? timeNow().year.toString();
+
+                    controller.getInkListData();
+                  }
+
+                  // open filter popup
+                  openInkPaperFilterPopup(context,
+                      onChanged: onchangeFilter,
+                      selectedMonth: controller.selectedMonth,
+                      selectedYear: controller.selectedYear,
+                      filter: controller.colorFilter.value);
+                }),
+            Obx(
+              () => Row(
+                children: [
+                  Text("Page",
+                      style: appTextTheme.titleSmall?.copyWith(
+                          color: Colours.blackLite,
+                          fontWeight: FontWeight.w700)),
+                  Gap(10),
+                  popupMenu(Get.context!,
+                      items: [
+                        ...List.generate(
+                            controller.totalPages.value,
+                            (index) => MenuItem(
+                                title: '${index + 1}',
+                                onTap: (value) {
+                                  controller.currentPage.value = index + 1;
+                                  controller.getInkListData();
+                                },
+                                id: index,
+                                key: "$index"))
+                      ],
+                      menuIcon: Container(
+                        height: 40,
+                        width: 70,
+                        decoration: BoxDecoration(
+                            color: Colours.white,
+                            border: Border.all(color: Colours.border),
+                            borderRadius: BorderRadius.circular(5)),
+                        child: Center(
+                            child: Text("${controller.currentPage.value}",
+                                style: appTextTheme.titleSmall?.copyWith(
+                                    color: Colours.blackLite,
+                                    fontWeight: FontWeight.w700))),
+                      )),
+                  Gap(10),
+                  Text("of ${controller.totalPages.value}",
+                      style: appTextTheme.titleSmall?.copyWith(
+                          color: Colours.blackLite,
+                          fontWeight: FontWeight.w700)),
+                ],
+              ),
+            )
           ],
-        ),
-        gap(),
-        FilterWidget<String>(
-          selectedItem: controller.colorFilter.value,
-          items: List.generate(inkColors.length, (index) => FilterItem(
-                id: index+1,
-                title: inkColors[index],
-                key:  inkColors[index],
-                isSelected: false,
-                value:  inkColors[index]))
-          ,
-          onChange: (FilterItem<String>? selectedItem) {
-            if (selectedItem == null) {
-              controller.colorFilter.value =
-                  FilterItem<String>(id: 0, title: '', key: '');
-            } else {
-              controller.colorFilter.value = selectedItem;
-            }
-            controller.getInkListData();
-          },
         ),
       ],
     );
@@ -245,7 +304,7 @@ class _InkListScreenState extends State<InkListScreen> {
 
   List<Widget> displayItems() {
     return displayList<InkModel>(
-        items: controller.items, builder: itemTileWidget,showGap: true);
+        items: controller.items, builder: itemTileWidget, showGap: true);
   }
 
   Widget itemTileWidget(
@@ -286,12 +345,12 @@ class _InkListScreenState extends State<InkListScreen> {
                             ? Icon(
                                 Icons.check_box,
                                 color: Colours.secondary,
-                          size: 22,
+                                size: 22,
                               )
                             : Icon(
                                 Icons.check_box_outline_blank,
                                 color: Colours.secondary,
-                          size: 22,
+                                size: 22,
                               ),
                       ),
                     ] else ...[
@@ -301,10 +360,15 @@ class _InkListScreenState extends State<InkListScreen> {
                         color: Colors.grey,
                       ),
                       gap(),
-                      Icon(
-                        Icons.delete_outline,
-                        size: 24,
-                        color: Colours.red,
+                      InkWell(
+                        onTap: () {
+                          controller.deleteInkList(context, remItem: [item]);
+                        },
+                        child: Icon(
+                          Icons.delete_outline,
+                          size: 24,
+                          color: Colours.red,
+                        ),
                       )
                     ],
                   ],
@@ -381,7 +445,7 @@ class _InkListScreenState extends State<InkListScreen> {
                   PrimaryButton(
                       title: "Update",
                       onTap: () {
-                        openUpdateStockDataBottomSheet();
+                        openUpdateInkSheet(context, items: [item].toList());
                       },
                       isFullWidth: false,
                       radius: 15)

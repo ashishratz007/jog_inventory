@@ -11,7 +11,8 @@ class DigitalPaperController extends GetxController {
   RxList<int> selected = <int>[].obs;
   Rx<FilterItem<String>> colorFilter =
       FilterItem<String>(id: 0, title: '', key: '').obs;
-  DateTime selectedDate = DateTime.now();
+  String selectedMonth = timeNow().month.toString();
+  String selectedYear = timeNow().year.toString();
 
   Rx<int> totalPages = 1.obs;
   Rx<int> currentPage = 1.obs;
@@ -51,8 +52,8 @@ class DigitalPaperController extends GetxController {
       currentPage.value,
       paper_size: colorFilter.value.value,
       IMsupplier: "Digital paper",
-      month:  selectedDate.month.toString(),
-      year:  selectedDate.year.toString(),
+      month:  selectedMonth,
+      year:  selectedYear,
 
     ).then((val) {
       items.value = val.items;

@@ -573,6 +573,10 @@ String getMonthName(int monthIndex, {bool short = false}) {
     return "Invalid Month Index";
   }
 
+  return yearMonths(short: short)[monthIndex - 1];
+}
+
+List<String> yearMonths({bool short = false}){
   List<String> shortNames = [
     "Jan",
     "Feb",
@@ -602,8 +606,7 @@ String getMonthName(int monthIndex, {bool short = false}) {
     "November",
     "December"
   ];
-
-  return short ? shortNames[monthIndex - 1] : fullNames[monthIndex - 1];
+  return short? shortNames:fullNames;
 }
 
 String generateCodeFromDateTime() {

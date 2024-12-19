@@ -49,10 +49,12 @@ enum VehicleStatusType {
 }
 enum ScanBarcodeType {
   assets,
-  material;
+  material,
+  ink,
+  paper;
 
   String get key =>
-      ["assets", "material", ][index];
+      ["assets", "material","ink","paper"][index];
 }
 
 enum FabricMaterialType {

@@ -6,6 +6,8 @@ import 'package:jog_inventory/modules/forecast/screens/list.dart';
 import 'package:jog_inventory/modules/home/screens/home.dart';
 import 'package:jog_inventory/modules/in_paper/screens/digital_paper.dart';
 import 'package:jog_inventory/modules/in_paper/screens/ink_list.dart';
+import 'package:jog_inventory/modules/in_paper/screens/ink_scan_detail.dart';
+import 'package:jog_inventory/modules/in_paper/screens/paper_scan_detail.dart';
 import 'package:jog_inventory/modules/material/models/material_request_detail.dart';
 import 'package:jog_inventory/modules/material/screens/asset_detail.dart';
 import 'package:jog_inventory/modules/material/screens/finish_material_rq.dart';
@@ -173,10 +175,27 @@ List<GetPage<dynamic>> getRoutes = [
       ///
     ],
   ),
+
+  GetPage(
+    name: AppRoutesString.inkScanDetail,
+    page: () => ScanInkDetailScreen(),
+    bindings: [
+      ///
+    ],
+  ),
+
+
   /// digital papers
   GetPage(
     name: AppRoutesString.digitalPaper,
     page: () => DigitalPaperScreen(),
+    bindings: [
+      ///
+    ],
+  ),
+  GetPage(
+    name: AppRoutesString.paperScanDetail,
+    page: () => ScanPaperDetailScreen(),
     bindings: [
       ///
     ],

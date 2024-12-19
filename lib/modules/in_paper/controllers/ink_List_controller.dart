@@ -11,7 +11,8 @@ class InkListController extends GetxController {
   RxList<int> selected = <int>[].obs;
   Rx<FilterItem<String>> colorFilter =
       FilterItem<String>(id: 0, title: '', key: '').obs;
-  DateTime selectedDate = DateTime.now();
+  String selectedMonth = timeNow().month.toString();
+  String selectedYear = timeNow().year.toString();
 
   Rx<int> totalPages = 1.obs;
   Rx<int> currentPage = 1.obs;
@@ -50,8 +51,8 @@ class InkListController extends GetxController {
     InkModel.fetchAll(
       currentPage.value,
       color: colorFilter.value.value,
-      month:  selectedDate.month.toString(),
-      year:  selectedDate.year.toString(),
+      month: selectedMonth,
+      year: selectedYear,
       stockMl: "1000",
     ).then((val) {
       items.value = val.items;
@@ -59,15 +60,34 @@ class InkListController extends GetxController {
 
       // register controllers
       controllers.clear();
-      val.items.forEach((action){
-
-       controllers.add(CustomExpandedTileController());
+      val.items.forEach((action) {
+        controllers.add(CustomExpandedTileController());
       });
       isLoading.value = false;
     }).onError((e, trace) {
       isLoading.value = false;
       displayErrorMessage(Get.context!,
           error: e, trace: trace, onRetry: getInkListData);
+    });
+  }
+
+  /// delete list of ink data
+  deleteInkList(BuildContext context, {required List<InkModel> remItem}) {
+    deleteItemPopup(context,
+        title: "Delete Ink Data",
+        subTitle: "Are you sure you want to delete Ink items?",
+        onDelete: (context) async {
+      InkModel.deleteInk(
+              appendIds: remItem.map((item) => item.id!.toString()).toList())
+          .then((val) {
+        remItem.forEach((item) {
+          items.removeWhere((i) => item.id == i.id);
+          controllers.removeLast(); // for balancing
+        });
+        mainNavigationService.back(context);
+      }).onError((e, trace) {
+        errorSnackBar(message: "Unable to delete item please try again");
+      });
     });
   }
 

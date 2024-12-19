@@ -117,7 +117,9 @@ class HomeController extends GetxController {
     isGettingLocation.value = false;
     var result = await BarcodeScanner.scan();
     print(result);
-    if(result.rawContent.contains(ScanBarcodeType.assets.key) ){
+
+    /// Assets
+    if (result.rawContent.contains(ScanBarcodeType.assets.key)) {
       var ids = result.rawContent.split(" ");
       if (ids.length >= 1) {
         print(ids.length);
@@ -137,6 +139,51 @@ class HomeController extends GetxController {
         }
       }
     }
+
+    /// paper
+    else if (result.rawContent.contains(ScanBarcodeType.paper.key)) {
+      var ids = result.rawContent.split(" ");
+      if (ids.length >= 1) {
+        print(ids.length);
+        var paperid;
+        var type;
+        if (ids.length == 1) {
+          paperid = ids.firstOrNull;
+        } else {
+          paperid = ids[0];
+          type = ids[1];
+        }
+        if (paperid.isNotEmpty) {
+          mainNavigationService.push(AppRoutesString.paperScanDetail,
+              arguments: {appKeys.paperId: paperid});
+        } else {
+          errorSnackBar(message: "Unable to get data from QR");
+        }
+      }
+    }
+
+    /// ink
+    else if (result.rawContent.contains(ScanBarcodeType.ink.key)) {
+      var ids = result.rawContent.split(" ");
+      if (ids.length >= 1) {
+        print(ids.length);
+        var inkId;
+        var type;
+        if (ids.length == 1) {
+          inkId = ids.firstOrNull;
+        } else {
+          inkId = ids[0];
+          type = ids[1];
+        }
+        if (inkId.isNotEmpty) {
+          mainNavigationService.push(AppRoutesString.inkScanDetail,
+              arguments: {appKeys.inkId: inkId});
+        } else {
+          errorSnackBar(message: "Unable to get data from QR");
+        }
+      }
+    }
+
     /// for material
     else {
       var ids = result.rawContent.split(" ");

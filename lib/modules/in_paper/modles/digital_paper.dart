@@ -70,6 +70,14 @@ class DigitalPaperModel extends BaseModel {
     );
   }
 
+  static Future deletePaper({required List<int> appendIds}){
+    var endpoint = "api/paper-delete";
+   var data = {
+      "appended_ids": "${appendIds}"
+  };
+   return DigitalPaperModel().create(data: data, url: endpoint);
+  }
+
   static Future updatePaper({
     required String size,
     required String month,
@@ -91,6 +99,17 @@ class DigitalPaperModel extends BaseModel {
   }
 
 
+  static Future<DigitalPaperModel> getPaperDetail({
+    required String paper_id
+  }) async {
+    var endpoint = "api/paper-detail";
+    var data = {
+      "paper_id": paper_id,
+    };
+    var resp = await  DigitalPaperModel().create(data: data, url: endpoint);
+    return DigitalPaperModel.fromJson(resp.data['data']);
+  }
+
   static Future<Pagination<DigitalPaperModel>> fetchAll(
     int page, {
     String? paper_size,
@@ -106,7 +125,10 @@ class DigitalPaperModel extends BaseModel {
       "year": year,
       "IMsupplier": IMsupplier,
     };
-    var resp = await DigitalPaperModel().create(data: data, isFormData: true);
+    var qp = {
+      "page": page,
+    };
+    var resp = await DigitalPaperModel().create(data: data, isFormData: true,queryParameters: qp);
     paginated = Pagination.fromJson(resp.data,
         itm: ParseData.toList(resp.data['data'],
             itemBuilder: (json) => DigitalPaperModel.fromJson(json)));

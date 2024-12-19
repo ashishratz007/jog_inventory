@@ -67,6 +67,17 @@ class InkModel extends BaseModel {
     );
   }
 
+
+  /// delete ink
+  static Future deleteInk({required List<String> appendIds}){
+    var endpoint = "api/ink-delete";
+    var data = {
+      "appended_ids": "${appendIds}"
+    };
+    return InkModel().create(data: data, url: endpoint);
+  }
+
+  /// update ink
   static Future updateInk({
     required String color,
     required String month,
@@ -77,14 +88,25 @@ class InkModel extends BaseModel {
     var endpoint = "api/ink-cut-stock";
     var data = {
       "tablename": "ink",
-      if(!stringActions.isNullOrEmpty(color))"color": color,
-      if(!stringActions.isNullOrEmpty(month))"month": month,
+      if (!stringActions.isNullOrEmpty(color)) "color": color,
+      if (!stringActions.isNullOrEmpty(month)) "month": month,
       "appended_ids": "$appendIds",
       "Used": "$used",
       "Ink_Balance": "0",
       "used_date": "${usedDate.year}-${usedDate.month}-${usedDate.day}"
     };
     return InkModel().create(data: data, url: endpoint);
+  }
+
+  static Future<InkModel> getInkDetail({
+    required String ink_id
+  })async {
+    var endpoint = "api/ink-detail";
+    var data = {
+      "ink_id": ink_id,
+    };
+    var resp = await  InkModel().create(data: data, url: endpoint);
+    return InkModel.fromJson(resp.data['data']);
   }
 
   /// get list
@@ -103,7 +125,11 @@ class InkModel extends BaseModel {
       "year": year,
       "color": color,
     };
-    var resp = await InkModel().create(data: data, isFormData: true);
+
+    var qp = {
+      "page": page,
+    };
+    var resp = await InkModel().create(data: data, isFormData: true,queryParameters: qp);
     paginated = Pagination.fromJson(resp.data,
         itm: ParseData.toList(resp.data['data'],
             itemBuilder: (json) => InkModel.fromJson(json)));
