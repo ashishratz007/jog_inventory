@@ -1,35 +1,36 @@
+import 'package:jog_inventory/common/constant/values.dart';
+import 'package:jog_inventory/common/utils/bottom_sheet.dart';
 import 'package:jog_inventory/common/utils/custom_expansion_tile.dart';
 import 'package:jog_inventory/common/utils/date_formater.dart';
 import 'package:jog_inventory/common/utils/date_time_picker.dart';
+import 'package:jog_inventory/common/utils/dotted_border.dart';
 import 'package:jog_inventory/common/utils/filter_widget.dart';
 import 'package:jog_inventory/common/utils/menu.dart';
-import 'package:jog_inventory/common/widgets/dotted_border.dart';
-import 'package:jog_inventory/modules/in_paper/controllers/digital_paper_list.dart';
-import 'package:jog_inventory/modules/in_paper/modles/digital_paper.dart';
-import 'package:jog_inventory/modules/in_paper/widgets/add_row_ink.dart';
-import 'package:jog_inventory/modules/in_paper/widgets/filter_popup.dart';
-import 'package:jog_inventory/modules/in_paper/widgets/stock_data.dart';
-import 'package:jog_inventory/modules/in_paper/widgets/upadte_stock.dart';
-import 'package:jog_inventory/modules/in_paper/widgets/update_paper_data.dart';
-
+import 'package:jog_inventory/modules/ink_paper/controllers/ink_List_controller.dart';
+import 'package:jog_inventory/modules/ink_paper/modles/ink_model.dart';
+import 'package:jog_inventory/modules/ink_paper/widgets/add_row_ink.dart';
+import 'package:jog_inventory/modules/ink_paper/widgets/filter_popup.dart';
+import 'package:jog_inventory/modules/ink_paper/widgets/stock_data.dart';
+import 'package:jog_inventory/modules/ink_paper/widgets/upadte_stock.dart';
+import 'package:jog_inventory/modules/ink_paper/widgets/update_ink.dart';
+import 'package:jog_inventory/modules/ink_paper/widgets/update_paper_data.dart';
 import '../../../common/exports/main_export.dart';
 
-class DigitalPaperScreen extends StatefulWidget {
-  const DigitalPaperScreen({super.key});
+class InkListScreen extends StatefulWidget {
+  const InkListScreen({super.key});
 
   @override
-  State<DigitalPaperScreen> createState() => _DigitalPaperScreenState();
+  State<InkListScreen> createState() => _InkListScreenState();
 }
 
-class _DigitalPaperScreenState extends State<DigitalPaperScreen> {
-  @override
-  DigitalPaperController controller = DigitalPaperController.getController();
+class _InkListScreenState extends State<InkListScreen> {
+  InkListController controller = InkListController.getController();
 
   @override
   Widget build(BuildContext context) {
     return Obx(
       () => CustomAppBar(
-        title: "Digital Paper List",
+        title: "Ink List",
         body: body,
         trailingButton: selectButton(),
         bottomNavBar: controller.enableSelect.value ? bottomNavBar() : null,
@@ -43,6 +44,7 @@ class _DigitalPaperScreenState extends State<DigitalPaperScreen> {
         child: Container(
           padding: AppPadding.pagePadding,
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               /// header with filter
               head(),
@@ -72,7 +74,11 @@ class _DigitalPaperScreenState extends State<DigitalPaperScreen> {
                   color: Colours.red,
                 ),
                 onTap: () {
-                  /// TODO
+                  controller.deleteInkList(context,
+                      remItem: controller.items
+                          .where(
+                              (item) => controller.selected.contains(item.id))
+                          .toList());
                 },
                 radius: 10,
                 textColor: Colours.red,
@@ -85,7 +91,7 @@ class _DigitalPaperScreenState extends State<DigitalPaperScreen> {
                 isEnable: controller.selected.length > 0,
                 title: "Update",
                 onTap: () {
-                  openUpdatePaperSheet(context,
+                  openUpdateInkSheet(context,
                       items: controller.items
                           .where(
                               (item) => controller.selected.contains(item.id))
@@ -105,17 +111,17 @@ class _DigitalPaperScreenState extends State<DigitalPaperScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.end,
           children: [
             /// stock data
-            TextBorderButton(
-                onTap: () {
-                  openStockDataBottomSheet();
-                },
-                title: Strings.stockData,
-                color: Colours.primary,
-                borderColor: Colours.primary),
-            Expanded(child: SizedBox()),
+            // TextBorderButton(
+            //     onTap: () {
+            //       openStockDataBottomSheet();
+            //     },
+            //     title: Strings.stockData,
+            //     color: Colours.primary,
+            //     borderColor: Colours.primary),
+            // Expanded(child: SizedBox()),
 
             /// button
             InkWell(
@@ -135,6 +141,20 @@ class _DigitalPaperScreenState extends State<DigitalPaperScreen> {
                       child: Text("+ Add Row",
                           style: appTextTheme.titleSmall
                               ?.copyWith(color: Colours.green)))),
+            ),
+            Obx(
+              () => Transform.scale(
+                scale:
+                    0.6, // Adjust the scale to change the size (height and width)
+                child: Switch(
+                  activeColor: Colours.primary,
+                  value: controller.isCollapsed.value,
+                  onChanged: (value) {
+                    controller.isCollapsed.value = value;
+                    controller.toggleCollapse(controller.isCollapsed.value);
+                  },
+                ),
+              ),
             ),
 
             /// select all
@@ -175,7 +195,6 @@ class _DigitalPaperScreenState extends State<DigitalPaperScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            /// Filter
             PrimaryButton(
                 title: "Filter",
                 isFullWidth: false,
@@ -191,8 +210,9 @@ class _DigitalPaperScreenState extends State<DigitalPaperScreen> {
                 onTap: () {
                   onchangeFilter(
                       {String? selectedMonth,
-                        String? selectedYear,
-                        FilterItem<String>? colorFilter}) {
+                      String? selectedYear,
+                      String? inkType,
+                      FilterItem<String>? colorFilter}) {
                     /// color filter
                     if (colorFilter == null) {
                       controller.colorFilter.value =
@@ -207,6 +227,9 @@ class _DigitalPaperScreenState extends State<DigitalPaperScreen> {
                     controller.selectedYear =
                         selectedYear ?? timeNow().year.toString();
 
+                    /// type
+                    controller.selectedType =
+                        inkType ?? "1000";
                     controller.getInkListData();
                   }
 
@@ -215,22 +238,26 @@ class _DigitalPaperScreenState extends State<DigitalPaperScreen> {
                       onChanged: onchangeFilter,
                       selectedMonth: controller.selectedMonth,
                       selectedYear: controller.selectedYear,
+                      inkType: controller.selectedType,
+                      isPaper: false,
                       filter: controller.colorFilter.value);
                 }),
-            Obx(()=> Row(
+            Obx(
+              () => Row(
                 children: [
                   Text("Page",
                       style: appTextTheme.titleSmall?.copyWith(
-                          color: Colours.blackLite, fontWeight: FontWeight.w700)),
+                          color: Colours.blackLite,
+                          fontWeight: FontWeight.w700)),
                   Gap(10),
                   popupMenu(Get.context!,
                       items: [
                         ...List.generate(
                             controller.totalPages.value,
-                                (index) => MenuItem(
+                            (index) => MenuItem(
                                 title: '${index + 1}',
                                 onTap: (value) {
-                                  controller.currentPage.value = index+1;
+                                  controller.currentPage.value = index + 1;
                                   controller.getInkListData();
                                 },
                                 id: index,
@@ -244,17 +271,16 @@ class _DigitalPaperScreenState extends State<DigitalPaperScreen> {
                             border: Border.all(color: Colours.border),
                             borderRadius: BorderRadius.circular(5)),
                         child: Center(
-                            child: Text(
-                                "${controller.currentPage.value}",
+                            child: Text("${controller.currentPage.value}",
                                 style: appTextTheme.titleSmall?.copyWith(
                                     color: Colours.blackLite,
                                     fontWeight: FontWeight.w700))),
                       )),
                   Gap(10),
-                  Text(
-                      "of ${controller.totalPages.value}",
+                  Text("of ${controller.totalPages.value}",
                       style: appTextTheme.titleSmall?.copyWith(
-                          color: Colours.blackLite, fontWeight: FontWeight.w700)),
+                          color: Colours.blackLite,
+                          fontWeight: FontWeight.w700)),
                 ],
               ),
             )
@@ -283,12 +309,12 @@ class _DigitalPaperScreenState extends State<DigitalPaperScreen> {
   }
 
   List<Widget> displayItems() {
-    return displayList<DigitalPaperModel>(
+    return displayList<InkModel>(
         items: controller.items, builder: itemTileWidget, showGap: true);
   }
 
   Widget itemTileWidget(
-    DigitalPaperModel item,
+    InkModel item,
     int index,
   ) {
     return CustomExpandedTile(
@@ -299,20 +325,20 @@ class _DigitalPaperScreenState extends State<DigitalPaperScreen> {
             children: [
               Row(
                 children: [
-                  Text("Size"),
+                  Text("Color"),
                   gap(),
-                  Text("${item.paperSize ?? "_"}"),
+                  Text("${item.inkColor ?? "_"}"),
                 ],
               ),
               Expanded(child: SizedBox()),
               Obx(
                 () => Row(
                   children: [
-                    if (controller.enableSelect.value)
-                      IconButton(
-                        onPressed: () {
+                    if (controller.enableSelect.value) ...[
+                      InkWell(
+                        onTap: () {
                           // if(item.inkBalanceMl?.trim() == "0" || item.inkBalanceMl?.trim() == ""){
-                          //   errorSnackBar(message: "Paper bal is 0");
+                          //   errorSnackBar(message: "Ink bal is 0");
                           //   return;
                           // }
                           if (controller.selected.contains(item.id)) {
@@ -321,27 +347,34 @@ class _DigitalPaperScreenState extends State<DigitalPaperScreen> {
                             controller.selected.add(item.id!);
                           }
                         },
-                        icon: (controller.selected.contains(item.id))
+                        child: (controller.selected.contains(item.id))
                             ? Icon(
                                 Icons.check_box,
                                 color: Colours.secondary,
+                                size: 22,
                               )
                             : Icon(
                                 Icons.check_box_outline_blank,
                                 color: Colours.secondary,
+                                size: 22,
                               ),
-                      )
-                    else ...[
+                      ),
+                    ] else ...[
                       Icon(
                         Icons.edit,
                         size: 24,
                         color: Colors.grey,
                       ),
                       gap(),
-                      Icon(
-                        Icons.delete_outline,
-                        size: 24,
-                        color: Colours.red,
+                      InkWell(
+                        onTap: () {
+                          controller.deleteInkList(context, remItem: [item]);
+                        },
+                        child: Icon(
+                          Icons.delete_outline,
+                          size: 24,
+                          color: Colours.red,
+                        ),
                       )
                     ],
                   ],
@@ -361,13 +394,18 @@ class _DigitalPaperScreenState extends State<DigitalPaperScreen> {
         ]),
         gap(),
         displayChildren([
-          ["IM", "${item.imSupplier ?? "_"}"],
-          ["Price (yads)", "1450"]
+          ["IM", "${item.imSupplier ?? "_"}ml"],
+          ["Price(l/tbh)", "1450"]
         ]),
         gap(),
         displayChildren([
           ["Used", "0"],
-          ["In Stock", "${item.inStock ?? "_"}"]
+          ["In Stock", "${item.inStockMl ?? "_"}(ml)"]
+        ]),
+        gap(),
+        displayChildren([
+          ["Bal.", "${item.inkBalanceMl ?? "_"}(ml)"],
+          ["", ""]
         ]),
       ],
       bottom: DottedBorderContainer(
@@ -384,7 +422,7 @@ class _DigitalPaperScreenState extends State<DigitalPaperScreen> {
               Row(
                 children: [
                   Text(
-                    "Used yads",
+                    "Used ML",
                     style: appTextTheme.labelSmall,
                   ),
                   gap(space: 40),
@@ -400,12 +438,12 @@ class _DigitalPaperScreenState extends State<DigitalPaperScreen> {
               Row(
                 children: [
                   Text(
-                    "${item.usedYads ?? "_"}",
+                    "${item.usedMl}",
                     style: appTextTheme.labelSmall,
                   ),
                   gap(space: 40),
                   Text(
-                    "${item.usedDate}",
+                    "${item.receiptDate}",
                     style: appTextTheme.labelSmall
                         ?.copyWith(color: Colours.primary),
                   ),
@@ -413,9 +451,7 @@ class _DigitalPaperScreenState extends State<DigitalPaperScreen> {
                   PrimaryButton(
                       title: "Update",
                       onTap: () {
-                        openUpdatePaperSheet(context,
-                            items: [item]
-                                .toList());
+                        openUpdateInkSheet(context, items: [item].toList());
                       },
                       isFullWidth: false,
                       radius: 15)

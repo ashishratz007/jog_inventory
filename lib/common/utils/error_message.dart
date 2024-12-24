@@ -80,7 +80,10 @@ bool barrierDismissible = true,
     builder: (context) => TransparentPopup(
       title: title ?? 'Error',
       subtitle: subtitle ?? 'Something went wrong. Please try again.',
-      onRetry: onRetry,
+      onRetry: (){
+        mainNavigationService.back(context);
+        onRetry.call();
+      },
     ),
   );
   // if (kReleaseMode)

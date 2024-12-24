@@ -1,86 +1,87 @@
 import 'package:jog_inventory/common/base_model/base_model.dart';
+import 'package:jog_inventory/common/base_model/common_model.dart';
 
-import '../../../common/base_model/common_model.dart';
 import '../../../common/exports/main_export.dart';
 
-class DigitalPaperModel extends BaseModel {
+class InkModel extends BaseModel {
   @override
-  String get endPoint => "api/paper-list";
+  String get endPoint => "api/ink-list";
 
   int? id;
   String? supplier;
   String? po;
   String? imSupplier;
+  String? inkColor;
   String? rollNo;
-  String? inStock;
+  String? inStockMl;
   String? priceLb;
-  String? priceYads;
-  String? usedYads;
-  String? paperBalance;
+  String? usedMl;
+  String? inkBalanceMl;
   String? receiptDate;
   String? usedDate;
   String? usedValue;
   String? inkType;
-  String? paperSize;
   String? createYear;
   String? createMonth;
   int? status;
 
-  DigitalPaperModel({
+  InkModel({
     this.id,
     this.supplier,
     this.po,
     this.imSupplier,
+    this.inkColor,
     this.rollNo,
-    this.inStock,
+    this.inStockMl,
     this.priceLb,
-    this.priceYads,
-    this.usedYads,
-    this.paperBalance,
+    this.usedMl,
+    this.inkBalanceMl,
     this.receiptDate,
     this.usedDate,
     this.usedValue,
     this.inkType,
-    this.paperSize,
     this.createYear,
     this.createMonth,
     this.status,
   });
 
-  factory DigitalPaperModel.fromJson(Map<String, dynamic> json) {
-    return DigitalPaperModel(
+  factory InkModel.fromJson(Map<String, dynamic> json) {
+    return InkModel(
       id: ParseData.toInt(json['id']),
       supplier: ParseData.string(json['supplier']),
       po: ParseData.string(json['PO']),
       imSupplier: ParseData.string(json['IMsupplier']),
+      inkColor: ParseData.string(json['ink_color']),
       rollNo: ParseData.string(json['roll_no']),
-      inStock: ParseData.string(json['in_stock']),
+      inStockMl: ParseData.string(json['in_stock_ml']),
       priceLb: ParseData.string(json['price_lb']),
-      priceYads: ParseData.string(json['price_yads']),
-      usedYads: ParseData.string(json['used_yads']),
-      paperBalance: ParseData.string(json['paper_balance']),
+      usedMl: ParseData.string(json['used_ML']),
+      inkBalanceMl: ParseData.string(json['ink_balance_ML']),
       receiptDate: ParseData.string(json['receipt_date']),
       usedDate: ParseData.string(json['used_date']),
       usedValue: ParseData.string(json['used_value']),
       inkType: ParseData.string(json['ink_type']),
-      paperSize: ParseData.string(json['paper_size']),
       createYear: ParseData.string(json['create_year']),
       createMonth: ParseData.string(json['create_month']),
       status: ParseData.toInt(json['status']),
     );
   }
 
-  static Future deletePaper({required List<int> appendIds}){
-    var endpoint = "api/paper-delete";
-   var data = {
-      "appended_ids": "${appendIds}"
-  };
-   return DigitalPaperModel().create(data: data, url: endpoint);
+
+  /// delete ink
+  static Future deleteInk({required List<String> appendIds})async{
+    var endpoint = "api/ink-delete";
+    var data = {
+      "appended_ids": appendIds
+    };
+    return await InkModel().create(data: data, url: endpoint);
   }
 
-  static Future updatePaper({
-    required String size,
+  /// update ink
+  static Future updateInk({
+    required String color,
     required String month,
+    required String year,
     required String used,
     required List<int> appendIds,
     required DateTime usedDate,
@@ -88,50 +89,51 @@ class DigitalPaperModel extends BaseModel {
     var endpoint = "api/ink-cut-stock";
     var data = {
       "tablename": "ink",
-      if(!stringActions.isNullOrEmpty(size))"color": size,
-      if(!stringActions.isNullOrEmpty(month))"month": month,
-      "appended_ids": "$appendIds",
-      "Used": "$used",
-      "Ink_Balance": "0",
+      if (!stringActions.isNullOrEmpty(color)) "color": color,
+      if (!stringActions.isNullOrEmpty(month)) "month": month,
+      "appended_ids": appendIds,
+      "Used": used,
+      "Ink_Balance": 0,
       "used_date": "${usedDate.year}-${usedDate.month}-${usedDate.day}"
     };
-    return DigitalPaperModel().create(data: data, url: endpoint);
+    return InkModel().create(data: data, url: endpoint);
   }
 
-
-  static Future<DigitalPaperModel> getPaperDetail({
-    required String paper_id
-  }) async {
-    var endpoint = "api/paper-detail";
+  static Future<InkModel> getInkDetail({
+    required String ink_id
+  })async {
+    var endpoint = "api/ink-detail";
     var data = {
-      "paper_id": paper_id,
+      "ink_id": ink_id,
     };
-    var resp = await  DigitalPaperModel().create(data: data, url: endpoint);
-    return DigitalPaperModel.fromJson(resp.data['data']);
+    var resp = await  InkModel().create(data: data, url: endpoint);
+    return InkModel.fromJson(resp.data['data']);
   }
 
-  static Future<Pagination<DigitalPaperModel>> fetchAll(
+  /// get list
+  static Future<Pagination<InkModel>> fetchAll(
     int page, {
-    String? paper_size,
+    String? stockMl,
     String? month,
     String? year,
-    String? IMsupplier,
+    String? color,
   }) async {
-    Pagination<DigitalPaperModel> paginated;
+    Pagination<InkModel> paginated;
     // filters for the request
     Map<String, dynamic>? data = {
-      "paper_size": paper_size,
+      "stock_ml": stockMl,
       "month": month,
       "year": year,
-      "IMsupplier": IMsupplier,
+      "color": color,
     };
+
     var qp = {
       "page": page,
     };
-    var resp = await DigitalPaperModel().create(data: data, isFormData: true,queryParameters: qp);
+    var resp = await InkModel().create(data: data, isFormData: true,queryParameters: qp);
     paginated = Pagination.fromJson(resp.data,
         itm: ParseData.toList(resp.data['data'],
-            itemBuilder: (json) => DigitalPaperModel.fromJson(json)));
+            itemBuilder: (json) => InkModel.fromJson(json)));
     return paginated;
   }
 }

@@ -6,10 +6,13 @@ import 'package:jog_inventory/services/tab_view_navigator.dart';
 openInkPaperFilterPopup(BuildContext context,
     {String? selectedMonth,
     String? selectedYear,
+    String? inkType,
     FilterItem<String>? filter,
+    bool isPaper = false,
     required void Function(
             {String? selectedMonth,
             String? selectedYear,
+            String? inkType,
             required FilterItem<String>? colorFilter})
         onChanged}) {
   showAppBottomSheet(
@@ -17,7 +20,9 @@ openInkPaperFilterPopup(BuildContext context,
       _FilterDateColorScreen(
         selectedMonth: selectedMonth,
         selectedYear: selectedYear,
+        inkType: inkType,
         filter: filter,
+        isPaper: isPaper,
         onChanged: onChanged,
       ),
       title: "Filter by");
@@ -26,16 +31,21 @@ openInkPaperFilterPopup(BuildContext context,
 class _FilterDateColorScreen extends StatefulWidget {
   final String? selectedMonth;
   final String? selectedYear;
+  final String? inkType;
+  final bool isPaper;
   final FilterItem<String>? filter;
   final void Function(
       {String? selectedMonth,
       String? selectedYear,
+      String? inkType,
       required FilterItem<String>? colorFilter}) onChanged;
   const _FilterDateColorScreen(
       {this.selectedMonth,
       this.selectedYear,
       this.filter,
+      this.inkType,
       required this.onChanged,
+      required this.isPaper,
       super.key});
 
   @override
@@ -44,14 +54,25 @@ class _FilterDateColorScreen extends StatefulWidget {
 
 class _FilterDateColorScreenState extends State<_FilterDateColorScreen> {
   List<String> get monthNames => yearMonths(short: true);
-  List<FilterItem<String>> _items = List.generate(
-      inkColors.length,
-      (index) => FilterItem(
-          id: index + 1,
-          title: inkColors[index],
-          key: inkColors[index],
-          isSelected: false,
-          value: inkColors[index]));
+  List<FilterItem<String>> get _items {
+    // check for paper or ink
+    if (!widget.isPaper)
+      return List.generate(
+          inkColors.length,
+          (index) => FilterItem(
+              id: index + 1,
+              title: inkColors[index],
+              key: inkColors[index],
+              isSelected: false,
+              value: inkColors[index]));
+    return [
+      FilterItem(
+          id: 100, title: "100", key: "100", isSelected: false, value: "100"),
+      FilterItem(
+          id: 200, title: "200", key: "200", isSelected: false, value: "200"),
+    ];
+  }
+
   FilterItem<String>? selectedItem;
 
   late List<DropDownItem<String>> months = List.generate(
@@ -74,6 +95,7 @@ class _FilterDateColorScreenState extends State<_FilterDateColorScreen> {
             value: "${timeNow().year - index}",
           ));
   late DropDownItem<String> selectedYear;
+  late DropDownItem<String> selectedType;
 
   @override
   void initState() {
@@ -88,6 +110,13 @@ class _FilterDateColorScreenState extends State<_FilterDateColorScreen> {
       key: year,
       isSelected: false,
       value: year,
+    );
+    selectedType = DropDownItem(
+      id: int.parse(widget.inkType ?? "0"),
+      title: widget.inkType ?? "0",
+      key: widget.inkType ?? "0",
+      isSelected: false,
+      value: widget.inkType ?? "0",
     );
 
     /// Month
@@ -115,6 +144,42 @@ class _FilterDateColorScreenState extends State<_FilterDateColorScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
+            if (!widget.isPaper) ...[
+              SecondaryFieldMenuWithLabel<String>(
+                labelText: "Select Type(ML)",
+                borderRadius: 20,
+                items: [
+                  DropDownItem(
+                    id: 1000,
+                    title: "1000",
+                    key: "1000",
+                    isSelected: false,
+                    value: "1000",
+                  ),
+                  DropDownItem(
+                    id: 1500,
+                    title: "1500",
+                    key: "1500",
+                    isSelected: false,
+                    value: "1500",
+                  )
+                ],
+                selectedItem: selectedType,
+                onChanged: (DropDownItem<String>? item) {
+                  selectedType = item ??
+                      DropDownItem(
+                        id: 1000,
+                        title: "1000",
+                        key: "1000",
+                        isSelected: false,
+                        value: "1000",
+                      );
+                },
+                hintText: Strings.selectType,
+              ),
+              gap(space: 20),
+            ],
+
             Text(
               "Date",
               style: appTextTheme.titleMedium,
@@ -154,7 +219,7 @@ class _FilterDateColorScreenState extends State<_FilterDateColorScreen> {
             ),
             gap(),
             Text(
-              "Color",
+              widget.isPaper?"Size" : "Color",
               style: appTextTheme.titleMedium,
             ),
             gap(space: 10),
@@ -238,6 +303,7 @@ class _FilterDateColorScreenState extends State<_FilterDateColorScreen> {
                       widget.onChanged(
                           selectedYear: selectedYear.value,
                           selectedMonth: selectedMonth.value,
+                          inkType: selectedType.value,
                           colorFilter: selectedItem);
                       mainNavigationService.back(context);
                     },

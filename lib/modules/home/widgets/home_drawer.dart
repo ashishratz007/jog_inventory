@@ -53,7 +53,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
               },
         child: AnimatedContainer(
           duration: Duration(milliseconds: 300), // Animation duration
-          width: isExpanded ? 300 : 100,
+          width: isExpanded ? 300 : 90,
           child: Drawer(
             shadowColor: Colors.white,
             child: SafeArea(
@@ -90,9 +90,8 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                                     .toString()),
                                 child: SmallToLargeAnimation(
                                   child: displayAssetsWidget(
-                                    AppIcons.double_arrow,
-                                    width: 35
-                                  ),
+                                      AppIcons.double_arrow,
+                                      width: 35),
                                   duration: Duration(milliseconds: 700),
                                 )),
                           if (isExpanded) ...[
@@ -150,9 +149,9 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                             child: Icon(
                               Icons.dashboard,
                               color: Colours.greyLight,
-                              size: isExpanded ? 20 : 20,
+                              size: isExpanded ? 25 : 40,
                             ),
-                            width: isExpanded ? 50 : 50,
+                            width: isExpanded ? 30 : 30,
                             height: isExpanded ? 50 : 50,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),
@@ -163,13 +162,13 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                             child: Icon(
                               Icons.dashboard,
                               color: Colours.secondary,
-                              size: isExpanded ? 20 : 20,
+                              size: isExpanded ? 20 : 40,
                             ),
                             width: isExpanded ? 50 : 50,
                             height: isExpanded ? 50 : 50,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(5),
-                              color: Colours.secondary.withOpacity(0.2),
+                              // color: Colours.secondary.withOpacity(0.2),
                             ),
                             padding: EdgeInsets.all(5)),
                         title: " Dash Board",
@@ -184,13 +183,13 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                     /// Stock in
                     drawerTile(
                       context,
-                      leading: displayAssetsWidget(AppIcons.stock_in_list_un,
-                          width: isExpanded ? 50 : 50,
+                      leading: displayAssetsWidget(AppIcons.stock_in,
+                          width: isExpanded ? 30 : 50,
                           height: isExpanded ? 50 : 50,
                           borderRadius: BorderRadius.circular(10),
                           padding: EdgeInsets.all(5)),
-                      selected: displayAssetsWidget(AppIcons.stock_in_list_sel,
-                          width: isExpanded ? 50 : 50,
+                      selected: displayAssetsWidget(AppIcons.stock_in_color,
+                          width: isExpanded ? 30 : 50,
                           height: isExpanded ? 50 : 50,
                           fit: BoxFit.contain,
                           borderRadius: BorderRadius.circular(10),
@@ -207,14 +206,14 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                     /// Material Rq
                     drawerTile(
                       context,
-                      leading: displayAssetsWidget(AppIcons.material_req_un,
+                      leading: displayAssetsWidget(AppIcons.material,
                           borderRadius: BorderRadius.circular(10),
-                          width: isExpanded ? 50 : 50,
+                          width: isExpanded ?30 : 50,
                           height: isExpanded ? 50 : 50,
                           padding: EdgeInsets.all(5)),
-                      selected: displayAssetsWidget(AppIcons.material_req_sel,
+                      selected: displayAssetsWidget(AppIcons.material_color,
                           borderRadius: BorderRadius.circular(10),
-                          width: isExpanded ? 50 : 50,
+                          width: isExpanded ? 30 : 50,
                           height: isExpanded ? 50 : 50,
                           padding: EdgeInsets.all(5)),
                       title: "Material RQ list",
@@ -226,43 +225,52 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                             removeAll: true);
                       },
                     ),
+
                     /// Ink list
                     drawerTile(
                       context,
-                      leading: displayAssetsWidget(AppIcons.material_req_un,
-                          borderRadius: BorderRadius.circular(10),
-                          width: isExpanded ? 50 : 50,
-                          height: isExpanded ? 50 : 50,
-                          padding: EdgeInsets.all(5)),
-                      selected: displayAssetsWidget(AppIcons.material_req_sel,
-                          borderRadius: BorderRadius.circular(10),
-                          // color: Colours.secondary,
-                          width: isExpanded ? 50 : 50,
-                          height: isExpanded ? 50 : 50,
-                          padding: EdgeInsets.all(5)),
+                      leading: displayAssetsWidget(
+                        AppIcons.ink,
+                        borderRadius: BorderRadius.circular(10),
+                        width: isExpanded ? 30 : 50,
+                        height: isExpanded ? 50 : 50,
+                        padding: EdgeInsets.all(5),
+                      ),
+                      selected: displayAssetsWidget(
+                        AppIcons.inkColor,
+                        borderRadius: BorderRadius.circular(10),
+                        padding: EdgeInsets.all(5),
+                        // color: Colours.secondary,
+                        width: isExpanded ? 30 : 50,
+                        height: isExpanded ? 50 : 50,
+                      ),
                       title: "INK list",
                       textColor: Colours.black,
                       hideTrailing: true,
                       onTap: () async {
-                        await mainNavigationService.push(
-                            AppRoutesString.inkList,
-                            removeAll: true);
+                        await mainNavigationService
+                            .push(AppRoutesString.inkList, removeAll: true);
                       },
                     ),
-                   /// digital paper list
+
+                    /// digital paper list
                     drawerTile(
                       context,
-                      leading: displayAssetsWidget(AppIcons.material_req_un,
-                          borderRadius: BorderRadius.circular(10),
-                          width: isExpanded ? 50 : 50,
-                          height: isExpanded ? 50 : 50,
-                          padding: EdgeInsets.all(5)),
-                      selected: displayAssetsWidget(AppIcons.material_req_sel,
-                          borderRadius: BorderRadius.circular(10),
-                          // color: Colours.secondary,
-                          width: isExpanded ? 50 : 50,
-                          height: isExpanded ? 50 : 50,
-                          padding: EdgeInsets.all(5)),
+                      leading: displayAssetsWidget(
+                        AppIcons.paper,
+                        borderRadius: BorderRadius.circular(10),
+                        width: isExpanded ? 30 : 50,
+                        height: isExpanded ? 30 : 50,
+                        padding: EdgeInsets.all(5),
+                      ),
+                      selected: displayAssetsWidget(
+                        AppIcons.paperColor,
+                        borderRadius: BorderRadius.circular(10),
+                        // color: Colours.secondary,
+                        width: isExpanded ? 30 : 50,
+                        height: isExpanded ? 50 : 50,
+                        padding: EdgeInsets.all(5),
+                      ),
                       title: "Digital Paper list",
                       textColor: Colours.black,
                       hideTrailing: true,
@@ -276,14 +284,14 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                     /// No code
                     drawerTile(
                       context,
-                      leading: displayAssetsWidget(AppIcons.no_code_req_un,
+                      leading: displayAssetsWidget(AppIcons.no_code_unsel,
                           borderRadius: BorderRadius.circular(10),
-                          width: isExpanded ? 50 : 50,
+                          width: isExpanded ? 30 : 50,
                           height: isExpanded ? 50 : 50,
                           padding: EdgeInsets.all(5)),
-                      selected: displayAssetsWidget(AppIcons.no_code_req_sel,
+                      selected: displayAssetsWidget(AppIcons.no_code_color,
                           borderRadius: BorderRadius.circular(10),
-                          width: isExpanded ? 50 : 50,
+                          width: isExpanded ? 30 : 50,
                           height: isExpanded ? 50 : 50,
                           padding: EdgeInsets.all(5)),
                       title: "No code RQ list",
@@ -299,13 +307,13 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                     /// Forecast list
                     drawerTile(
                       context,
-                      leading: displayAssetsWidget(AppIcons.forecast_un,
-                          width: isExpanded ? 50 : 50,
+                      leading: displayAssetsWidget(AppIcons.forecast,
+                          width: isExpanded ? 30 : 50,
                           height: isExpanded ? 50 : 50,
                           borderRadius: BorderRadius.circular(10),
                           padding: EdgeInsets.all(5)),
-                      selected: displayAssetsWidget(AppIcons.forecast_sel,
-                          width: isExpanded ? 50 : 50,
+                      selected: displayAssetsWidget(AppIcons.forecast_color,
+                          width: isExpanded ? 30 : 50,
                           height: isExpanded ? 50 : 50,
                           borderRadius: BorderRadius.circular(10),
                           padding: EdgeInsets.all(5)),
@@ -326,7 +334,8 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                     /// Log out user
                     drawerTile(
                       context,
-                      paddingLeft: 16,paddingRight: 16,
+                      paddingLeft: 16,
+                      paddingRight: 16,
                       leading: Icon(
                         Icons.logout,
                         color: Colors.red,
@@ -348,9 +357,10 @@ class _SideBarWidgetState extends State<SideBarWidget> {
                           buttonText: "Logout",
                           onDelete: (context) async {
                             await UserLoginModel.logoutUser();
-                            Get.offAllNamed(AppRoutesString.login);
                           },
-                          onComplete: () {
+                          onComplete: () async{
+                            Get.offAllNamed(AppRoutesString.login);
+                            await delay(1);
                             successSnackBar(message: "Logout successfully");
                           },
                         );
@@ -382,16 +392,20 @@ class _SideBarWidgetState extends State<SideBarWidget> {
             left: paddingLeft,
             right: paddingRight,
           ),
-          leading: !(selectedValue == title) ? leading : selected,
+          leading: Container(
+            // padding: EdgeInsets.only(left:!isExpanded? 20:0),
+            child: !(selectedValue == title) ? leading : selected
+          ),
           title: Visibility(
             visible: isExpanded,
-            child: Text(title,
-                style: appTextTheme.titleSmall?.copyWith(
-                    color: (selectedValue.value == title)
-                        ? Colours.secondary
-                        : textColor,
-                    fontWeight: FontWeight.w600),
-            maxLines: 1,
+            child: Text(
+              title,
+              style: appTextTheme.titleSmall?.copyWith(
+                  color: (selectedValue.value == title)
+                      ? Colours.secondary
+                      : textColor,
+                  fontWeight: FontWeight.w600),
+              maxLines: 1,
             ),
           ),
           trailing: hideTrailing

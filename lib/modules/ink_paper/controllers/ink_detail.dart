@@ -1,5 +1,5 @@
 import 'package:jog_inventory/common/constant/enums.dart';
-import 'package:jog_inventory/modules/in_paper/modles/ink_model.dart';
+import 'package:jog_inventory/modules/ink_paper/modles/ink_model.dart';
 import '../../../common/exports/main_export.dart';
 
 class InkDetailController extends GetxController {

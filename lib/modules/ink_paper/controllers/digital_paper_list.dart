@@ -1,6 +1,6 @@
 import 'package:jog_inventory/common/utils/custom_expansion_tile.dart';
 import 'package:jog_inventory/common/utils/error_message.dart';
-import 'package:jog_inventory/modules/in_paper/modles/digital_paper.dart';
+import 'package:jog_inventory/modules/ink_paper/modles/digital_paper.dart';
 import '../../../common/exports/main_export.dart';
 
 class DigitalPaperController extends GetxController {
@@ -71,6 +71,26 @@ class DigitalPaperController extends GetxController {
       displayErrorMessage(Get.context!,
           error: e, trace: trace, onRetry: getInkListData);
     });
+  }
+
+
+  /// delete list of ink data
+  deletePaperList(BuildContext context, {required List<DigitalPaperModel> remItem}) {
+    deleteItemPopup(context,
+        title: "Delete Ink Data",
+        subTitle: "Are you sure you want to delete Ink items?",
+        onDelete: (context) async {
+          DigitalPaperModel.deletePaper(
+              appendIds: remItem.map((item) => item.id!).toList())
+              .then((val) {
+            remItem.forEach((item) {
+              items.removeWhere((i) => item.id == i.id);
+              controllers.removeLast(); // for balancing
+            });
+          }).onError((e, trace) {
+            errorSnackBar(message: "Unable to delete item please try again");
+          });
+        });
   }
 
   /// get and register controller

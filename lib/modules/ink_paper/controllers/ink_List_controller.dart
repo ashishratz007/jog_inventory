@@ -1,6 +1,6 @@
 import 'package:jog_inventory/common/utils/custom_expansion_tile.dart';
 import 'package:jog_inventory/common/utils/error_message.dart';
-import 'package:jog_inventory/modules/in_paper/modles/ink_model.dart';
+import 'package:jog_inventory/modules/ink_paper/modles/ink_model.dart';
 import '../../../common/exports/main_export.dart';
 
 class InkListController extends GetxController {
@@ -13,6 +13,7 @@ class InkListController extends GetxController {
       FilterItem<String>(id: 0, title: '', key: '').obs;
   String selectedMonth = timeNow().month.toString();
   String selectedYear = timeNow().year.toString();
+  String selectedType = "1000";
 
   Rx<int> totalPages = 1.obs;
   Rx<int> currentPage = 1.obs;
@@ -53,7 +54,7 @@ class InkListController extends GetxController {
       color: colorFilter.value.value,
       month: selectedMonth,
       year: selectedYear,
-      stockMl: "1000",
+      stockMl: selectedType,
     ).then((val) {
       items.value = val.items;
       totalPages.value = val.totalPages;
@@ -84,7 +85,6 @@ class InkListController extends GetxController {
           items.removeWhere((i) => item.id == i.id);
           controllers.removeLast(); // for balancing
         });
-        mainNavigationService.back(context);
       }).onError((e, trace) {
         errorSnackBar(message: "Unable to delete item please try again");
       });

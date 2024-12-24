@@ -137,7 +137,7 @@ class _DeleteItemBody extends StatelessWidget {
                         bgColor: Colours.bgColor,
                           title: Strings.cancel,
                           onTap: () {
-                            mainNavigationService.pop();
+                            mainNavigationService.back(context);
                           },
                           isFullWidth: false),
                     ),
@@ -152,7 +152,7 @@ class _DeleteItemBody extends StatelessWidget {
                             isBusy.value = true;
                             try {
                               await onDelete(context);
-                              mainNavigationService.pop();
+                              mainNavigationService.back(context);
                               if (onComplete != null) onComplete!();
                             } catch (e) {}
                             isBusy.value = false;

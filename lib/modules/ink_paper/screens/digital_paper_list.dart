@@ -1,36 +1,31 @@
-import 'package:jog_inventory/common/constant/values.dart';
-import 'package:jog_inventory/common/utils/bottom_sheet.dart';
 import 'package:jog_inventory/common/utils/custom_expansion_tile.dart';
-import 'package:jog_inventory/common/utils/date_formater.dart';
-import 'package:jog_inventory/common/utils/date_time_picker.dart';
-import 'package:jog_inventory/common/utils/dotted_border.dart';
-import 'package:jog_inventory/common/utils/filter_widget.dart';
 import 'package:jog_inventory/common/utils/menu.dart';
-import 'package:jog_inventory/modules/in_paper/controllers/ink_List_controller.dart';
-import 'package:jog_inventory/modules/in_paper/modles/ink_model.dart';
-import 'package:jog_inventory/modules/in_paper/widgets/add_row_ink.dart';
-import 'package:jog_inventory/modules/in_paper/widgets/filter_popup.dart';
-import 'package:jog_inventory/modules/in_paper/widgets/stock_data.dart';
-import 'package:jog_inventory/modules/in_paper/widgets/upadte_stock.dart';
-import 'package:jog_inventory/modules/in_paper/widgets/update_ink.dart';
-import 'package:jog_inventory/modules/in_paper/widgets/update_paper_data.dart';
+import 'package:jog_inventory/common/widgets/dotted_border.dart';
+import 'package:jog_inventory/modules/ink_paper/controllers/digital_paper_list.dart';
+import 'package:jog_inventory/modules/ink_paper/modles/digital_paper.dart';
+import 'package:jog_inventory/modules/ink_paper/widgets/add_row_ink.dart';
+import 'package:jog_inventory/modules/ink_paper/widgets/filter_popup.dart';
+import 'package:jog_inventory/modules/ink_paper/widgets/stock_data.dart';
+import 'package:jog_inventory/modules/ink_paper/widgets/update_paper_data.dart';
 import '../../../common/exports/main_export.dart';
 
-class InkListScreen extends StatefulWidget {
-  const InkListScreen({super.key});
+class DigitalPaperScreen extends StatefulWidget {
+  const DigitalPaperScreen({super.key});
 
   @override
-  State<InkListScreen> createState() => _InkListScreenState();
+  State<DigitalPaperScreen> createState() => _DigitalPaperScreenState();
 }
 
-class _InkListScreenState extends State<InkListScreen> {
-  InkListController controller = InkListController.getController();
+class _DigitalPaperScreenState extends State<DigitalPaperScreen> {
+  @override
+  DigitalPaperController get controller =>
+      DigitalPaperController.getController();
 
   @override
   Widget build(BuildContext context) {
     return Obx(
       () => CustomAppBar(
-        title: "Ink List",
+        title: "Digital Paper List",
         body: body,
         trailingButton: selectButton(),
         bottomNavBar: controller.enableSelect.value ? bottomNavBar() : null,
@@ -44,7 +39,6 @@ class _InkListScreenState extends State<InkListScreen> {
         child: Container(
           padding: AppPadding.pagePadding,
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               /// header with filter
               head(),
@@ -74,7 +68,7 @@ class _InkListScreenState extends State<InkListScreen> {
                   color: Colours.red,
                 ),
                 onTap: () {
-                  controller.deleteInkList(context,
+                  controller.deletePaperList(context,
                       remItem: controller.items
                           .where(
                               (item) => controller.selected.contains(item.id))
@@ -91,7 +85,7 @@ class _InkListScreenState extends State<InkListScreen> {
                 isEnable: controller.selected.length > 0,
                 title: "Update",
                 onTap: () {
-                  openUpdateInkSheet(context,
+                  openUpdatePaperSheet(context,
                       items: controller.items
                           .where(
                               (item) => controller.selected.contains(item.id))
@@ -142,20 +136,6 @@ class _InkListScreenState extends State<InkListScreen> {
                           style: appTextTheme.titleSmall
                               ?.copyWith(color: Colours.green)))),
             ),
-            Obx(
-              () => Transform.scale(
-                scale:
-                    0.6, // Adjust the scale to change the size (height and width)
-                child: Switch(
-                  activeColor: Colours.primary,
-                  value: controller.isCollapsed.value,
-                  onChanged: (value) {
-                    controller.isCollapsed.value = value;
-                    controller.toggleCollapse(controller.isCollapsed.value);
-                  },
-                ),
-              ),
-            ),
 
             /// select all
             Obx(
@@ -195,6 +175,7 @@ class _InkListScreenState extends State<InkListScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
+            /// Filter
             PrimaryButton(
                 title: "Filter",
                 isFullWidth: false,
@@ -211,6 +192,7 @@ class _InkListScreenState extends State<InkListScreen> {
                   onchangeFilter(
                       {String? selectedMonth,
                       String? selectedYear,
+                      String? inkType,
                       FilterItem<String>? colorFilter}) {
                     /// color filter
                     if (colorFilter == null) {
@@ -234,6 +216,7 @@ class _InkListScreenState extends State<InkListScreen> {
                       onChanged: onchangeFilter,
                       selectedMonth: controller.selectedMonth,
                       selectedYear: controller.selectedYear,
+                      isPaper: true,
                       filter: controller.colorFilter.value);
                 }),
             Obx(
@@ -303,12 +286,12 @@ class _InkListScreenState extends State<InkListScreen> {
   }
 
   List<Widget> displayItems() {
-    return displayList<InkModel>(
+    return displayList<DigitalPaperModel>(
         items: controller.items, builder: itemTileWidget, showGap: true);
   }
 
   Widget itemTileWidget(
-    InkModel item,
+    DigitalPaperModel item,
     int index,
   ) {
     return CustomExpandedTile(
@@ -319,20 +302,20 @@ class _InkListScreenState extends State<InkListScreen> {
             children: [
               Row(
                 children: [
-                  Text("Color"),
+                  Text("Size"),
                   gap(),
-                  Text("${item.inkColor ?? "_"}"),
+                  Text("${item.paperSize ?? "_"}"),
                 ],
               ),
               Expanded(child: SizedBox()),
               Obx(
                 () => Row(
                   children: [
-                    if (controller.enableSelect.value) ...[
-                      InkWell(
-                        onTap: () {
+                    if (controller.enableSelect.value)
+                      IconButton(
+                        onPressed: () {
                           // if(item.inkBalanceMl?.trim() == "0" || item.inkBalanceMl?.trim() == ""){
-                          //   errorSnackBar(message: "Ink bal is 0");
+                          //   errorSnackBar(message: "Paper bal is 0");
                           //   return;
                           // }
                           if (controller.selected.contains(item.id)) {
@@ -341,19 +324,17 @@ class _InkListScreenState extends State<InkListScreen> {
                             controller.selected.add(item.id!);
                           }
                         },
-                        child: (controller.selected.contains(item.id))
+                        icon: (controller.selected.contains(item.id))
                             ? Icon(
                                 Icons.check_box,
                                 color: Colours.secondary,
-                                size: 22,
                               )
                             : Icon(
                                 Icons.check_box_outline_blank,
                                 color: Colours.secondary,
-                                size: 22,
                               ),
-                      ),
-                    ] else ...[
+                      )
+                    else ...[
                       Icon(
                         Icons.edit,
                         size: 24,
@@ -362,7 +343,7 @@ class _InkListScreenState extends State<InkListScreen> {
                       gap(),
                       InkWell(
                         onTap: () {
-                          controller.deleteInkList(context, remItem: [item]);
+                          controller.deletePaperList(context, remItem: [item]);
                         },
                         child: Icon(
                           Icons.delete_outline,
@@ -388,18 +369,13 @@ class _InkListScreenState extends State<InkListScreen> {
         ]),
         gap(),
         displayChildren([
-          ["IM", "${item.imSupplier ?? "_"}ml"],
-          ["Price(l/tbh)", "1450"]
+          ["IM", "${item.imSupplier ?? "_"}"],
+          ["Price (yads)", "1450"]
         ]),
         gap(),
         displayChildren([
           ["Used", "0"],
-          ["In Stock", "${item.inStockMl ?? "_"}(ml)"]
-        ]),
-        gap(),
-        displayChildren([
-          ["Bal.", "${item.inkBalanceMl ?? "_"}(ml)"],
-          ["", ""]
+          ["In Stock", "${item.inStock ?? "_"}"]
         ]),
       ],
       bottom: DottedBorderContainer(
@@ -416,7 +392,7 @@ class _InkListScreenState extends State<InkListScreen> {
               Row(
                 children: [
                   Text(
-                    "Used ML",
+                    "Used yads",
                     style: appTextTheme.labelSmall,
                   ),
                   gap(space: 40),
@@ -432,12 +408,12 @@ class _InkListScreenState extends State<InkListScreen> {
               Row(
                 children: [
                   Text(
-                    "${item.usedMl}",
+                    "${item.usedYads ?? "_"}",
                     style: appTextTheme.labelSmall,
                   ),
                   gap(space: 40),
                   Text(
-                    "${item.receiptDate}",
+                    "${item.usedDate}",
                     style: appTextTheme.labelSmall
                         ?.copyWith(color: Colours.primary),
                   ),
@@ -445,7 +421,7 @@ class _InkListScreenState extends State<InkListScreen> {
                   PrimaryButton(
                       title: "Update",
                       onTap: () {
-                        openUpdateInkSheet(context, items: [item].toList());
+                        openUpdatePaperSheet(context, items: [item].toList());
                       },
                       isFullWidth: false,
                       radius: 15)

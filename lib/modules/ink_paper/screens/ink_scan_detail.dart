@@ -1,37 +1,38 @@
 import 'package:jog_inventory/common/utils/error_message.dart';
-import 'package:jog_inventory/modules/in_paper/modles/digital_paper.dart';
+import 'package:jog_inventory/modules/ink_paper/modles/ink_model.dart';
+import 'package:jog_inventory/modules/ink_paper/widgets/update_ink.dart';
 import '../../../common/exports/main_export.dart';
 
-class ScanPaperDetailScreen extends StatefulWidget {
-  const ScanPaperDetailScreen({super.key});
+class ScanInkDetailScreen extends StatefulWidget {
+  const ScanInkDetailScreen({super.key});
 
   @override
-  State<ScanPaperDetailScreen> createState() => _ScanPaperDetailScreenState();
+  State<ScanInkDetailScreen> createState() => _ScanInkDetailScreenState();
 }
 
-class _ScanPaperDetailScreenState extends State<ScanPaperDetailScreen> {
+class _ScanInkDetailScreenState extends State<ScanInkDetailScreen> {
   RxBool isLoading = false.obs;
-  DigitalPaperModel? paperData;
-  late String paperId;
+  InkModel? inkData;
+  late String inkId;
 
   @override
   void initState() {
     var args = mainNavigationService.arguments;
-    paperId = args[appKeys.paperId];
+    inkId = args[appKeys.inkId];
     getData();
     super.initState();
   }
 
   getData() {
     isLoading.value = true;
-    DigitalPaperModel.getPaperDetail(paper_id: paperId).then((value) {
+    InkModel.getInkDetail(ink_id: inkId).then((value) {
       if (value != null) {
-        paperData = value;
+        inkData = value;
         setState(() {});
       } else
         displayErrorMessage(
           Get.context!,
-          error: "Unable to find the Paper detail",
+          error: "Unable to find the Ink detail",
           trace: StackTrace.current,
           onRetry: () {},
         );
@@ -49,7 +50,7 @@ class _ScanPaperDetailScreenState extends State<ScanPaperDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return CustomAppBar(title: "Paper Detail", body: body);
+    return CustomAppBar(title: "Ink Detail", body: body,bottomNavBar: cutStockButton(),);
   }
 
   Widget body(BuildContext context) {
@@ -64,7 +65,7 @@ class _ScanPaperDetailScreenState extends State<ScanPaperDetailScreen> {
     );
   }
 
-  Widget displayMaterialDetails() {
+  Widget displayMaterialDetails(){
     var radius = 10.0;
     return Container(
         decoration: BoxDecoration(
@@ -86,7 +87,7 @@ class _ScanPaperDetailScreenState extends State<ScanPaperDetailScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "Digital Paper",
+                    "Ink",
                     style: appTextTheme.titleMedium
                         ?.copyWith(color: Colours.white),
                   ),
@@ -95,28 +96,26 @@ class _ScanPaperDetailScreenState extends State<ScanPaperDetailScreen> {
               ),
             ),
             gap(space: 10),
-            displayDataTiles('Date', paperData?.usedDate?? "_"),
+            displayDataTiles('Date', inkData?.usedDate ?? "_"),
             Divider(color: Colours.bgGrey),
-            displayDataTiles('Supplier', paperData?.supplier?? "_"),
+            displayDataTiles('Color', inkData?.inkColor ?? "_"),
             Divider(color: Colours.bgGrey),
-            displayDataTiles('PO', paperData?.po?? "_"),
+            displayDataTiles('Type', inkData?.inkType ?? "_"),
             Divider(color: Colours.bgGrey),
-            displayDataTiles('No', "${paperData?.rollNo?? "_"}"),
+            displayDataTiles('Supplier', inkData?.supplier ?? "_"),
             Divider(color: Colours.bgGrey),
-            displayDataTiles('In Stock', paperData?.inStock??"_"),
+            displayDataTiles('PO', inkData?.po ?? "_"),
             Divider(color: Colours.bgGrey),
-            displayDataTiles('Paper Size', paperData?.paperSize?? "_"),
+            displayDataTiles('No', "${inkData?.rollNo ?? "_"}"),
             Divider(color: Colours.bgGrey),
-            displayDataTiles('Price (Yads) ', paperData?.priceYads?? "_"),
+            displayDataTiles('In Stock', inkData?.inStockMl ?? "_"),
             Divider(color: Colours.bgGrey),
-            displayDataTiles('Price(lb)', paperData?.priceLb?? "_"),
+            displayDataTiles('IM', inkData?.imSupplier ?? "_"),
             Divider(color: Colours.bgGrey),
-            displayDataTiles('Used', paperData?.usedValue?? "_"),
+            displayDataTiles('Price', inkData?.priceLb ?? "_"),
             Divider(color: Colours.bgGrey),
-            displayDataTiles('Paper size', paperData?.paperSize?? "_"),
+            displayDataTiles('Used', inkData?.usedValue ?? "_"),
             Divider(color: Colours.bgGrey),
-            displayDataTiles('Balance', paperData?.paperBalance?? "_"),
-
             gap(space: 10)
           ],
         ));
@@ -124,7 +123,7 @@ class _ScanPaperDetailScreenState extends State<ScanPaperDetailScreen> {
 
   Widget displayDataTiles(String title, String value) {
     return Obx(
-          () => shimmerEffects(
+      () => shimmerEffects(
         isLoading: isLoading.value,
         child: Container(
           padding: AppPadding.inner,
@@ -144,6 +143,19 @@ class _ScanPaperDetailScreenState extends State<ScanPaperDetailScreen> {
             ],
           ),
         ),
+      ),
+    );
+  }
+  
+  Widget cutStockButton(){
+    return Container(
+      child: PrimaryButton(title: "Cut Stock", onTap: (){
+        openUpdateInkSheet(context,
+            onDone: (){
+          Get.back();
+            },
+            items: [inkData!]);
+      },
       ),
     );
   }

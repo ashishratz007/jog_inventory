@@ -1,22 +1,20 @@
-import 'package:jog_inventory/common/constant/values.dart';
 import 'package:jog_inventory/common/utils/bottom_sheet.dart';
 import 'package:jog_inventory/common/utils/date_time_picker.dart';
 import 'package:jog_inventory/common/utils/validation.dart';
-import 'package:jog_inventory/modules/in_paper/modles/ink_model.dart';
+import 'package:jog_inventory/modules/ink_paper/modles/digital_paper.dart';
 import '../../../common/exports/main_export.dart';
 
-openUpdateInkSheet(BuildContext context, {required List<InkModel> items}) {
+openUpdatePaperSheet(BuildContext context,
+    {required List<DigitalPaperModel> items, Function? onDone}) {
   showAppBottomSheet(
-      Get.context!,
-      _UpdatePaperScreen(
-        items: items,
-      ),
-      title: "Update Ink Data");
+      Get.context!, _UpdatePaperScreen(items: items, onDone: onDone),
+      title: "Update Paper");
 }
 
 class _UpdatePaperScreen extends StatefulWidget {
-  final List<InkModel> items;
-  const _UpdatePaperScreen({required this.items, super.key});
+  final List<DigitalPaperModel> items;
+  final Function? onDone;
+  const _UpdatePaperScreen({required this.items, this.onDone, super.key});
 
   @override
   State<_UpdatePaperScreen> createState() => _UpdatePaperScreenState();
@@ -24,18 +22,40 @@ class _UpdatePaperScreen extends StatefulWidget {
 
 class _UpdatePaperScreenState extends State<_UpdatePaperScreen> {
   var formKey = GlobalKey<FormState>();
-   String used = "";
-   String color= "";
-   String month= "";
-   String usedDate= "";
+  String used = "";
+  String size = "";
+  String month = "";
+  String year = "";
+  String usedDate = "";
   RxBool isBusy = false.obs;
+
+  List<DropDownItem<String>> years = List.generate(
+      20,
+          // index + 1 is to add one future year
+          (index) => DropDownItem(
+        id: timeNow().year - index + 1,
+        title: "${timeNow().year - index + 1}",
+        key: "${timeNow().year - index + 1}",
+        isSelected: false,
+        value: "${timeNow().year - index + 1}",
+      ));
+
+  List<String> get monthNames => yearMonths(short: true);
+  late List<DropDownItem<String>> months = List.generate(
+      monthNames.length,
+          (index) => DropDownItem(
+          id: index + 1,
+          title: monthNames[index],
+          key: monthNames[index],
+          isSelected: false,
+          value: "${index + 1}"));
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: AppPadding.pagePadding,
-      child: Form(
-        key: formKey,
+    return Form(
+      key: formKey,
+      child: Container(
+        padding: AppPadding.pagePadding,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -43,22 +63,29 @@ class _UpdatePaperScreenState extends State<_UpdatePaperScreen> {
               children: [
                 Expanded(
                     child: PrimaryFieldMenuWithLabel<String>(
-                        items: List.generate(
-                            inkColors.length,
-                            (index) => DropDownItem<String>(
-                                id: index,
-                                title: inkColors[index],
-                                key: inkColors[index],
-                                isSelected: false,
-                                value: inkColors[index])),
+                        items: [
+                      DropDownItem<String>(
+                          id: 1,
+                          title: "100",
+                          key: "100",
+                          isSelected: false,
+                          value: "100"),
+                      DropDownItem<String>(
+                          id: 2,
+                          title: "200",
+                          key: "200",
+                          isSelected: false,
+                          value: "200"),
+                    ],
                         allowSearch: true,
-                        validate: validation.validateEmptyField,
                         onSave: (item) {
-                          color = item?.first.value ?? "";
+                          size = item?.first.value ?? "";
                         },
-                        hintText: "Color",
-                        labelText: "Color",
-                        onChanged: (List<DropDownItem<String>>? items) {})),
+                        hintText: "Paper size",
+                        labelText: "Paper size",
+                        onChanged: (List<DropDownItem<String>>? item) {
+                          //
+                        })),
                 gap(space: 10),
                 Expanded(
                     child: TextFieldWithLabel(
@@ -78,8 +105,8 @@ class _UpdatePaperScreenState extends State<_UpdatePaperScreen> {
                     child: TextFieldWithLabel(
                         enabled: false,
                         initialValue: "0",
-                        hintText: "Ink Bal.",
-                        labelText: "Ink Bal.")),
+                        hintText: "Paper Bal.",
+                        labelText: "Paper Bal.")),
                 gap(space: 10),
                 Expanded(
                     child: DateTimePickerField(
@@ -96,7 +123,7 @@ class _UpdatePaperScreenState extends State<_UpdatePaperScreen> {
               children: [
                 Expanded(
                   child: PrimaryFieldMenuWithLabel<String>(
-                    items: [],
+                    items: months,
                     allowSearch: true,
                     onChanged: (item) {
                       month = item?.first.value ?? "";
@@ -105,7 +132,18 @@ class _UpdatePaperScreenState extends State<_UpdatePaperScreen> {
                     hintText: "Change Month",
                   ),
                 ),
-                Expanded(child: SizedBox()),
+                gap(space: 10),
+                Expanded(
+                  child: PrimaryFieldMenuWithLabel<String>(
+                    items: years,
+                    allowSearch: true,
+                    onChanged: (item) {
+                      year = item?.first.value ?? "";
+                    },
+                    labelText: "Change Year",
+                    hintText: "Change Year",
+                  ),
+                ),
               ],
             ),
             gap(space: 30),
@@ -118,14 +156,17 @@ class _UpdatePaperScreenState extends State<_UpdatePaperScreen> {
                       isBusy.value = true;
                       var appendIds =
                           widget.items.map((item) => item.id!).toList();
-                      InkModel.updateInk(
-                              color: color,
+                      DigitalPaperModel.updatePaper(
+                              size: size,
                               month: month,
+                              year: year,
                               used: used,
                               appendIds: appendIds,
                               usedDate: ParseData.toDateTime(usedDate)!)
                           .then((val) {
                         isBusy.value = false;
+                        Get.back();
+                        widget.onDone?.call();
                       }).onError((err, trace) {
                         isBusy.value = false;
                         errorSnackBar(message: "Please try again");

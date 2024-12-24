@@ -1,39 +1,40 @@
 import 'package:jog_inventory/common/utils/error_message.dart';
-import 'package:jog_inventory/modules/in_paper/modles/ink_model.dart';
+import 'package:jog_inventory/modules/ink_paper/modles/digital_paper.dart';
+import 'package:jog_inventory/modules/ink_paper/widgets/update_paper_data.dart';
 import '../../../common/exports/main_export.dart';
 
-class ScanInkDetailScreen extends StatefulWidget {
-  const ScanInkDetailScreen({super.key});
+class ScanPaperDetailScreen extends StatefulWidget {
+  const ScanPaperDetailScreen({super.key});
 
   @override
-  State<ScanInkDetailScreen> createState() => _ScanInkDetailScreenState();
+  State<ScanPaperDetailScreen> createState() => _ScanPaperDetailScreenState();
 }
 
-class _ScanInkDetailScreenState extends State<ScanInkDetailScreen> {
+class _ScanPaperDetailScreenState extends State<ScanPaperDetailScreen> {
   RxBool isLoading = false.obs;
-  InkModel? inkData;
-  late String inkId;
+  DigitalPaperModel? paperData;
+  late String paperId;
 
   @override
   void initState() {
     var args = mainNavigationService.arguments;
-    inkId = args[appKeys.inkId];
+    paperId = args[appKeys.paperId];
     getData();
     super.initState();
   }
 
   getData() {
     isLoading.value = true;
-    InkModel.getInkDetail(ink_id: inkId).then((value) {
+    DigitalPaperModel.getPaperDetail(paper_id: paperId).then((value) {
       if (value != null) {
-        inkData = value;
+        paperData = value;
         setState(() {});
       } else
         displayErrorMessage(
           Get.context!,
-          error: "Unable to find the Ink detail",
+          error: "Unable to find the Paper detail",
           trace: StackTrace.current,
-          onRetry: () {},
+          onRetry: getData,
         );
       isLoading.value = false;
     }).onError((e, trace) {
@@ -42,14 +43,18 @@ class _ScanInkDetailScreenState extends State<ScanInkDetailScreen> {
         Get.context!,
         error: e,
         trace: trace,
-        onRetry: () {},
+        onRetry: getData,
       );
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return CustomAppBar(title: "Ink Detail", body: body);
+    return CustomAppBar(
+      title: "Paper Detail",
+      body: body,
+      bottomNavBar: cutStockButton(),
+    );
   }
 
   Widget body(BuildContext context) {
@@ -86,7 +91,7 @@ class _ScanInkDetailScreenState extends State<ScanInkDetailScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "Ink",
+                    "Digital Paper",
                     style: appTextTheme.titleMedium
                         ?.copyWith(color: Colours.white),
                   ),
@@ -95,26 +100,27 @@ class _ScanInkDetailScreenState extends State<ScanInkDetailScreen> {
               ),
             ),
             gap(space: 10),
-            displayDataTiles('Date', inkData?.usedDate ?? "_"),
+            displayDataTiles('Date', paperData?.usedDate ?? "_"),
             Divider(color: Colours.bgGrey),
-            displayDataTiles('Color', inkData?.inkColor ?? "_"),
+            displayDataTiles('Supplier', paperData?.supplier ?? "_"),
             Divider(color: Colours.bgGrey),
-            displayDataTiles('Type', inkData?.inkType ?? "_"),
+            displayDataTiles('PO', paperData?.po ?? "_"),
             Divider(color: Colours.bgGrey),
-            displayDataTiles('Supplier', inkData?.supplier ?? "_"),
+            displayDataTiles('No', "${paperData?.rollNo ?? "_"}"),
             Divider(color: Colours.bgGrey),
-            displayDataTiles('PO', inkData?.po ?? "_"),
+            displayDataTiles('In Stock', paperData?.inStock ?? "_"),
             Divider(color: Colours.bgGrey),
-            displayDataTiles('No', "${inkData?.rollNo ?? "_"}"),
+            displayDataTiles('Paper Size', paperData?.paperSize ?? "_"),
             Divider(color: Colours.bgGrey),
-            displayDataTiles('In Stock', inkData?.inStockMl ?? "_"),
+            displayDataTiles('Price (Yads) ', paperData?.priceYads ?? "_"),
             Divider(color: Colours.bgGrey),
-            displayDataTiles('IM', inkData?.imSupplier ?? "_"),
+            displayDataTiles('Price(lb)', paperData?.priceLb ?? "_"),
             Divider(color: Colours.bgGrey),
-            displayDataTiles('Price', inkData?.priceLb ?? "_"),
+            displayDataTiles('Used', paperData?.usedValue ?? "_"),
             Divider(color: Colours.bgGrey),
-            displayDataTiles('Used', inkData?.usedValue ?? "_"),
+            displayDataTiles('Paper size', paperData?.paperSize ?? "_"),
             Divider(color: Colours.bgGrey),
+            displayDataTiles('Balance', paperData?.paperBalance ?? "_"),
             gap(space: 10)
           ],
         ));
@@ -145,4 +151,23 @@ class _ScanInkDetailScreenState extends State<ScanInkDetailScreen> {
       ),
     );
   }
+
+  Widget cutStockButton() {
+    return Container(
+      child: PrimaryButton(
+          title: "Cut Stock",
+          onTap: () {
+            openUpdatePaperSheet(
+              context,
+              onDone: () {
+                Get.back();
+              },
+              items: [paperData!],
+            );
+          },
+          color: Colours.greenLight),
+    );
+  }
+
+
 }
