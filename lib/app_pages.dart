@@ -4,6 +4,8 @@ import 'package:jog_inventory/modules/forecast/screens/addforecast_screen.dart';
 import 'package:jog_inventory/modules/forecast/screens/detail.dart';
 import 'package:jog_inventory/modules/forecast/screens/list.dart';
 import 'package:jog_inventory/modules/home/screens/home.dart';
+import 'package:jog_inventory/modules/ink_paper/screens/add_ink_row.dart';
+import 'package:jog_inventory/modules/ink_paper/screens/add_paper_row.dart';
 import 'package:jog_inventory/modules/ink_paper/screens/digital_paper_list.dart';
 import 'package:jog_inventory/modules/ink_paper/screens/ink_list.dart';
 import 'package:jog_inventory/modules/ink_paper/screens/ink_scan_detail.dart';
@@ -177,13 +179,28 @@ List<GetPage<dynamic>> getRoutes = [
   ),
 
   GetPage(
+    name: AppRoutesString.addInkRow,
+    page: () => AddInkRowScreen(),
+    bindings: [
+      ///
+    ],
+  ),
+
+  GetPage(
+    name: AppRoutesString.addPaperRow,
+    page: () => AddPaperRowScreen(),
+    bindings: [
+      ///
+    ],
+  ),
+
+  GetPage(
     name: AppRoutesString.inkScanDetail,
     page: () => ScanInkDetailScreen(),
     bindings: [
       ///
     ],
   ),
-
 
   /// digital papers
   GetPage(
@@ -206,6 +223,7 @@ Map<String, WidgetBuilder> get routeBuilders {
   Map<String, WidgetBuilder> routeData = {};
   getRoutes.forEach((page) {
     if (page.name == AppRoutesString.dashboard) {
+      /// Ignoring the dashboard screen so that it will not navigate to nested navigation for tab
       var data = GetPage(
         name: AppRoutesString.dashboard,
         page: () => HomeScreen(),

@@ -634,7 +634,7 @@ List<FilteringTextInputFormatter> inputFormatters(
     {bool allowInt = false, bool textOnly = false, allowDouble = false}) {
   return [
     if (allowDouble) amountFormatter(),
-    if (allowInt) FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+    if (allowInt && !allowDouble) FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
     if (textOnly) FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z\s]')),
   ];
 }

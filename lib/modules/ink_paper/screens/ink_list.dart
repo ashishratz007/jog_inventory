@@ -126,7 +126,7 @@ class _InkListScreenState extends State<InkListScreen> {
             /// button
             InkWell(
               onTap: () {
-                openAddRowInkSheet();
+                mainNavigationService.push(AppRoutesString.addInkRow);
               },
               child: DottedBorderContainer(
                   borderColor: Colours.green,

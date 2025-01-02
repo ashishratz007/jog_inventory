@@ -247,7 +247,7 @@ class _FinishMaterialRQScreenState extends State<FinishMaterialRQScreen> {
                     keyboardType: TextInputType.number,
                     labelText: "Balance after",
                     hintText: "in kgs",
-                    validator: (String? val){
+                    validation: (String? val){
                       if(val == null || ((val??"").trim() == "")) return validation.validateEmptyField(val);
                       if(!compareBalance(val, item.fabricBalance)){
                         var message = "Value must be less than or equal to balance.";

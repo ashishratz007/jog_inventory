@@ -37,7 +37,7 @@ class PrimaryFieldMenu<T> extends FormField<List<DropDownItem<T>>> {
   final bool allowMultiSelect;
   final void Function(List<DropDownItem<T>>?) onChanged;
   final void Function(List<DropDownItem<T>>?)? onSave;
-  final String? Function(List<DropDownItem<T>>?)? validate;
+  final String? Function(List<DropDownItem<T>>?)? validation;
   final FocusNode? focusNode;
 
   PrimaryFieldMenu({
@@ -65,14 +65,14 @@ class PrimaryFieldMenu<T> extends FormField<List<DropDownItem<T>>> {
     this.allowMultiSelect = false,
     required this.onChanged,
     this.onSave,
-    this.validate,
+    this.validation,
     this.focusNode,
     this.controller,
     Key? key,
   }) : super(
           key: key,
           initialValue: initialItems,
-          validator: validate,
+          validator: validation,
           onSaved: onSave,
           builder: (FormFieldState<List<DropDownItem<T>>> state) {
             return _SelectItemMenuWidget<T>(
@@ -738,7 +738,7 @@ Widget PrimaryFieldMenuWithLabel<T>({
   required List<DropDownItem<T>> items,
   required void Function(List<DropDownItem<T>>?) onChanged,
   Function(List<DropDownItem<T>>?)? onSave,
-  String? Function(List<DropDownItem<T>>?)? validate,
+  String? Function(List<DropDownItem<T>>?)? validation,
   final Future<List<DropDownItem<T>>> Function()? fromApi,
   final Future<List<DropDownItem<T>>> Function(String)? searchApi,
   final MenuItemsController? controller,
@@ -783,7 +783,7 @@ Widget PrimaryFieldMenuWithLabel<T>({
                 style: textTheme.hintTextStyle
                     .copyWith(color: labelHintTextColor, fontSize: fontSize),
               ),
-            if (validate != null)
+            if (validation != null)
               TextSpan(
                   text: "  *",
                   style: appTextTheme.bodyMedium
@@ -806,7 +806,7 @@ Widget PrimaryFieldMenuWithLabel<T>({
         onSave: onSave,
         titleColor: titleColor,
         titleSize: titleSize,
-        validate: validate,
+        validation: validation,
         fromApi: fromApi,
         searchApi: searchApi,
         fontSize: fontSize,

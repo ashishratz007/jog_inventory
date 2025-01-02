@@ -96,7 +96,7 @@ class NoCodeRequestFormScreen extends GetView<NoCodeRequestController> {
           labelText: Strings.note,
           enabled: !controller.isCodeGenerated.value,
           hintText: Strings.enterComments,
-          validator: validation.validateEmptyField,
+          validation: validation.validateEmptyField,
           controller: controller.noteController,
           maxLines: controller.isCodeGenerated.value ? 1 : 2),
     );

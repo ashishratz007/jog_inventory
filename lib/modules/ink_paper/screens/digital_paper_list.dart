@@ -120,7 +120,7 @@ class _DigitalPaperScreenState extends State<DigitalPaperScreen> {
             /// button
             InkWell(
               onTap: () {
-                openAddRowInkSheet();
+                mainNavigationService.push(AppRoutesString.addPaperRow);
               },
               child: DottedBorderContainer(
                   borderColor: Colours.green,

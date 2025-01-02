@@ -142,7 +142,7 @@ Widget TextFieldWithLabel(
     String? initialValue,
     FocusNode? focusNode,
     void Function(String)? onChanged,
-    String? Function(String?)? validator,
+    String? Function(String?)? validation,
     void Function(String?)? onSaved,
     void Function(String)? onFieldSubmitted,
     bool obscureText = false,
@@ -178,7 +178,7 @@ Widget TextFieldWithLabel(
                   style: TextStyle(
                       color: labelHintTextColor, fontSize: fontSize ?? 12),
                 ),
-              if (validator != null)
+              if (validation != null)
                 TextSpan(
                     text: "  *",
                     style: appTextTheme.bodyMedium
@@ -215,7 +215,7 @@ Widget TextFieldWithLabel(
           onSaved: onSaved,
           obscureText: obscureText,
           readOnly: readOnly,
-          validator: validator,
+          validator: validation,
           autofocus: autofocus,
           maxLength: maxLength,
           minLines: maxLines,

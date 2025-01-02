@@ -31,7 +31,9 @@ abstract class AppRoutesString {
 
   /// ink paper
   static const inkList = "${dashboard}/ink_list";
+  static const addInkRow = "${inkList}/add_row";
   static const digitalPaper = "${dashboard}/digital_paper";
+  static const addPaperRow = "${digitalPaper}/add_row";
   static const inkScanDetail = "${dashboard}/ink_scan_detail";
   static const paperScanDetail = "${dashboard}/paper_scan_detail";
 

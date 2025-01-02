@@ -6,7 +6,6 @@ import 'package:jog_inventory/modules/stock_in/controllers/form.dart';
 import 'package:jog_inventory/modules/stock_in/models/po_order.dart';
 import 'package:jog_inventory/modules/stock_in/models/stock_in.dart';
 import 'package:jog_inventory/modules/stock_in/widgets/add_fabric_form.dart';
-
 import '../../../common/exports/main_export.dart';
 
 class StockInFromScreen extends StatefulWidget {
@@ -84,7 +83,7 @@ class _StockInFromScreenState extends State<StockInFromScreen> {
                 child: PrimaryFieldMenuWithLabel<PoOrderModel>(
                   labelText: "PO No.",
                   items: [],
-                  validate: (val) {
+                  validation: (val) {
                     if (val == null || !val.isNotEmpty) {
                       return validation.validateEmptyField(null);
                     } else {
@@ -338,7 +337,7 @@ class _StockInFromScreenState extends State<StockInFromScreen> {
                         child: TextFieldWithLabel(
                           labelText: "Box",
                           initialValue: "${item.box ?? ""}",
-                          validator: validation.validateEmptyField,
+                          validation: validation.validateEmptyField,
                           inputFormatters: inputFormatters(allowInt: true),
                           onChanged: (data) {
                             item.box = int.tryParse(data);
@@ -351,7 +350,7 @@ class _StockInFromScreenState extends State<StockInFromScreen> {
                           child: TextFieldWithLabel(
                         labelText: "No.",
                         inputFormatters: inputFormatters(allowInt: true),
-                        validator: validation.validateEmptyField,
+                        validation: validation.validateEmptyField,
                         initialValue: "${item.no ?? ""}",
                         onChanged: (data) {
                           item.no = int.tryParse(data) ?? 0;
@@ -368,7 +367,7 @@ class _StockInFromScreenState extends State<StockInFromScreen> {
                         child: TextFieldWithLabel(
                           labelText: "Amount (Kg)",
                           inputFormatters: inputFormatters(allowDouble: true),
-                          validator: validation.validateEmptyField,
+                          validation: validation.validateEmptyField,
                           initialValue: "${item.amount ?? ""}",
                           onChanged: (data) {
                             item.amount = double.tryParse(data);
@@ -382,7 +381,7 @@ class _StockInFromScreenState extends State<StockInFromScreen> {
                         initialValue: "${item.unitPrice ?? ""}",
                         labelText: "Unit Price (THB)",
                         inputFormatters: inputFormatters(allowDouble: true),
-                        validator: validation.validateEmptyField,
+                        validation: validation.validateEmptyField,
                         onChanged: (data) {
                           item.unitPrice = double.tryParse(data);
                           setState(() {});

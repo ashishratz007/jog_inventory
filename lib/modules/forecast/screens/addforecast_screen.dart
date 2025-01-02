@@ -140,7 +140,7 @@ class _AddForecastScreenState extends State<AddForecastScreen> {
                 items: [],
                 allowSearch: true,
                 allowMultiSelect: false,
-                validate: (val) {
+                validation: (val) {
                   if (val == null) {
                     validation.validateEmptyField(null);
                   } else {

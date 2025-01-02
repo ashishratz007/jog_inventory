@@ -91,7 +91,7 @@ class _DateTimePickerFieldState extends State<DateTimePickerField> {
               textAlign: TextAlign.start,
               style: appTextTheme.bodyMedium,
             ),
-            gap(space: 5)
+            gap(space: 8)
           ],
           Container(
             color: Colors.white,
@@ -109,7 +109,7 @@ class _DateTimePickerFieldState extends State<DateTimePickerField> {
                 contentPadding: widget.padding,
                 border: OutlineInputBorder(
                   borderSide: BorderSide(
-                      color: Colors.grey.withOpacity(0.3), width: 1.0),
+                      color: Colours.bgGrey, width: 0.5),
                 ),
                 suffixIcon: Icon(
                   Icons.date_range,

@@ -77,7 +77,7 @@ class _UpdatePaperScreenState extends State<_UpdatePaperScreen> {
                                   isSelected: false,
                                   value: inkColors[index])),
                           allowSearch: true,
-                          validate: validation.validateEmptyField,
+                          validation: validation.validateEmptyField,
                           onSave: (item) {
                             color = item?.first.value ?? "";
                           },
@@ -87,7 +87,7 @@ class _UpdatePaperScreenState extends State<_UpdatePaperScreen> {
                   gap(space: 10),
                   Expanded(
                       child: TextFieldWithLabel(
-                    validator: validation.validateEmptyField,
+                    validation: validation.validateEmptyField,
                     onChanged: (val) {
                       used = val;
                     },

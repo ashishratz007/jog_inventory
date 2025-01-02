@@ -89,7 +89,7 @@ class _UpdatePaperScreenState extends State<_UpdatePaperScreen> {
                 gap(space: 10),
                 Expanded(
                     child: TextFieldWithLabel(
-                  validator: validation.validateEmptyField,
+                  validation: validation.validateEmptyField,
                   onChanged: (val) {
                     used = val;
                   },
