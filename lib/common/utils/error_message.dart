@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:jog_inventory/common/globals/global.dart';
 import 'package:jog_inventory/services/tab_view_navigator.dart';
 
@@ -74,6 +75,12 @@ displayErrorMessage(
 bool barrierDismissible = true,
   required void Function() onRetry,
 }) async {
+  if(error is String){
+    subtitle = error;
+  }
+  if(error is DioException){
+    subtitle = error.message;
+  }
   await showDialog(
     barrierDismissible: barrierDismissible,
     context: context,

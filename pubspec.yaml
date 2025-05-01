@@ -47,7 +47,8 @@ dependencies:
   package_info_plus: ^8.0.2
 
 # scanner
-  barcode_scan2: ^4.3.3
+#  barcode_scan2: ^4.3.3 // used before mobile_scanner:
+  mobile_scanner:
 
 # device
   # The following adds the Cupertino Icons font to your application.

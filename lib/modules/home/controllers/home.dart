@@ -1,10 +1,11 @@
-import 'package:barcode_scan2/platform_wrapper.dart';
+// import 'package:barcode_scan2/platform_wrapper.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:jog_inventory/common/constant/enums.dart';
 import 'package:jog_inventory/common/globals/app_version.dart';
 import 'package:jog_inventory/common/globals/global.dart';
 import 'package:jog_inventory/common/permissson/permission.dart';
 import 'package:jog_inventory/common/utils/error_message.dart';
+import 'package:jog_inventory/common/utils/sacn_barcode.dart';
 import 'package:jog_inventory/modules/material/models/material_request.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -53,9 +54,9 @@ class HomeController extends GetxController {
   /// functions
   Future<MaterialRQItem> getScanQrCodeData() async {
     try {
-      var result = await BarcodeScanner.scan();
-
-      var ids = result.rawContent.split(" ");
+      var result = await Get.to(BarcodeScannerPage());
+      if(!(result is String)) throw "Unable to get data from QR";
+      var ids = result.split(" ");
       if (ids.length != 1) {
         print(ids.length);
         var pacId = ids[0];
@@ -115,12 +116,14 @@ class HomeController extends GetxController {
     //   return;
     // }
     isGettingLocation.value = false;
-    var result = await BarcodeScanner.scan();
+    var result = await Get.to(BarcodeScannerPage());
     print(result);
-
+    if(!(result is String)){
+      throw "Unable to get data from QR";
+    }
     /// Assets
-    if (result.rawContent.contains(ScanBarcodeType.assets.key)) {
-      var ids = result.rawContent.split(" ");
+    if (result.contains(ScanBarcodeType.assets.key)) {
+      var ids = result.split(" ");
       if (ids.length >= 1) {
         print(ids.length);
         var assetId;
@@ -141,8 +144,8 @@ class HomeController extends GetxController {
     }
 
     /// paper
-    else if (result.rawContent.contains(ScanBarcodeType.paper.key)) {
-      var ids = result.rawContent.split(" ");
+    else if (result.contains(ScanBarcodeType.paper.key)) {
+      var ids = result.split(" ");
       if (ids.length >= 1) {
         print(ids.length);
         var paperid;
@@ -163,8 +166,8 @@ class HomeController extends GetxController {
     }
 
     /// ink
-    else if (result.rawContent.contains(ScanBarcodeType.ink.key)) {
-      var ids = result.rawContent.split(" ");
+    else if (result.contains(ScanBarcodeType.ink.key)) {
+      var ids = result.split(" ");
       if (ids.length >= 1) {
         print(ids.length);
         var inkId;
@@ -186,7 +189,7 @@ class HomeController extends GetxController {
 
     /// for material
     else {
-      var ids = result.rawContent.split(" ");
+      var ids = result.split(" ");
       if (ids.length >= 1) {
         print(ids.length);
         var pacId;
